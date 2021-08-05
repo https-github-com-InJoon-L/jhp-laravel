@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AttendsController extends Controller
 {
-    public function attend(Request $req) {
+    public function attend() {
         $date = date("Y-m-d H:i:s");
         $time = date("H:i:s");
         $point = strtotime('09:00:00');
-        $result = $time - $point;
+        $timestamp = strtotime($time);
+        $result = $timestamp - $point;
 
         $attend = new Attend();
         $userId = Auth::user()->id;
