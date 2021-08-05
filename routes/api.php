@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// axios.Post('/api/attends') <- 요청 방법
 Route::post('/attends', [AttendsController::class,'attend']);
 
 
