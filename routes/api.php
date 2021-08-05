@@ -20,7 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
 Route::post('/attends', [AttendsController::class,'attend']);
 
 
-Route::get('/users', [UsersController::class, 'read']);
+
+// Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('/users', [UsersController::class, 'read']);
+    Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
+// });
