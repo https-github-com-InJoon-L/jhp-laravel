@@ -13,21 +13,20 @@ class AttendsController extends Controller
         $date = date("Y-m-d H:i:s");
         $time = date("H:i:s");
         $point = strtotime('09:00:00');
-        $timestamp = strtotime($time);
-        $result = $timestamp - $point;
+        $result = $time - $point;
 
         $attend = new Attend();
         $userId = Auth::user()->id;
-        // $userId = 1;
+
         if ($result > 0) {
             $cul = number_format($result/60/5); // 바퀴 수
-            if ($cul == 0) $cul = 1;
+            $cul++;
             $attend->run = $cul;
         }
 
         $attend->user_id = $userId;
         $attend->attend = $date;
-        // $attend->save();
+        $attend->save();
 
         $res = response()->json([
             'status' => 'success',
