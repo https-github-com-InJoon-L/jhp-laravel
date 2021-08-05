@@ -20,7 +20,8 @@ class AttendsController extends Controller
         $userId = Auth::user()->id;
         // $userId = 1;
         if ($result > 0) {
-            $cul = number_format($result/60/5) ; // 바퀴 수
+            $cul = number_format($result/60/5); // 바퀴 수
+            if ($cul == 0) $cul = 1;
             $attend->run = $cul;
         }
 
