@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class SocialController extends Controller
 {
     //
-  
+
     public function redirect() {
         return Socialite::driver('kakao')->redirect();
     }
@@ -28,7 +28,7 @@ class SocialController extends Controller
             $users->save();
             Auth::login($users);
             return redirect('/');
-        } 
+        }
         else {
 
 
@@ -56,10 +56,10 @@ class SocialController extends Controller
                 'position' => 'required|string',
                 'class' => 'required',
             ]);
-    
+
             $res = null;
-    
-    
+
+
             $user = User::find(Auth::user()->id);
             $user->phone_number = $req->phone_number;
             if($req->class == 'WDJ') {
@@ -70,16 +70,16 @@ class SocialController extends Controller
             $user->class = $req->class;
             $user->sid = $req->sid;
             $user->position = $req->position;
-    
+
             $user->save();
-    
+
             $res = response()->json([
                 'status' => 'success',
                 'data' => $user
             ], 200);
-    
+
             return redirect()->route('dashboard', ['res' => $res]);
         }
 
-    
+
 }

@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
+use App\Http\Controllers\TimetablesController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // axios.Post('/api/attends') <- 요청 방법
-Route::post('/attends', [AttendsController::class,'attend']);
+Route::post('/attends', [AttendsController::class, 'attend']);
+
+Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 
