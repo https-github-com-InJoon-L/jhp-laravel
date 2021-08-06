@@ -26,3 +26,8 @@ Route::post('/attends', [AttendsController::class, 'attend']);
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 
+
+// Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('/users', [UsersController::class, 'read']);
+    Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
+// });
