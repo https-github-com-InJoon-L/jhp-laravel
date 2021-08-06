@@ -20,7 +20,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// axios.Post('/api/attends') <- 요청 방법
+// axios.Post('localhost:port/api/attends') <- 요청 방법
 Route::post('/attends', [AttendsController::class, 'attend']);
 
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
