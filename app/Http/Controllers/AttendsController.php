@@ -80,4 +80,44 @@ class AttendsController extends Controller
 
         $run->save();
     }
+
+    // 출석하지 않은 유저들 반별로
+    public function notAttendUsers(Request $req) {
+        $validator = Validator::make($req->all(), [
+            'class' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $date = date("Y-m-d");
+        $users = User::where('class', $req->class)->get();
+        $attend_users = Attend::where('attend', $date)->get();
+        $users_array = $users->toArray();
+
+        // 하루에 한명도 출석 안할 시
+        if ($attend_users->count() == 0) {
+            $res = response()-> json([
+                'status' => 'success',
+                'users' => $users_array
+            ]);
+
+            return $res;
+        }
+
+        // 한명이라도 출석 했다면
+        for ($i = 0; $i < $users->count(); $i++) {
+            if($users[$i]->id == $attend_users[$i]->user_id) {
+                array_splice($users_array, $i);
+            }
+        }
+
+        $res = response()-> json([
+            'status' => 'success',
+            'users' => $users_array
+        ]);
+
+        return $res;
+    }
 }
