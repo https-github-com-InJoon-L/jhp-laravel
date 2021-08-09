@@ -44,7 +44,7 @@ class AttendsController extends Controller
             $attend->desc_value = '지각';
 
             // 첫 번째 인자 학번, 두 번째 인자 오늘 run 수 세 번째 인자 user_id
-            $this->insertRun($req->user_sid, $attend->run, $userId);
+            $this->insertRun($attend->run, $userId);
         }
 
         $attend->user_id = $userId;
@@ -60,18 +60,18 @@ class AttendsController extends Controller
         return $res;
     }
 
-    // 첫 번째 인자 학번, 두 번째 인자 오늘 run 수 세 번째 인자 user_id
-    public function insertRun($user_sid, $todayRun, $userId) {
+    // 첫 번째 인자 오늘 run 두 세 번째 인자 user_id
+    public function insertRun($todayRun, $userId) {
         $run = null;
         $countRun = $todayRun;
         $totalRun = User::find($userId)->attends()->sum('run');
 
 
-        if (Run::where('user_id', $user_sid)->get()->count() == 0) {
+        if (Run::where('user_id', $userId)->get()->count() == 0) {
             $run = new Run();
-            $run->user_id = $user_sid;
+            $run->user_id = $userId;
         } else {
-            $run = Run::where('user_id', $user_sid)->first();
+            $run = Run::where('user_id', $userId)->first();
         }
 
         $run->countRun = $run->countRun + $countRun;
