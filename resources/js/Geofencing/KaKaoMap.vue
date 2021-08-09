@@ -1,18 +1,29 @@
 <template>
     <input type="text" :value="distance"> <label for="">미터 떨어져있음</label>
-                            <div v-if="counts>0">
-                            <attend-form/>
-                            </div>
-                            <div v-else>
-                                <div role="alert">
-  <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-    에러
-  </div>
-  <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-    <p>출석체크를 할려면 100m 이내에 접근하세요</p>
-  </div>
-</div>
-                                </div>
+    <div v-if="isPC<1" class="flex ">
+        <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20">
+                <path
+                    d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
+            </svg></div>
+        <div>
+            <p class="font-bold py-1">PC에서 출석시 위치가 정확하지 않을 수 있습니다!</p>
+        </div>
+    </div>
+
+    <div v-if="counts>0">
+        <attend-form />
+    </div>
+    <div v-else>
+        <div role="alert">
+            <div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                에러
+            </div>
+            <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+                <p>출석체크를 할려면 100m 이내에 접근하세요</p>
+            </div>
+        </div>
+    </div>
 
     <div id="map" style="width:100%;height:500px"></div>
     <h1>hello</h1>
@@ -20,24 +31,23 @@
 </template>
 <script>
     import AttendForm from '@/Geofencing/AttendForm'
+    import axios from 'axios'
     export default {
         data() {
             return {
-                currentTab: 'Home',
-                tabs: ['Home', 'Posts'],
-                counts: '0',
+                counts: '1',
                 distance: '1000',
+                isPC: '0'
             }
         },
-        computed: {
-            currentTabComponent() {
-                return 'tab-' + this.currentTab.toLowerCase()
-            }
-        },
+        computed: {},
         mounted() {
             window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
             if (this.polylineLength <= 400) {
                 alert("hello");
+            }
+            if (this.isMobile()) {
+                this.isPC = 1;
             }
         },
         methods: {
@@ -45,7 +55,7 @@
                 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
                     mapOption = {
                         center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                        level: 5 // 지도의 확대 레벨 
+                        level: 4 // 지도의 확대 레벨 
                     };
 
                 var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
@@ -73,29 +83,51 @@
 
                         // 마커와 인포윈도우를 표시합니다
                         // 마커를 생성합니다
+
+                        var imageSrc = '/img/marker_yju.png', // 마커이미지의 주소입니다    
+                            imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+                            imageOption = {
+                                offset: new kakao.maps.Point(22, 49)
+                            }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                        var imageSrc2 = '/img/marker_me.png', // 마커이미지의 주소입니다    
+                            imageSize2 = new kakao.maps.Size(44, 49), // 마커이미지의 크기입니다
+                            imageOption2 = {
+                                offset: new kakao.maps.Point(32, 49)
+                            }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                        var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+                            markerPosition = new kakao.maps.LatLng(startlat, startlon); // 마커가 표시될 위치입니다
+
+                        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+                        var markerImage2 = new kakao.maps.MarkerImage(imageSrc2, imageSize2, imageOption2),
+                            markerPosition2 = new kakao.maps.LatLng(startlat, startlon); // 마커가 표시될 위치입니다
+
+
                         var marker = new kakao.maps.Marker({
+                            position: markerPosition,
+                            image: markerImage // 마커이미지 설정 
+                        });
+
+                        var currentMarker = new kakao.maps.Marker({
+                            position: locPosition,
+                            image: markerImage2 // 마커이미지 설정 
+                        });
+                        marker.setMap(map);
+                        currentMarker.setMap(map);
+
+
+                        var content = '<div class="customoverlay">' +
+                            '  <a href="//map.kakao.com/?itemId=17565943" target="_blank">' +
+                            '    <span class="title">영진전문대 본관</span>' +
+                            '  </a>' +
+                            '</div>';
+                        var customOverlay = new kakao.maps.CustomOverlay({
                             map: map,
-                            position: locPosition
-                        });
-
-
-                        var newMarker = new kakao.maps.Marker({
-                            map: map,
-                            position: startPosition
-                        });
-
-                        var iwContent = message, // 인포윈도우에 표시할 내용
-                            iwRemoveable = false;
-
-                        // 인포윈도우를 생성합니다
-                        var infowindow = new kakao.maps.InfoWindow({
-                            content: check,
-                            removable: iwRemoveable
-                        });
-
- var infowindow2 = new kakao.maps.InfoWindow({
-                            content: message,
-                            removable: false
+                            position: startPosition,
+                            content: content,
+                            yAnchor: 1
                         });
                         // 인포윈도우를 마커위에 표시합니다 
 
@@ -136,10 +168,10 @@
                         polyline.setMap(map);
                         circle.setMap(map);
 
-                        if (polyline.getLength() <= 500) {
+                        if (polyline.getLength() <= 100) {
                             console.log("출석체크 버튼 생성");
-                            infowindow.open(map, newMarker);
-                            infowindow2.open(map, marker);
+
+
                             this.addAttendButton();
                         }
                     });
@@ -161,10 +193,63 @@
                 document.head.appendChild(script);
             },
             addAttendButton: function () {
-                this.counts =1;
-            }
-        }, components: {
+                this.counts = 1;
+            },
+            isMobile() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            },
+        },
+        components: {
             AttendForm
         }
     }
 </script>
+<style>
+    .customoverlay {
+        position: relative;
+        bottom: 85px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        border-bottom: 2px solid #ddd;
+        float: left;
+    }
+
+    .customoverlay:nth-of-type(n) {
+        border: 0;
+        box-shadow: 0px 1px 2px #888;
+    }
+
+    .customoverlay a {
+        display: block;
+        text-decoration: none;
+        color: #000;
+        text-align: center;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: bold;
+        overflow: hidden;
+        background: #248EFC;
+        background: #248EFC url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
+    }
+
+    .customoverlay .title {
+        display: block;
+        text-align: center;
+        background: #fff;
+        margin-right: 35px;
+        padding: 10px 15px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .customoverlay:after {
+        content: '';
+        position: absolute;
+        margin-left: -12px;
+        left: 50%;
+        bottom: -12px;
+        width: 22px;
+        height: 12px;
+        background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+    }
+</style>

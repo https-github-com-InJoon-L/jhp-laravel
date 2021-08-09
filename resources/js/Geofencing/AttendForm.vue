@@ -31,7 +31,7 @@
             attend() {
                 let value = { user_sid : this.user_sid }
                 axios.post('/api/attends',null,{params: value})
-                    .then(response => {
+                   a .then(response => {
                         console.log(response);
                     })
                     .catch(response => {

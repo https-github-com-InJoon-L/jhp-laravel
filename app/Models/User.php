@@ -55,7 +55,20 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = [
-        'profile_photo_url',
-    ];
+
+     
+    // protected $appends = [
+    //     'profile_photo_url',
+    // ];
+
+    
+    public function attends()
+    {
+        return $this->hasMany(Attend::class);
+    }
+
+    public function run()
+    {
+        return $this->hasOne(Run::class);
+    }
 }
