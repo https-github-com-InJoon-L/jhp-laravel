@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SocialController;
 use App\Http\Controllers\TimetablesController;
+use App\Http\Controllers\UsersController;
 use Inertia\Inertia;
 
 /*
@@ -28,3 +29,8 @@ Route::post('/attends', [AttendsController::class, 'attend']);
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 Route::get('/test',[ApiController::class,'test'])->name('api.test');
+
+// Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('/users', [UsersController::class, 'read']);
+    Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
+// });
