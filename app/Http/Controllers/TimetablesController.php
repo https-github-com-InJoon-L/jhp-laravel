@@ -14,7 +14,7 @@ class TimetablesController extends Controller
         $res = response()->json([
             'status' => 'success',
             'data' => $timetables
-        ], 200);
+        ], 200, [], JSON_UNESCAPED_UNICODE);
 
         return $res;
     }
