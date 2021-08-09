@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attend;
+use App\Models\Run;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -42,7 +43,8 @@ class AttendsController extends Controller
             $attend->run = $cul;
             $attend->desc_value = '지각';
 
-            $this->insertRun($userId);
+            // 첫 번째 인자 학번, 두 번째 인자 오늘 run 수 세 번째 인자 user_id
+            $this->insertRun($req->user_sid, $attend->run, $userId);
         }
 
         $attend->user_id = $userId;
@@ -58,7 +60,24 @@ class AttendsController extends Controller
         return $res;
     }
 
-    public function insertRun($userId) {
+    // 첫 번째 인자 학번, 두 번째 인자 오늘 run 수 세 번째 인자 user_id
+    public function insertRun($user_sid, $todayRun, $userId) {
+        $run = null;
+        $countRun = $todayRun;
+        $totalRun = User::find($userId)->attends()->sum('run');
 
+
+        if (Run::where('user_id', $user_sid)->get()->count() == 0) {
+            $run = new Run();
+            $run->user_id = $user_sid;
+        } else {
+            $run = Run::where('user_id', $user_sid)->first();
+        }
+
+        $run->countRun = $run->countRun + $countRun;
+        // 오늘 출석 데이터가 디비에 들어가기 전에 실행 되기 때문에 전날까지만 가져오므로 오늘꺼 더해준다.
+        $run->totalRun = $totalRun + $countRun;
+
+        $run->save();
     }
 }
