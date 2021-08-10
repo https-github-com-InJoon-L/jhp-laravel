@@ -33,7 +33,7 @@ class AttendsController extends Controller
         if (Attend::where('attend', $date)->where('user_id', $userId)->get()->count() != 0) {
             return $res = response()->json([
                 'status' => 'false',
-                'message' => '오늘은 이미 출석 했습니다.',
+                'message' => '오늘은 이미 출결 했습니다.',
             ]);
         }
 
@@ -138,7 +138,7 @@ class AttendsController extends Controller
         if (Attend::where('attend', $date)->where('user_id', $userId)->get()->count() != 0) {
             return response()->json([
                 'status' => 'false',
-                'message' => '오늘은 이미 결석 했습니다.',
+                'message' => '오늘은 이미 출결 했습니다.',
             ]);
         }
 
