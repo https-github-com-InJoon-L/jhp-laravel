@@ -145,10 +145,15 @@ class UsersController extends Controller
 
     // 출석 현황 최근 3개
     public function getAttendanceStatus($selected_user_id) {
-        return User::find($selected_user_id)
+        $attends = User::find($selected_user_id)
         ->attends()
         ->latest()
         ->take(3)
         ->get();
+
+        return  response()->json([
+            'status' => 'success',
+            'attends' => $attends,
+        ], 200);
     }
 }
