@@ -19018,9 +19018,10 @@ __webpack_require__.r(__webpack_exports__);
         checked = document.querySelector('input[name="class"]:checked');
       }
 
+      var urlName = '/api/user/' + this.user.id;
       this.form.current_team_id = checked.value;
-      this.form.get(route('api.dialogprofessor'), {
-        errorBag: 'api.dialogprofessor',
+      this.form.get(route(urlName), {
+        errorBag: urlName,
         preserveScroll: true
       });
     }
@@ -19984,19 +19985,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Jetstream_ProfessorDashBoardHead__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/ProfessorDashBoardHead */ "./resources/js/Jetstream/ProfessorDashBoardHead.vue");
 /* harmony import */ var _Jetstream_ProfessorDashBoard__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Jetstream/ProfessorDashBoard */ "./resources/js/Jetstream/ProfessorDashBoard.vue");
 /* harmony import */ var _Jetstream_ProfessorDialog__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/ProfessorDialog */ "./resources/js/Jetstream/ProfessorDialog.vue");
- // import Welcome from '@/Jetstream/Welcome'
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
 
 
 
- // import Pagination from '@/Jetstream/Pagination'
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__.default,
-    // Welcome,
     ProfessorDashBoardHead: _Jetstream_ProfessorDashBoardHead__WEBPACK_IMPORTED_MODULE_1__.default,
     ProfessorDashBoard: _Jetstream_ProfessorDashBoard__WEBPACK_IMPORTED_MODULE_2__.default,
-    // Pagination,
     ProfessorDialog: _Jetstream_ProfessorDialog__WEBPACK_IMPORTED_MODULE_3__.default
   },
   data: function data() {
@@ -20036,39 +20036,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     console.log(this.users);
-    var teamFir = [];
-    var teamSec = [];
-    var teamThi = [];
-    var teamFou = [];
-    this.users.forEach(function (user) {
-      switch (user.current_team_id) {
-        case 1:
-          teamFir.push(user);
-          break;
-
-        case 2:
-          teamSec.push(user);
-          break;
-
-        case 3:
-          teamThi.push(user);
-          break;
-
-        case 4:
-          teamFou.push(user);
-          break;
-
-        default:
-      }
+    axios__WEBPACK_IMPORTED_MODULE_4___default().get('/api/users').then(function (res) {
+      console.log(res.data);
+    })["catch"](function (err) {
+      console.log(err);
     });
-    this.teamFir = teamFir;
-    this.teamSec = teamSec;
-    this.teamThi = teamThi;
-    this.teamFou = teamFou;
-    console.log(this.teamFir);
-    console.log(this.teamSec);
-    console.log(this.teamThi);
-    console.log(this.teamFou);
   }
 });
 
@@ -25316,7 +25288,7 @@ var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(
 }, " Name "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
   scope: "col",
   "class": "px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-}, " Sid "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <th scope=\"col\" class=\"px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider\">\n                                                                Email\n                                                            </th> "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
+}, " Sid "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
   scope: "col",
   "class": "relative px-6 py-3"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", {
@@ -25342,11 +25314,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [_hoisted_1];
     }),
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <welcome /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class='flex'> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_professor_dash_board_head, {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_professor_dash_board_head, {
         onChangeTag: $options.changeList
       }, null, 8
       /* PROPS */
-      , ["onChangeTag"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <professor-dash-board/> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <professor-dash-board v-for=\"user in users\" :key=\"user.id\"\n                            :id=\"user.id\" :email=\"user.email\" :std_name=\"user.name\"\n                            :class_name=\"user.class\" :sid=\"user.sid\" :current_team_id=\"user.current_team_id\"\n                            :profile_photo_url=\"user.profile_photo_url\"\n                            @open=\"openDialog\"\n                            /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <professor-dash-board v-for=\"user in users\" :key=\"user.id\"\n                            :user=\"user\"\n                            @open=\"openDialog\"\n                            /> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("table", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tbody", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.users, function (user) {
+      , ["onChangeTag"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("table", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tbody", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.users, function (user) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_professor_dash_board, {
           key: user.id,
           user: user,
@@ -25356,7 +25328,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         , ["user", "onOpen"]);
       }), 128
       /* KEYED_FRAGMENT */
-      ))])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")])])])])];
+      ))])])])])])])])])])])])];
     }),
     _: 1
     /* STABLE */
@@ -35434,7 +35406,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.customoverlay {\r\n        position: relative;\r\n        bottom: 85px;\r\n        border-radius: 6px;\r\n        border: 1px solid #ccc;\r\n        border-bottom: 2px solid #ddd;\r\n        float: left;\n}\n.customoverlay:nth-of-type(n) {\r\n        border: 0;\r\n        box-shadow: 0px 1px 2px #888;\n}\n.customoverlay a {\r\n        display: block;\r\n        text-decoration: none;\r\n        color: #000;\r\n        text-align: center;\r\n        border-radius: 6px;\r\n        font-size: 14px;\r\n        font-weight: bold;\r\n        overflow: hidden;\r\n        background: #248EFC;\r\n        background: #248EFC url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;\n}\n.customoverlay .title {\r\n        display: block;\r\n        text-align: center;\r\n        background: #fff;\r\n        margin-right: 35px;\r\n        padding: 10px 15px;\r\n        font-size: 14px;\r\n        font-weight: bold;\n}\n.customoverlay:after {\r\n        content: '';\r\n        position: absolute;\r\n        margin-left: -12px;\r\n        left: 50%;\r\n        bottom: -12px;\r\n        width: 22px;\r\n        height: 12px;\r\n        background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.customoverlay {\n        position: relative;\n        bottom: 85px;\n        border-radius: 6px;\n        border: 1px solid #ccc;\n        border-bottom: 2px solid #ddd;\n        float: left;\n}\n.customoverlay:nth-of-type(n) {\n        border: 0;\n        box-shadow: 0px 1px 2px #888;\n}\n.customoverlay a {\n        display: block;\n        text-decoration: none;\n        color: #000;\n        text-align: center;\n        border-radius: 6px;\n        font-size: 14px;\n        font-weight: bold;\n        overflow: hidden;\n        background: #248EFC;\n        background: #248EFC url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;\n}\n.customoverlay .title {\n        display: block;\n        text-align: center;\n        background: #fff;\n        margin-right: 35px;\n        padding: 10px 15px;\n        font-size: 14px;\n        font-weight: bold;\n}\n.customoverlay:after {\n        content: '';\n        position: absolute;\n        margin-left: -12px;\n        left: 50%;\n        bottom: -12px;\n        width: 22px;\n        height: 12px;\n        background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -35458,7 +35430,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.loading-spinner[data-v-a6611c6e] {\r\n  width: 100px;\r\n  height: 100px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.loading-spinner[data-v-a6611c6e] {\n  width: 100px;\n  height: 100px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -35482,7 +35454,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\na:hover {\r\n        text-decoration: underline;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\na:hover {\n        text-decoration: underline;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -35506,7 +35478,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\na:hover {\r\n        text-decoration: underline;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\na:hover {\n        text-decoration: underline;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

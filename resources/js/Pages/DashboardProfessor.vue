@@ -10,22 +10,9 @@
             <div class="py-3">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                        <!-- <welcome /> -->
                         <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 pt-3 shadow-md"
                         role="alert">
-                            <!-- <div class='flex'> -->
                             <professor-dash-board-head @changeTag="changeList"/>
-                            <!-- <professor-dash-board/> -->
-                            <!-- <professor-dash-board v-for="user in users" :key="user.id"
-                            :id="user.id" :email="user.email" :std_name="user.name"
-                            :class_name="user.class" :sid="user.sid" :current_team_id="user.current_team_id"
-                            :profile_photo_url="user.profile_photo_url"
-                            @open="openDialog"
-                            /> -->
-                            <!-- <professor-dash-board v-for="user in users" :key="user.id"
-                            :user="user"
-                            @open="openDialog"
-                            /> -->
                             <div>
                                 <div class="flex flex-col">
                                     <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -40,9 +27,6 @@
                                                             <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                                 Sid
                                                             </th>
-                                                            <!-- <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                                Email
-                                                            </th> -->
                                                             <th scope="col" class="relative px-6 py-3">
                                                                 <span class="sr-only">Edit</span>
                                                             </th>
@@ -60,7 +44,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- </div> -->
                         </div>
                     </div>
                 </div>
@@ -77,20 +60,17 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
-    // import Welcome from '@/Jetstream/Welcome'
     import ProfessorDashBoardHead from '@/Jetstream/ProfessorDashBoardHead'
     import ProfessorDashBoard from '@/Jetstream/ProfessorDashBoard'
     import ProfessorDialog from '@/Jetstream/ProfessorDialog'
 
-    // import Pagination from '@/Jetstream/Pagination'
+    import axios from 'axios'
 
     export default {
         components: {
             AppLayout,
-            // Welcome,
             ProfessorDashBoardHead,
             ProfessorDashBoard,
-            // Pagination,
             ProfessorDialog,
         },
         data(){
@@ -131,35 +111,13 @@
         },
         mounted(){
             console.log(this.users);
-            let teamFir =[];
-            let teamSec =[];
-            let teamThi =[];
-            let teamFou =[];
-            this.users.forEach(function(user){
-                switch(user.current_team_id){
-                    case 1:
-                        teamFir.push(user);
-                        break;
-                    case 2:
-                        teamSec.push(user);
-                        break;
-                    case 3:
-                        teamThi.push(user);
-                        break;
-                    case 4:
-                        teamFou.push(user);
-                        break;
-                    default:
-                }
-            });
-            this.teamFir = teamFir;
-            this.teamSec = teamSec;
-            this.teamThi = teamThi;
-            this.teamFou = teamFou;
-            console.log(this.teamFir);
-            console.log(this.teamSec);
-            console.log(this.teamThi);
-            console.log(this.teamFou);
+            axios.get('/api/users')
+                .then(res=>{
+                    console.log(res.data);
+                })
+                .catch(err=>{
+                    console.log(err);
+                })
         },
     }
 </script>

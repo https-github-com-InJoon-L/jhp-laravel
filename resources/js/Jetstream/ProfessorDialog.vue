@@ -110,9 +110,10 @@
                     document.querySelector('input[name="class"]').checked=true;
                     checked=document.querySelector('input[name="class"]:checked');
                 }
+                const urlName = '/api/user/'+this.user.id;
                 this.form.current_team_id=checked.value;
-                this.form.get(route('api.dialogprofessor'), {
-                    errorBag: 'api.dialogprofessor',
+                this.form.get(route(urlName), {
+                    errorBag: urlName,
                     preserveScroll: true,
                 });
             }
