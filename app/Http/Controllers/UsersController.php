@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -33,10 +34,10 @@ class UsersController extends Controller
 
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users',
+            'email' => 'required|email|max:255',
             'phone_number' => 'required|string|max:255',
             'class' => 'required|string|max:255',
-            'sid' => 'required|integer|unique:users',
+            'sid' => 'required|integer',
             'current_team_id' => 'required|integer',
         ]);
 
@@ -44,24 +45,21 @@ class UsersController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::find($selected_user_id);
-        $user->fill($request->all());
+        try {
+            $user = User::find($selected_user_id);
+            $user->update($request->all());
+        } catch(QueryException $e){
+            return response()->json([
+                'states' => 'error',
+                'message' => $e->getMessage()
+            ], 403);
+        }
 
         $user->save();
 
         return response()->json([
             'status' => 'success',
         ], 200);
-    }
-
-    // 반별 유저 + 달리기 총 횟수 테이블
-    protected function getRunnersByClass($class_value) {
-        return DB::table('users')
-        ->join('runs', 'users.id', '=', 'runs.user_id')
-        ->where('users.current_team_id', $class_value)
-        ->select('users.*', 'runs.totalRun')
-        ->orderBy('totalRun', 'desc')
-        ->get();
     }
 
     // 달리기 횟수 반별 랭킹
@@ -78,6 +76,16 @@ class UsersController extends Controller
             'status' => 'success',
             'runners' => $runners,
         ], 200);
+    }
+
+    // 반별 유저 + 달리기 총 횟수 테이블
+    protected function getRunnersByClass($class_value) {
+        return DB::table('users')
+        ->join('runs', 'users.id', '=', 'runs.user_id')
+        ->where('users.current_team_id', $class_value)
+        ->select('users.*', 'runs.totalRun')
+        ->orderBy('totalRun', 'desc')
+        ->get();
     }
 
     // 결석 횟수 반별 랭킹
@@ -134,6 +142,13 @@ class UsersController extends Controller
         ->orderBy('attends.total_count', 'desc')
         ->get();
     }
-}
 
-// 출결현황 3개정도
+    // 출석 현황 최근 3개
+    public function getAttendanceStatus($selected_user_id) {
+        return User::find($selected_user_id)
+        ->attends()
+        ->latest()
+        ->take(3)
+        ->get();
+    }
+}
