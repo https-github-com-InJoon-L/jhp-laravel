@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Timetable;
-use Illuminate\Http\Request;
 
 class TimetablesController extends Controller
 {
@@ -14,7 +13,7 @@ class TimetablesController extends Controller
         $res = response()->json([
             'status' => 'success',
             'data' => $timetables
-        ], 200);
+        ], 200, [], JSON_UNESCAPED_UNICODE);
 
         return $res;
     }

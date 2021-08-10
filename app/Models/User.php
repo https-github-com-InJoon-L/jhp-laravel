@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attend::class);
     }
+
+    public function run()
+    {
+        return $this->hasOne(Run::class);
+    }
 }
