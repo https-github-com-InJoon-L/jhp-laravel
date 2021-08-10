@@ -20,20 +20,20 @@
                                             <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                                                 <table class="min-w-full divide-y divide-gray-200">
                                                     <thead class="bg-gray-50">
-                                                        <tr>
-                                                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                        <tr class="justify-between flex">
+                                                            <th scope="col" class="w-1/3 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                                 Name
                                                             </th>
-                                                            <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                                Sid
+                                                            <th scope="col" class="w-1/3 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                <span class="">Sid</span>
                                                             </th>
-                                                            <th scope="col" class="relative px-6 py-3">
+                                                            <th scope="col" class="w-1/3 px-6 py-3">
                                                                 <span class="sr-only">Edit</span>
                                                             </th>
                                                         </tr>
                                                     </thead>
                                                     <tbody class="bg-white divide-y divide-gray-200">
-                                                        <professor-dash-board v-for="user in users" :key="user.id"
+                                                        <professor-dash-board v-for="user in selectedTeam" :key="user.id"
                                                         :user="user"
                                                         @open="openDialog"
                                                         />
@@ -77,11 +77,19 @@
             return{
                 dialogShow:false,
                 selectedUser:{},
-                teamFir:[],
-                teamSec:[],
-                teamThi:[],
-                teamFou:[],
-                form:{},
+                selectedTeam:[],
+                // teamNone:[],
+                // teamWdj:[],
+                // teamCpj:[],
+                // teamProfessor:[],
+                allTeam:[],
+                form: this.$inertia.form({
+                    _method: 'PUT',
+                    name: '',
+                    email: '',
+                    sid: '',
+                    current_team_id: '',
+                }),
             }
         },
         
@@ -97,7 +105,6 @@
                 console.log('오픈 도착');
                 this.selectedUser=user;
                 this.form=this.$inertia.form({
-                    _method: 'POST',
                     name: this.selectedUser.name,
                     email: this.selectedUser.email,
                     sid: this.selectedUser.sid,
@@ -107,17 +114,41 @@
             },
             changeList(tagIdx){
                 console.log('Nav Tag 변경',tagIdx);
+                switch(tagIdx){
+                    case 1:
+                        this.selectedTeam = this.allTeam.none;
+                        break;
+                    case 2:
+                        this.selectedTeam = this.allTeam.wdj;
+                        break;
+                    case 3:
+                        this.selectedTeam = this.allTeam.cpj;
+                        break;
+                    case 4:
+                        this.selectedTeam = this.allTeam.professor;
+                        break;
+                }
             }
         },
         mounted(){
             console.log(this.users);
             axios.get('/api/users')
                 .then(res=>{
-                    console.log(res.data);
+                    console.log(res.data.status);
+                    const classTeam = res.data.data;
+                    this.allTeam = classTeam;
+                    this.selectedTeam = classTeam.none;
+                    // console.log(classTeam);
+                    // console.log(classTeam.none);//1
+                    // console.log(classTeam.wdj);//2
+                    // console.log(classTeam.cpj);//3
+                    // console.log(classTeam.professor);//4
+                    // this.allTeam.wdj.forEach(element => console.log(element));
                 })
                 .catch(err=>{
                     console.log(err);
                 })
+            console.log(this.allTeam);
         },
     }
 </script>

@@ -34,25 +34,31 @@
                 </div>
             </div>
         </div> -->
-        <tr >
-            <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div v-if="user.name" class="text-sm text-center text-gray-900">
-                    {{user.name}}
+        <tr class="flex">
+            <td class=" w-1/3 px-6 py-4 whitespace-nowrap text-center">
+                <div class="max-w-max min-w-max text-center inline">
+                    <span v-if="user.name" class="text-sm text-center text-gray-900">
+                        {{user.name}}
+                    </span>
+                    <span v-else class="px-2 flex text-center inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        등록된 이름 없음
+                    </span>
                 </div>
-                <span v-else class="px-2 flex text-center inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                    등록된 이름 없음
-                </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div v-if="user.sid" class="text-sm text-center text-gray-900">
-                    {{user.sid}}
+            <td class="w-1/3 px-6 py-4 whitespace-nowrap text-center">
+                <div class="max-w-max min-w-max text-center inline">
+                    <span v-if="user.sid" class="text-sm text-center text-gray-900">
+                        {{user.sid}}
+                    </span>
+                    <span v-else class="px-2 text-center inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        등록된 학번 없음
+                    </span>
                 </div>
-                <span v-else class="px-2 text-center inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
-                    등록된 학번 없음
-                </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <a href="" @click="open" @click.prevent="openThread" class="text-indigo-600 hover:text-indigo-900 p-3">수정</a>
+            <td class="w-1/3 px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <div class="max-w-max min-w-max text-center inline">
+                    <a href="" @click="open" @click.prevent="openThread" class="text-indigo-600 hover:text-indigo-900 p-3">수정</a>
+                </div>
             </td>
         </tr>
     <!-- </div> -->

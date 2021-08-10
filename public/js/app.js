@@ -19008,6 +19008,8 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('close');
     },
     saveClose: function saveClose() {
+      var _this = this;
+
       console.log('저장 후 닫기');
       var checked = document.querySelector('input[name="class"]:checked');
       console.log(checked.value);
@@ -19018,11 +19020,14 @@ __webpack_require__.r(__webpack_exports__);
         checked = document.querySelector('input[name="class"]:checked');
       }
 
-      var urlName = '/api/user/' + this.user.id;
       this.form.current_team_id = checked.value;
-      this.form.get(route(urlName), {
-        errorBag: urlName,
-        preserveScroll: true
+      this.form.patch('/api/user/' + this.user.id, {
+        onSuccess: function onSuccess() {
+          return _this.$emit('close');
+        },
+        onError: function onError() {
+          console.log('다시 입력하세요');
+        }
       });
     }
   }
@@ -20003,11 +20008,19 @@ __webpack_require__.r(__webpack_exports__);
     return {
       dialogShow: false,
       selectedUser: {},
-      teamFir: [],
-      teamSec: [],
-      teamThi: [],
-      teamFou: [],
-      form: {}
+      selectedTeam: [],
+      // teamNone:[],
+      // teamWdj:[],
+      // teamCpj:[],
+      // teamProfessor:[],
+      allTeam: [],
+      form: this.$inertia.form({
+        _method: 'PUT',
+        name: '',
+        email: '',
+        sid: '',
+        current_team_id: ''
+      })
     };
   },
   props: {
@@ -20022,7 +20035,6 @@ __webpack_require__.r(__webpack_exports__);
       console.log('오픈 도착');
       this.selectedUser = user;
       this.form = this.$inertia.form({
-        _method: 'POST',
         name: this.selectedUser.name,
         email: this.selectedUser.email,
         sid: this.selectedUser.sid,
@@ -20032,15 +20044,44 @@ __webpack_require__.r(__webpack_exports__);
     },
     changeList: function changeList(tagIdx) {
       console.log('Nav Tag 변경', tagIdx);
+
+      switch (tagIdx) {
+        case 1:
+          this.selectedTeam = this.allTeam.none;
+          break;
+
+        case 2:
+          this.selectedTeam = this.allTeam.wdj;
+          break;
+
+        case 3:
+          this.selectedTeam = this.allTeam.cpj;
+          break;
+
+        case 4:
+          this.selectedTeam = this.allTeam.professor;
+          break;
+      }
     }
   },
   mounted: function mounted() {
+    var _this = this;
+
     console.log(this.users);
     axios__WEBPACK_IMPORTED_MODULE_4___default().get('/api/users').then(function (res) {
-      console.log(res.data);
+      console.log(res.data.status);
+      var classTeam = res.data.data;
+      _this.allTeam = classTeam;
+      _this.selectedTeam = classTeam.none; // console.log(classTeam);
+      // console.log(classTeam.none);//1
+      // console.log(classTeam.wdj);//2
+      // console.log(classTeam.cpj);//3
+      // console.log(classTeam.professor);//4
+      // this.allTeam.wdj.forEach(element => console.log(element));
     })["catch"](function (err) {
       console.log(err);
     });
+    console.log(this.allTeam);
   }
 });
 
@@ -22302,36 +22343,48 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "px-6 py-4 whitespace-nowrap text-center"
+  "class": "flex"
 };
 var _hoisted_2 = {
+  "class": " w-1/3 px-6 py-4 whitespace-nowrap text-center"
+};
+var _hoisted_3 = {
+  "class": "max-w-max min-w-max text-center inline"
+};
+var _hoisted_4 = {
   key: 0,
   "class": "text-sm text-center text-gray-900"
 };
-var _hoisted_3 = {
+var _hoisted_5 = {
   key: 1,
   "class": "px-2 flex text-center inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
 };
-var _hoisted_4 = {
-  "class": "px-6 py-4 whitespace-nowrap text-center"
+var _hoisted_6 = {
+  "class": "w-1/3 px-6 py-4 whitespace-nowrap text-center"
 };
-var _hoisted_5 = {
+var _hoisted_7 = {
+  "class": "max-w-max min-w-max text-center inline"
+};
+var _hoisted_8 = {
   key: 0,
   "class": "text-sm text-center text-gray-900"
 };
-var _hoisted_6 = {
+var _hoisted_9 = {
   key: 1,
   "class": "px-2 text-center inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800"
 };
-var _hoisted_7 = {
-  "class": "px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+var _hoisted_10 = {
+  "class": "w-1/3 px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+};
+var _hoisted_11 = {
+  "class": "max-w-max min-w-max text-center inline"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div>\n        <div class=\"bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2 border-b\">\n            <div class=\"p-6\">\n                <div class=\"flex items-center\">\n                    <svg v-if=\"user.current_team_id=='1'\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"w-8 h-8 text-red-400\">\n                        <path d=\"M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z\"></path>\n\t\t\t\t\t</svg>\n                    <svg v-else fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"w-8 h-8 text-gray-400\">\n                        <path d=\"M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z\"></path>\n\t\t\t\t\t</svg>\n                    <div class=\"ml-4 text-lg text-gray-600 leading-7 font-semibold\">\n                        <a href=\"#\">\n                        이름:{{user.name}}<br/>\n                        학번:{{user.sid}}</a>\n                    </div>\n                </div>\n\n                <div class=\"ml-12\">\n                    <div class=\"mt-2 text-sm text-gray-500\">\n                        {{user.email}}<br/>\n                        {{user.class_team}}<br/>\n                        {{user.current_team_id}}<br/>\n                    </div>\n                    <a @click=\"open\">\n                        <div class=\"mt-3 flex items-center text-sm font-semibold text-indigo-700\">\n                            <div>수정하기</div>\n\n                            <div class=\"ml-1 text-indigo-500\">\n                                <svg viewBox=\"0 0 20 20\" fill=\"currentColor\" class=\"w-4 h-4\"><path fill-rule=\"evenodd\" d=\"M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z\" clip-rule=\"evenodd\"></path></svg>\n                            </div>\n                        </div>\n                    </a>\n                </div>\n            </div>\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("td", _hoisted_1, [$props.user.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.user.name), 1
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div>\n        <div class=\"bg-gray-200 bg-opacity-25 grid grid-cols-1 md:grid-cols-2 border-b\">\n            <div class=\"p-6\">\n                <div class=\"flex items-center\">\n                    <svg v-if=\"user.current_team_id=='1'\" fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"w-8 h-8 text-red-400\">\n                        <path d=\"M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z\"></path>\n\t\t\t\t\t</svg>\n                    <svg v-else fill=\"none\" stroke=\"currentColor\" stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" viewBox=\"0 0 24 24\" class=\"w-8 h-8 text-gray-400\">\n                        <path d=\"M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z\"></path>\n\t\t\t\t\t</svg>\n                    <div class=\"ml-4 text-lg text-gray-600 leading-7 font-semibold\">\n                        <a href=\"#\">\n                        이름:{{user.name}}<br/>\n                        학번:{{user.sid}}</a>\n                    </div>\n                </div>\n\n                <div class=\"ml-12\">\n                    <div class=\"mt-2 text-sm text-gray-500\">\n                        {{user.email}}<br/>\n                        {{user.class_team}}<br/>\n                        {{user.current_team_id}}<br/>\n                    </div>\n                    <a @click=\"open\">\n                        <div class=\"mt-3 flex items-center text-sm font-semibold text-indigo-700\">\n                            <div>수정하기</div>\n\n                            <div class=\"ml-1 text-indigo-500\">\n                                <svg viewBox=\"0 0 20 20\" fill=\"currentColor\" class=\"w-4 h-4\"><path fill-rule=\"evenodd\" d=\"M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z\" clip-rule=\"evenodd\"></path></svg>\n                            </div>\n                        </div>\n                    </a>\n                </div>\n            </div>\n        </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tr", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("td", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [$props.user.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.user.name), 1
   /* TEXT */
-  )) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_3, " 등록된 이름 없음 "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("td", _hoisted_4, [$props.user.sid ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.user.sid), 1
+  )) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_5, " 등록된 이름 없음 "))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("td", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [$props.user.sid ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.user.sid), 1
   /* TEXT */
-  )) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_6, " 등록된 학번 없음 "))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("td", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
+  )) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("span", _hoisted_9, " 등록된 학번 없음 "))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("td", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
     href: "",
     onClick: [_cache[1] || (_cache[1] = function () {
       return $options.open && $options.open.apply($options, arguments);
@@ -22339,7 +22392,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return _ctx.openThread && _ctx.openThread.apply(_ctx, arguments);
     }, ["prevent"]))],
     "class": "text-indigo-600 hover:text-indigo-900 p-3"
-  }, "수정")])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")], 2112
+  }, "수정")])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")], 2112
   /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */
   );
 }
@@ -25282,15 +25335,19 @@ var _hoisted_10 = {
 
 var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("thead", {
   "class": "bg-gray-50"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tr", {
+  "class": "justify-between flex"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
   scope: "col",
-  "class": "px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+  "class": "w-1/3 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
 }, " Name "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
   scope: "col",
-  "class": "px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-}, " Sid "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
+  "class": "w-1/3 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", {
+  "class": ""
+}, "Sid")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("th", {
   scope: "col",
-  "class": "relative px-6 py-3"
+  "class": "w-1/3 px-6 py-3"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", {
   "class": "sr-only"
 }, "Edit")])])], -1
@@ -25318,7 +25375,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onChangeTag: $options.changeList
       }, null, 8
       /* PROPS */
-      , ["onChangeTag"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("table", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tbody", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.users, function (user) {
+      , ["onChangeTag"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("table", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("tbody", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.selectedTeam, function (user) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_professor_dash_board, {
           key: user.id,
           user: user,

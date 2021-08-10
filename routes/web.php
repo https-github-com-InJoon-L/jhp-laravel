@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\SocialController;
-use App\Http\Controllers\ProfessorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,5 +60,7 @@ Route::get('/timetable',function() {
 })->name('timetable');
 
 Route::middleware(['auth:sanctum', 'verified'])
-            ->get('/dashboard/professor',[ProfessorController::class,'index'])
+            ->get('/dashboard/professor',function(){
+                return Inertia::render('DashboardProfessor');
+            })
             ->name('dashboard.professor');

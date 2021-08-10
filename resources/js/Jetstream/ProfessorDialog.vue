@@ -99,7 +99,7 @@
         methods: {
             close() {
                 console.log('상세창 닫기');
-                this.$emit('close')
+                this.$emit('close');
             },
             saveClose(){
                 console.log('저장 후 닫기');
@@ -110,12 +110,14 @@
                     document.querySelector('input[name="class"]').checked=true;
                     checked=document.querySelector('input[name="class"]:checked');
                 }
-                const urlName = '/api/user/'+this.user.id;
                 this.form.current_team_id=checked.value;
-                this.form.get(route(urlName), {
-                    errorBag: urlName,
-                    preserveScroll: true,
+                this.form.patch('/api/user/'+this.user.id,{
+                    onSuccess: () => this.$emit('close'),
+                    onError: () => {
+                        console.log('다시 입력하세요');
+                    }
                 });
+                
             }
         }
     }
