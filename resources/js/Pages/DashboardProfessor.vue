@@ -50,8 +50,11 @@
             </div>
             
         </app-layout>
+        <professor-error-dialog :show="dialogShow"
+        :user="selectedUser" @close="closeDialog">
+        </professor-error-dialog>
         <professor-dialog :show="dialogShow"
-        :user="selectedUser" :form="form" @close="closeDialog">
+        :user="selectedUser" @close="closeDialog">
         </professor-dialog>
         
     </div>
@@ -63,7 +66,7 @@
     import ProfessorDashBoardHead from '@/Jetstream/ProfessorDashBoardHead'
     import ProfessorDashBoard from '@/Jetstream/ProfessorDashBoard'
     import ProfessorDialog from '@/Jetstream/ProfessorDialog'
-
+    import ProfessorErrorDialog from '@/Jetstream/ProfessorErrorDialog'
     import axios from 'axios'
 
     export default {
@@ -72,45 +75,82 @@
             ProfessorDashBoardHead,
             ProfessorDashBoard,
             ProfessorDialog,
+            ProfessorErrorDialog,
         },
         data(){
             return{
                 dialogShow:false,
                 selectedUser:{},
+                backupUser:{
+                    name:'',
+                    email:'',
+                    sid:'',
+                    phone_number:'',
+                    current_team_id:'',
+                },
                 selectedTeam:[],
-                // teamNone:[],
-                // teamWdj:[],
-                // teamCpj:[],
-                // teamProfessor:[],
                 allTeam:[],
                 form: this.$inertia.form({
-                    _method: 'PUT',
-                    name: '',
-                    email: '',
-                    sid: '',
-                    current_team_id: '',
+                    _method: 'PATCH',
+                    user:{},
                 }),
             }
         },
-        
         props: {
             users: Object,
         },
         methods:{
-            closeDialog(){
+            closeDialog(user){
                 console.log('클로즈 도착');
+                if(!user||user==''){
+                    this.selectedUser.name = this.backupUser.name;
+                    this.selectedUser.sid = this.backupUser.sid;
+                    this.selectedUser.email = this.backupUser.email;
+                    this.selectedUser.phone_number = this.backupUser.phone_number;
+                    this.selectedUser.current_team_id = this.backupUser.current_team_id;
+                }else{
+                    user.current_team_id
+                    // let findKey = '';
+                    for(let key in this.selectedTeam) {
+                        if(user == this.selectedTeam[key]){
+                            delete this.selectedTeam[key];
+                            switch(user.current_team_id){
+                                case "1":
+                                    this.allTeam.none[key]=user;
+                                    break;
+                                case '2':
+                                    this.allTeam.wdj[key]=user;
+                                    break;
+                                case '3':
+                                    this.allTeam.cpj[key]=user;
+                                    break;
+                                case '4':
+                                    this.allTeam.professor[key]=user;
+                                    break;
+                                default:
+                                    loaction.reload();
+                            }
+                            break;
+                        }
+                    }
+                    
+                }
                 this.dialogShow=false;
             },
             openDialog(user){
                 console.log('오픈 도착');
                 this.selectedUser=user;
-                this.form=this.$inertia.form({
-                    name: this.selectedUser.name,
-                    email: this.selectedUser.email,
-                    sid: this.selectedUser.sid,
-                    current_team_id: this.selectedUser.current_team_id,
-                });
+                this.backupUser.name=user.name;
+                this.backupUser.sid=user.sid;
+                this.backupUser.email=user.email;
+                this.backupUser.phone_number=user.phone_number;
+                this.backupUser.current_team_id=user.current_team_id;
                 this.dialogShow=true;
+                // name:'',
+                //     email:'',
+                //     sid:'',
+                //     phone_number:'',
+                //     current_team_id:'',
             },
             changeList(tagIdx){
                 console.log('Nav Tag 변경',tagIdx);
@@ -131,7 +171,6 @@
             }
         },
         mounted(){
-            console.log(this.users);
             axios.get('/api/users')
                 .then(res=>{
                     console.log(res.data.status);

@@ -1,58 +1,60 @@
 <template>
-    <modal :show="show" :max-width="maxWidth" :closeable="closeable" @close="close">
-        <form @submit.prevent="saveClose">
-            <div class="px-3 py-4">
-                <div class="text-lg">
-                    <slot name="title">
+    <div>
+        <modal :show="show" :max-width="maxWidth" :closeable="closeable" @close="close">
+            <form>
+                <div class="px-3 py-4">
+                    <div class="text-lg">
+                        <slot name="title">
+                        </slot>
+                    </div>
+                    <div class="mt-4">
+                        <slot name="content">
+                            <svg v-if="user.current_team_id=='1'" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-red-400">
+                                <path d="M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z"></path>
+                            </svg>
+                            <svg v-else fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-400">
+                                <path d="M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z"></path>
+                            </svg>
+                            <div class="flex flex-col mb-4">
+                                <jet-label for="name" value="Name" />
+                                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="user.name" autocomplete="name" placeholder="박 성철"/>
+                            </div>
+                            <div class="flex flex-col mb-4">
+                                <jet-label for="email" value="Email" />
+                                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="user.email" autocomplete="email" placeholder="scpark@g.yju.ac.kr"/>
+                            </div>
+                            <div class="flex flex-col mb-4">
+                                <jet-label for="sid" value="Sid" />
+                                <jet-input id="sid" type="number" class="mt-1 block w-full" v-model="user.sid" autocomplete="sid" placeholder="18-000000"/>
+                            </div>
+                            <div class="flex flex-col mb-4">
+                                <jet-label for="phone_number" value="Phone_number" />
+                                <jet-input id="phone_number" type="number" class="mt-1 block w-full" v-model="user.phone_number" autocomplete="phone_number" placeholder="018-0000-0000"/>
+                            </div>
+                            <div class="flex flex-col mb-4">
+                                <jet-label for="current_team_id" value="Class" />
+                                <label v-for="(cname, idx) in classname" :key="idx">
+                                    <input v-if="(idx+1)==user.current_team_id" type='radio' name='class' :value="idx+1" checked>
+                                    <input v-else type='radio' name='class' :value="idx+1">
+                                    {{cname}}
+                                </label>
+                            </div>
+                        </slot>
+                    </div>
+                </div>
+                <div class="px-6 py-4 bg-gray-100 text-right">
+                    <slot name="footer">
+                        <jet-button  @click.prevent="close" :disabled="waiting" class="mr-3">
+                            Close
+                        </jet-button>
+                        <jet-button @click.prevent="change" :disabled="waiting">
+                            Save
+                        </jet-button>
                     </slot>
                 </div>
-                <div class="mt-4">
-                    <slot name="content">
-                        <svg v-if="user.current_team_id=='1'" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-red-400">
-                            <path d="M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z"></path>
-                        </svg>
-                        <svg v-else fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="w-8 h-8 text-gray-400">
-                            <path d="M12.075,10.812c1.358-0.853,2.242-2.507,2.242-4.037c0-2.181-1.795-4.618-4.198-4.618S5.921,4.594,5.921,6.775c0,1.53,0.884,3.185,2.242,4.037c-3.222,0.865-5.6,3.807-5.6,7.298c0,0.23,0.189,0.42,0.42,0.42h14.273c0.23,0,0.42-0.189,0.42-0.42C17.676,14.619,15.297,11.677,12.075,10.812 M6.761,6.775c0-2.162,1.773-3.778,3.358-3.778s3.359,1.616,3.359,3.778c0,2.162-1.774,3.778-3.359,3.778S6.761,8.937,6.761,6.775 M3.415,17.69c0.218-3.51,3.142-6.297,6.704-6.297c3.562,0,6.486,2.787,6.705,6.297H3.415z"></path>
-                        </svg>
-                        <div class="col-span-6 sm:col-span-4">
-                            <jet-label for="name" value="Name" />
-                            <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autocomplete="name" placeholder="박 성철"/>
-                            <jet-input-error :message="form.errors.name" class="mt-2" />
-                        </div>
-                        <div class="col-span-6 sm:col-span-4">
-                            <jet-label for="email" value="Email" />
-                            <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" autocomplete="email" placeholder="scpark@g.yju.ac.kr"/>
-                            <jet-input-error :message="form.errors.email" class="mt-2" />
-                        </div>
-                        <div class="flex flex-col mb-4">
-                            <jet-label for="sid" value="Sid" />
-                            <jet-input id="sid" type="number" class="mt-1 block w-full" v-model="form.sid" autocomplete="sid" placeholder="18-000000"/>
-                            <jet-input-error :message="form.errors.sid" class="mt-2" />
-                        </div>
-                        <div class="flex flex-col mb-4">
-                            <jet-label for="current_team_id" value="Class" />
-                            <label v-for="(cname, idx) in classname" :key="idx">
-                                <input v-if="(idx+1)==user.current_team_id" type='radio' name='class' :value="idx+1" checked>
-                                <input v-else type='radio' name='class' :value="idx+1">
-                                {{cname}}
-                            </label>
-                        </div>
-                    </slot>
-                </div>
-            </div>
-            <div class="px-6 py-4 bg-gray-100 text-right">
-                <slot name="footer">
-                    <jet-action-message :on="form.recentlySuccessful" class="mr-3">
-                        Saved.
-                    </jet-action-message>
-
-                    <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Save
-                    </jet-button>
-                </slot>
-            </div>
-        </form>
-    </modal>
+            </form>
+        </modal>
+    </div>
 </template>
 
 <script>
@@ -62,6 +64,8 @@
     import JetLabel from '@/Jetstream/Label'
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetButton from './Button'
+
+    import axios from 'axios';
 
     export default {
         emits: ['close'],
@@ -84,7 +88,6 @@
                 default: true
             },
             user:Object,
-            form:Object,
         },
         data(){
             return{
@@ -94,14 +97,16 @@
                     'CPJ',
                     '교수',
                 ],
+                waiting:false,
             }
         },
         methods: {
             close() {
                 console.log('상세창 닫기');
-                this.$emit('close');
+                this.$emit('close',null);
             },
-            saveClose(){
+            change(){
+                this.waiting=true;
                 console.log('저장 후 닫기');
                 let checked = document.querySelector('input[name="class"]:checked');
                 console.log(checked.value);
@@ -110,15 +115,55 @@
                     document.querySelector('input[name="class"]').checked=true;
                     checked=document.querySelector('input[name="class"]:checked');
                 }
-                this.form.current_team_id=checked.value;
-                this.form.patch('/api/user/'+this.user.id,{
-                    onSuccess: () => this.$emit('close'),
-                    onError: () => {
-                        console.log('다시 입력하세요');
-                    }
-                });
+                this.user.current_team_id=checked.value;
+                this.user.class='미등록 사용자';
+                switch(checked.value){
+                    case 1:
+                        this.user.class='미등록 사용자';
+                        break;
+                    case 2:
+                        this.user.class='WDJ';
+                        break;
+                    case 3:
+                        this.user.class='CPJ';
+                        break;
+                    case 4:
+                        this.user.class='교수';
+                        break;
+                }
                 
-            }
-        }
+                console.log(this.user);
+                if(!this.user.name||this.user.name==''||
+                    !this.user.email||this.user.email==''||
+                    !this.user.class||this.user.class==''||
+                    !this.user.current_team_id||this.user.current_team_id==''||
+                    !this.user.sid||this.user.sid==''||
+                    !this.user.phone_number||this.user.phone_number=='') {
+                    // this.user = backup;
+                    this.$emit('close',null);
+                    return;
+                }
+
+                axios.patch('/api/user/'+this.user.id,this.user)
+                    .then(res=>{
+                        console.log('변경 성공');
+                        console.log(res)
+                        this.waiting=false;
+                        this.$emit('close',this.user);
+                    })
+                    .catch(err=>{
+                        console.log('에러로 빠짐');
+                        this.waiting=false;
+                        console.log(err)
+                });
+            },
+        },
     }
 </script>
+
+<style>
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+</style>
