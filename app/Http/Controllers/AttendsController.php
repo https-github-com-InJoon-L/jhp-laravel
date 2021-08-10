@@ -120,4 +120,40 @@ class AttendsController extends Controller
 
         return $res;
     }
+
+    // 결석 처리
+    public function absent(Request $req) {
+        $validator = Validator::make($req->all(), [
+            'user_sid' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $date = date("Y-m-d");
+        $userId = User::where('sid', $req->user_sid)->first()->id;
+
+        // 오늘 출결 했는지 판단 후 했다면 디비에 넣지 않고 return false
+        if (Attend::where('attend', $date)->where('user_id', $userId)->get()->count() != 0) {
+            return response()->json([
+                'status' => 'false',
+                'message' => '오늘은 이미 출결 했습니다.',
+            ]);
+        }
+
+        $absent_user = new Attend();
+        $absent_user->user_id = $userId;
+        $absent_user->desc_value = '결석';
+        $absent_user->attend = $date;
+
+        $absent_user->save();
+
+        $res = response()-> json([
+            'status' => 'success',
+            'data' => $absent_user
+        ]);
+
+        return $res;
+    }
 }
