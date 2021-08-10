@@ -30,7 +30,12 @@ Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 Route::get('/test',[ApiController::class,'test'])->name('api.test');
 
-// Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/users', [UsersController::class, 'read']);
-    Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
-// });
+
+// 관리자 페이지, 유저 수정 관련
+Route::get('/users', [UsersController::class, 'read']);
+Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
+
+// 랭크 관련
+Route::get('/users/runners', [UsersController::class, 'theMostestRunner']);
+Route::get('/users/absentees', [UsersController::class, 'theMostestAbsentee']);
+Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer']);
