@@ -56,6 +56,21 @@ class UsersController extends Controller
             'status' => 'success',
         ], 200);
     }
+
+    public function theMostestRunner() {
+        $wdj_users = User::all()->where('current_team_id', 2);
+        $cpj_users = User::all()->where('current_team_id', 3);
+
+        $runners = [
+            'wdj' => $wdj_users->run()->orderBy('totalRun', 'desc'),
+            'cpj' => $cpj_users->run()->orderBy('totalRun', 'desc'),
+        ];
+
+        return response()->json([
+            'status' => 'success',
+            'runners' => $runners,
+        ], 200);
+    }
 }
 
 // 반별 달리기수, 결석수, 지각수
