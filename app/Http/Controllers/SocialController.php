@@ -14,11 +14,11 @@ class SocialController extends Controller
     //
 
     public function redirect() {
-        return Socialite::driver('kakao')->redirect();
+        return Socialite::driver('kakao')->stateless()->redirect();
     }
 
     public function callback() {
-        $userSocial = Socialite::driver('kakao')->user();
+        $userSocial = Socialite::driver('kakao')->stateless()->user();
         $userProfile = $userSocial->user['kakao_account']['profile']['profile_image_url'];
         $users = User::where(['email'=>$userSocial->getEmail(),'provider'=>'kakao'])->first();
 
@@ -27,7 +27,8 @@ class SocialController extends Controller
             $users->profile_photo_path = $userProfile;
             $users->save();
             Auth::login($users);
-            return redirect('/');
+            $token = $users->createToken($users->name)->plainTextToken;
+            return redirect('/')->with('api_token', $token); // blade: {{ session()->get('api_token')}} php: session()->get('api_token')
         }
         else {
 
@@ -44,18 +45,21 @@ class SocialController extends Controller
             $users = User::where(['email'=>$userSocial->getEmail(),'provider'=>'kakao'])->first();
 
             Auth::login($users);
-            return redirect('/setInfo');
+            $token = $users->createToken($users->name)->plainTextToken;
+            return redirect('/setInfo')->with('api_token', $token);
         }
     }
 
         // 로그인 후 추가정보 입력
         public function inputData(Request $req) {
             $validator = Validator($req->all(), [
-                'phone_number' => 'required|string',
                 'sid' => 'required|integer',
-                'position' => 'required|string',
                 'class' => 'required',
             ]);
+
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(), 400);
+            }
 
             $res = null;
 

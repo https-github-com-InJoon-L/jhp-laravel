@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TimetablesController;
 
 /*
@@ -20,11 +21,22 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// api_token header에 넣어서 보내주기
+// axios.defaults.headers.common["Authorization"] = `Bearer ${발급받은 token}`;
+Route::middleware(['auth:sanctum'])->group(function () {
+    // api token으로 인증을 받아야 하는 api 넣기
+
+});
+
 // axios.Post('/api/attends') <- 요청 방법
 Route::post('/attends', [AttendsController::class, 'attend']);
 Route::post('/attends/absent', [AttendsController::class, 'absent']);
 Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
 
+// test용
+Route::post('/token', [AuthController::class, 'createApiToken']);
+// logout이 어디서 작동하는 지 몰라서 못 넣음 로그아웃 button 클릭 시 이 api에 요청 보내주세욤ㅎㅎ
+Route::delete('/token/delete', [AuthController::class, 'deleteApiToken']);
 
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
