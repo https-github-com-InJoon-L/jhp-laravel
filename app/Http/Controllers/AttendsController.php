@@ -54,7 +54,8 @@ class AttendsController extends Controller
 
         $res = response()->json([
             'status' => 'success',
-            'data' => $attend
+            'data' => $attend,
+            'message' => $date.' 출석했습니다.',
         ], 200);
 
         return $res;
@@ -151,7 +152,8 @@ class AttendsController extends Controller
 
         $res = response()-> json([
             'status' => 'success',
-            'data' => $absent_user
+            'data' => $absent_user,
+            'message' => $date.' 결석했습니다.',
         ]);
 
         return $res;
