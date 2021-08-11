@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Run;
+use App\Models\Attend;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class RunFactory extends Factory
+class AttendFactory extends Factory
 {
 
     protected $users = null;
@@ -21,7 +21,7 @@ class RunFactory extends Factory
      *
      * @var string
      */
-    protected $model = Run::class;
+    protected $model = Attend::class;
 
     /**
      * Define the model's default state.
@@ -32,8 +32,9 @@ class RunFactory extends Factory
     {
         return [
             'user_id' => $this->users->random()->id,
-            'countRun' => $this->faker->numberBetween(1, 20),
-            'totalRun' => $this->faker->numberBetween(1, 100),
+            'run' => $this->faker->numberBetween(1, 20),
+            'desc_value' => '결석', // '지각', '결석'
+            'attend' => $this->faker->date(),
         ];
     }
 }
