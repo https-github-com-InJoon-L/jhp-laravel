@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TimetablesController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,7 +43,17 @@ Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 
 
-// Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/users', [UsersController::class, 'read']);
-    Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
-// });
+
+
+
+// 관리자 페이지, 유저 수정 관련
+Route::get('/users', [UsersController::class, 'read']);
+Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
+
+// 랭크 관련 (나중에 해당년도 별로 뽑아오기로 수정??)
+Route::get('/users/runners', [UsersController::class, 'theMostestRunner']);
+Route::get('/users/absentees', [UsersController::class, 'theMostestAbsentee']);
+Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer']);
+
+// 출결 현황
+Route::get('/user/attendance/{selected_user_id}', [UsersController::class, 'getAttendanceStatus']);
