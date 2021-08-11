@@ -6,7 +6,6 @@
                     대시보드testing!!
                 </h2>
             </template>
-
             <div class="py-3">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
@@ -32,6 +31,9 @@
                                                             </th>
                                                         </tr>
                                                     </thead>
+                                                    <table v-if="ifLoading<1" class="flex items-center justify-center min-w-full bg-white">
+                                                        <loading-bar />
+                                                    </table>
                                                     <tbody class="bg-white divide-y divide-gray-200">
                                                         <professor-dash-board v-for="user in selectedTeam" :key="user.id"
                                                         :user="user"
@@ -55,7 +57,9 @@
         <professor-dialog :show="dialogShow"
         :user="selectedUser" @close="closeDialog">
         </professor-dialog>
-        <professor-error-dialog :show="errorDialogShow" @close="closeErrorDialog">
+        
+        <professor-error-dialog :show="errorDialogShow"
+        :errMsg="errMsg" :errState="errState" @errorClose="closeErrorDialog">
         </professor-error-dialog>
     </div>
     
@@ -68,6 +72,7 @@
     import ProfessorDialog from '@/Jetstream/ProfessorDialog'
     import ProfessorErrorDialog from '@/Jetstream/ProfessorErrorDialog'
     import axios from 'axios'
+    import LoadingBar from "@/Pages/Board/LoadingBar"
 
     export default {
         components: {
@@ -76,6 +81,7 @@
             ProfessorDashBoard,
             ProfessorDialog,
             ProfessorErrorDialog,
+            LoadingBar,
         },
         data(){
             return{
@@ -95,25 +101,34 @@
                     _method: 'PATCH',
                     user:{},
                 }),
+                ifLoading:0,
+                errMsg:[],
+                errState:0,
             }
         },
         props: {
             users: Object,
         },
         methods:{
-            closeDialog(state){
+            closeDialog(state, errMsg){
                 console.log('클로즈 도착');
-                if(state==1||state==3){
+                console.log('행위에 대한 결과: ',state)
+                this.errMsg = errMsg;
+                if(state==0){
+                    return;
+                }else if(state==1||state==3){
+                    this.errState=1;
                     this.selectedUser.name = this.backupUser.name;
                     this.selectedUser.sid = this.backupUser.sid;
                     this.selectedUser.email = this.backupUser.email;
                     this.selectedUser.phone_number = this.backupUser.phone_number;
                     this.selectedUser.current_team_id = this.backupUser.current_team_id;
-                    if(state==3){
-                        this.errorDialogShow=true;
+                    if(state==1){
+                        this.dialogShow=false;
                         return;
                     }
                 }else if(state==2){
+                    this.errState=0;
                     for(let key in this.selectedTeam) {
                         if(this.selectedUser == this.selectedTeam[key]){
                             delete this.selectedTeam[key];
@@ -137,7 +152,8 @@
                         }
                     }
                 }
-                this.dialogShow=false;
+                this.errorDialogShow=true;
+                console.log('추가창 생성');
             },
             openDialog(user){
                 console.log('오픈 도착');
@@ -148,9 +164,13 @@
                 this.backupUser.phone_number=user.phone_number;
                 this.backupUser.current_team_id=user.current_team_id;
                 this.dialogShow=true;
+                // this.errorDialogShow=true;
             },
-            closeErrorDialog(){
-                console.log('error 발생');
+            closeErrorDialog(errState){
+                console.log('추가 창 종료');
+                if(errState==0){
+                    this.dialogShow=false;
+                }
                 this.errorDialogShow=false;
             },
             changeList(tagIdx){
@@ -178,12 +198,7 @@
                     const classTeam = res.data.data;
                     this.allTeam = classTeam;
                     this.selectedTeam = classTeam.none;
-                    // console.log(classTeam);
-                    // console.log(classTeam.none);//1
-                    // console.log(classTeam.wdj);//2
-                    // console.log(classTeam.cpj);//3
-                    // console.log(classTeam.professor);//4
-                    // this.allTeam.wdj.forEach(element => console.log(element));
+                    this.ifLoading = 1;
                 })
                 .catch(err=>{
                     console.log(err);

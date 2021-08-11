@@ -1,6 +1,6 @@
 <template>
     <div>
-        <modal :show="show" :max-width="maxWidth" :closeable="closeable" @close="errorClose" class="mt-10">
+        <modal :show="show" :max-width="maxWidth" :closeable="closeable" @close="errorClose">
             <div class="px-3 py-4">
                 <div class="text-lg">
                     <slot name="title">
@@ -8,7 +8,7 @@
                 </div>
                 <div class="mt-4">
                     <slot name="content">
-                        오류입니다
+                        <div v-for="(err, idx) in errMsg" :key="idx"><span>{{err}}</span></div>
                     </slot>
                 </div>
             </div>
@@ -32,7 +32,7 @@
     import JetButton from './Button'
 
     export default {
-        emits: ['close'],
+        emits: ['errorClose'],
         components: {
             Modal,
             JetButton,
@@ -51,15 +51,22 @@
             closeable: {
                 default: true
             },
-        },
-        data(){
-            return{
+            errMsg:{
+                default: '에러데수'
+            },
+            errState:{
+                default:0,
             }
         },
         methods: {
             errorClose() {
                 console.log('에러창 닫기');
-                this.$emit('close');
+                if(this.errState==1){
+                    this.$emit('errorClose',1);
+                }else{
+                    this.$emit('errorClose',0);
+                }
+                
             },
         },
     }
