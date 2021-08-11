@@ -1,6 +1,6 @@
 <template>
     <div>
-        <modal :show="show" :max-width="maxWidth" :closeable="closeable" @errorClose="errorClose">
+        <modal :show="show" :max-width="maxWidth" :closeable="closeable" @close="errorClose" class="mt-10">
             <div class="px-3 py-4">
                 <div class="text-lg">
                     <slot name="title">
@@ -14,11 +14,8 @@
             </div>
             <div class="px-6 py-4 bg-gray-100 text-right">
                 <slot name="footer">
-                    <jet-button  @click.prevent="close" :disabled="waiting" class="mr-3">
+                    <jet-button  @click.prevent="errorClose" class="mr-3">
                         Close
-                    </jet-button>
-                    <jet-button @click.prevent="change" :disabled="waiting">
-                        Save
                     </jet-button>
                 </slot>
             </div>
@@ -27,7 +24,7 @@
 </template>
 
 <script>
-    import Modal from './Modal'
+    import Modal from './ProfessorErrorModal'
     import JetInput from '@/Jetstream/Input'
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
@@ -62,7 +59,7 @@
         methods: {
             errorClose() {
                 console.log('에러창 닫기');
-                this.$emit('errorClose');
+                this.$emit('close');
             },
         },
     }

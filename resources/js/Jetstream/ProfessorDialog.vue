@@ -103,7 +103,7 @@
         methods: {
             close() {
                 console.log('상세창 닫기');
-                this.$emit('close',null);
+                this.$emit('close',1);
             },
             change(){
                 this.waiting=true;
@@ -149,11 +149,12 @@
                         console.log('변경 성공');
                         console.log(res)
                         this.waiting=false;
-                        this.$emit('close',this.user);
+                        this.$emit('close',2);
                     })
                     .catch(err=>{
                         console.log('에러로 빠짐');
                         this.waiting=false;
+                        this.$emit('close',3);
                         console.log(err)
                 });
             },

@@ -50,13 +50,13 @@
             </div>
             
         </app-layout>
-        <professor-error-dialog :show="dialogShow"
-        :user="selectedUser" @close="closeDialog">
-        </professor-error-dialog>
+        
+
         <professor-dialog :show="dialogShow"
         :user="selectedUser" @close="closeDialog">
         </professor-dialog>
-        
+        <professor-error-dialog :show="errorDialogShow" @close="closeErrorDialog">
+        </professor-error-dialog>
     </div>
     
 </template>
@@ -80,6 +80,7 @@
         data(){
             return{
                 dialogShow:false,
+                errorDialogShow:false,
                 selectedUser:{},
                 backupUser:{
                     name:'',
@@ -100,32 +101,34 @@
             users: Object,
         },
         methods:{
-            closeDialog(user){
+            closeDialog(state){
                 console.log('클로즈 도착');
-                if(!user||user==''){
+                if(state==1||state==3){
                     this.selectedUser.name = this.backupUser.name;
                     this.selectedUser.sid = this.backupUser.sid;
                     this.selectedUser.email = this.backupUser.email;
                     this.selectedUser.phone_number = this.backupUser.phone_number;
                     this.selectedUser.current_team_id = this.backupUser.current_team_id;
-                }else{
-                    user.current_team_id
-                    // let findKey = '';
+                    if(state==3){
+                        this.errorDialogShow=true;
+                        return;
+                    }
+                }else if(state==2){
                     for(let key in this.selectedTeam) {
-                        if(user == this.selectedTeam[key]){
+                        if(this.selectedUser == this.selectedTeam[key]){
                             delete this.selectedTeam[key];
-                            switch(user.current_team_id){
+                            switch(this.selectedUser.current_team_id){
                                 case "1":
-                                    this.allTeam.none[key]=user;
+                                    this.allTeam.none[key]=this.selectedUser;
                                     break;
                                 case '2':
-                                    this.allTeam.wdj[key]=user;
+                                    this.allTeam.wdj[key]=this.selectedUser;
                                     break;
                                 case '3':
-                                    this.allTeam.cpj[key]=user;
+                                    this.allTeam.cpj[key]=this.selectedUser;
                                     break;
                                 case '4':
-                                    this.allTeam.professor[key]=user;
+                                    this.allTeam.professor[key]=this.selectedUser;
                                     break;
                                 default:
                                     loaction.reload();
@@ -133,7 +136,6 @@
                             break;
                         }
                     }
-                    
                 }
                 this.dialogShow=false;
             },
@@ -146,11 +148,10 @@
                 this.backupUser.phone_number=user.phone_number;
                 this.backupUser.current_team_id=user.current_team_id;
                 this.dialogShow=true;
-                // name:'',
-                //     email:'',
-                //     sid:'',
-                //     phone_number:'',
-                //     current_team_id:'',
+            },
+            closeErrorDialog(){
+                console.log('error 발생');
+                this.errorDialogShow=false;
             },
             changeList(tagIdx){
                 console.log('Nav Tag 변경',tagIdx);

@@ -55,10 +55,11 @@
                     </span>
                 </div>
             </td>
-            <td class="w-1/3 px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+            <td class="w-1/3 px-6 py-4 whitespace-nowrap text-right font-medium">
                 <div class="max-w-max min-w-max text-center inline">
-                    <a href="" @click="open" @click.prevent="openThread" class="text-indigo-600 hover:text-indigo-900 p-3">수정</a>
+                    <a href="" @click="open" @click.prevent="openThread" class="text-sm text-indigo-600 hover:text-indigo-900 p-3">수정</a>
                 </div>
+
             </td>
         </tr>
     <!-- </div> -->
