@@ -18,11 +18,11 @@
     <li class="bg-white shadow-lg p-4 rounded-lg flex justify-between w-full mb-3">
         <div>
             <p class="text-gray-900 font-semibold tracking-wide text-sm">최근 출석</p>
-            <div class="flex flex-wrap m-3 items-center">
+            <div>
                 <div v-if="isLoading==0">
                     <loading-bar />
                 </div>
-                <div v-else>
+                <div v-else class="flex flex-wrap m-3 items-center">
                     <div v-for="(attend,index) in attends" v-bind:key="index" class="m-1">
                         <badge-red v-if="attend.desc_value=='결석'" @click="openAttendDialog(index)">{{ attend.attend }}
                         </badge-red>

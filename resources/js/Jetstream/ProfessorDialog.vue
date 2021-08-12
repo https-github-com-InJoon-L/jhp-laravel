@@ -166,6 +166,7 @@
                         errMsg.push('휴대폰 번호를 입력하지 않았습니다.');
                     }
                     this.waiting=false;
+                    this.ifLoading=1;
                     this.$emit('close',3,errMsg);
                     return;
                 }
