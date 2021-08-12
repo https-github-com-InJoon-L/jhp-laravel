@@ -25,12 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // axios.Post('/api/attends') <- 요청 방법
 Route::post('/attends', [AttendsController::class, 'attend']);
-Route::post('/attends/absent', [AttendsController::class, 'absent']);
-Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
+
+Route::post('/absence', [AttendsController::class, 'absent']);
 
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
-Route::get('/test',[ApiController::class,'test'])->name('api.test');
 
 
 // 관리자 페이지, 유저 수정 관련
@@ -44,3 +43,5 @@ Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer'])
 
 // 출결 현황
 Route::get('/user/attendance/{selected_user_id}', [UsersController::class, 'getAttendanceStatus']);
+
+

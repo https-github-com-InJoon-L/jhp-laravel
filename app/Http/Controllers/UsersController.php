@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,7 +41,10 @@ class UsersController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'states' => 'false',
+                'message' => $validator->errors()->toJson()
+            ], 400);
         }
 
         try {
@@ -50,7 +52,7 @@ class UsersController extends Controller
             $user->update($request->all());
         } catch(QueryException $e){
             return response()->json([
-                'states' => 'error',
+                'states' => 'false',
                 'message' => $e->getMessage()
             ], 403);
         }
@@ -58,7 +60,7 @@ class UsersController extends Controller
         $user->save();
 
         return response()->json([
-            'status' => 'success',
+            'status' => 'success'
         ], 200);
     }
 
@@ -74,7 +76,7 @@ class UsersController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'runners' => $runners,
+            'runners' => $runners
         ], 200);
     }
 
@@ -151,7 +153,7 @@ class UsersController extends Controller
         ->take(3)
         ->get();
 
-        return  response()->json([
+        return response()->json([
             'status' => 'success',
             'attends' => $attends,
         ], 200);

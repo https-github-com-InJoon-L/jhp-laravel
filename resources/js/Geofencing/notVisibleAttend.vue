@@ -10,7 +10,6 @@
             </div>
         </div>
         <div class="flex items-center">
-            <badge-green value="attend" @click="attend">출석</badge-green>
             <badge-red class="m-1" value="abcense" @click="absence">결석</badge-red>
         </div>
     </li>
@@ -124,26 +123,6 @@
                 })
         },
         methods: {
-            attend() {
-                let value = {
-                    user_sid: this.user_sid
-                }
-                axios.post('/api/attends', null, {
-                        params: value
-                    })
-                    .then(response => {
-                        console.log(response);
-                        this.msg = response.statusText;
-                        this.header = response.data.message;
-                        this.openDialog();
-                    })
-                    .catch(response => {
-                        console.log(response)
-                        this.msg = '출석 실패';
-                        this.header = '출석 서버와 통신에 실패했습니다';
-                        this.openDialog();
-                    })
-            },
             absence() {
                 let value = {
                     user_sid: this.user_sid

@@ -29,12 +29,6 @@
                                 <jet-nav-link :href="route('timetable')" :active="route().current('timetable')">
                                     시간표
                                 </jet-nav-link>
-                                <jet-nav-link :href="route('chart')" :active="route().current('chart')">
-                                    Chart
-                                </jet-nav-link>
-                                <jet-nav-link v-if="$page.props.user.current_team_id==4" :href="route('dashboard.professor')" :active="route().current('dashboard.professor')">
-                                    교수용 대시보드
-                                </jet-nav-link>
                             </div>
                         </div>
 
@@ -189,9 +183,6 @@
                         </jet-responsive-nav-link>
                         <jet-responsive-nav-link :href="route('timetable')" :active="route().current('timetable')">
                             시간표
-                        </jet-responsive-nav-link>
-                        <jet-responsive-nav-link v-if="$page.props.user.current_team_id==4" :href="route('dashboard.professor')" :active="route().current('dashboard.professor')">
-                            교수용 대시보드
                         </jet-responsive-nav-link>
                     </div>
 

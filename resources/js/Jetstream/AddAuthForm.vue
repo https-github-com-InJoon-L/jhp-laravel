@@ -1,12 +1,7 @@
 <template>
     <div class="py-3">
     <form action="/setInfo/save" method="post">
-      <p v-if="errors.length">
-    <b>Please correct the following error(s):</b>
-    <ul>
-      <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-    </ul>
-  </p>
+
         <div class="flex flex-col mb-4">
             <label class="mb-2 font-bold text-lg text-gray-900" for="phone_number">전화번호</label>
             <input  placeholder="010-0000-0000" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" name="phone_number" id="phone_number">
@@ -37,9 +32,7 @@
     export default {
         data: function () {
             return {
-                phone_number: null,
-                sid: null,
-                
+
                 msg: '',
                 csrf: document.head.querySelector('meta[name="csrf-token"]').content,
             }

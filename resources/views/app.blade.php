@@ -9,6 +9,8 @@
         <meta name="user-name" content="{{ Auth::user()->name }}">
         <meta name="user-sid" content="{{ Auth::user()->sid }}">
         <meta name="user-class" content="{{ Auth::user()->class }}">
+        <meta name="user-photo" content="{{ Auth::user()->profile_photo_path }}">
+        <meta name="user-id" content="{{ Auth::user()->id }}">
         @endif 
         <title>{{ config('app.name', 'Laravel') }}</title>
 

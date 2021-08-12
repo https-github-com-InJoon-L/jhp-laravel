@@ -1,5 +1,4 @@
 <template>
-    <input type="text" :value="distance"> <label for="">미터 떨어져있음</label>
     <div v-if="isPC<1" class="flex ">
         <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20">
@@ -7,7 +6,7 @@
                     d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z" />
             </svg></div>
         <div>
-            <p class="font-bold py-1">PC에서 출석시 위치가 정확하지 않을 수 있습니다!</p>
+            <p class="font-bold py-1">PC에서 접속시 현재위치가 정확하지 않을 수 있습니다!</p>
         </div>
     </div>
 
@@ -20,32 +19,34 @@
                 에러
             </div>
             <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
-                <p>출석체크를 할려면 100m 이내에 접근하세요</p>
+                <p>출석체크를 할려면 {{ boundary }}M 이내에 접근하세요</p>
             </div>
         </div>
+        <div class="py-3">
+            <not-visible-attend></not-visible-attend>
+        </div>
+        
     </div>
 
     <div id="map" style="width:100%;height:500px"></div>
-    <h1>hello</h1>
 
 </template>
 <script>
     import AttendForm from '@/Geofencing/AttendForm'
+    import NotVisibleAttend from '@/Geofencing/notVisibleAttend.vue'
     import axios from 'axios'
     export default {
         data() {
             return {
-                counts: '1',
-                distance: '1000',
-                isPC: '0'
+                counts: '0',
+                distance: '9999',
+                isPC: '0',
+                boundary: 1000,
             }
         },
         computed: {},
         mounted() {
             window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
-            if (this.polylineLength <= 400) {
-                alert("hello");
-            }
             if (this.isMobile()) {
                 this.isPC = 1;
             }
@@ -78,8 +79,8 @@
                             check = '<div style="padding:5px;">영진전문대 본관</div>'; // 인포윈도우에 표시될 내용입니다
 
                         var locPosition = new kakao.maps.LatLng(lat,
-                                lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-                            message = '<div>현재위치</div>'; // 인포윈도우에 표시될 내용입니다
+                                lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+                          // 인포윈도우에 표시될 내용입니다
 
                         // 마커와 인포윈도우를 표시합니다
                         // 마커를 생성합니다
@@ -129,7 +130,7 @@
                             content: content,
                             yAnchor: 1
                         });
-                        // 인포윈도우를 마커위에 표시합니다 
+
 
 
                         // 지도 중심좌표를 접속위치로 변경합니다
@@ -168,11 +169,19 @@
                         polyline.setMap(map);
                         circle.setMap(map);
 
-                        if (polyline.getLength() <= 100) {
+                        var distance = Math.ceil(polyline.getLength());
+                        var content2 = '<span class="info-title">'+'<a>'+"학교까지  "+ distance +"M  "+'</a>'+'</span>'
+                        var customOverlay2 = new kakao.maps.CustomOverlay({
+                            map: map,
+                            position: locPosition,
+                            content: content2,
+                            yAnchor: 1
+                        });
+                        if (polyline.getLength() <= this.boundary) {
                             console.log("출석체크 버튼 생성");
-
-
                             this.addAttendButton();
+                        } else {
+                            
                         }
                     });
 
@@ -200,14 +209,15 @@
             },
         },
         components: {
-            AttendForm
+            AttendForm,
+            NotVisibleAttend
         }
     }
 </script>
 <style>
     .customoverlay {
         position: relative;
-        bottom: 85px;
+        bottom: 60px;
         border-radius: 6px;
         border: 1px solid #ccc;
         border-bottom: 2px solid #ddd;
@@ -252,4 +262,24 @@
         height: 12px;
         background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
     }
+    .info-title {
+        position: relative;
+        top: 50px;
+        right: 10px;
+        border-radius: 6px;
+        border: 4px solid #fff;
+        border-bottom: 4px solid #fff;
+        float: right;
+    }
+    .info-title>a {
+    display: block;
+    background: #F87171;
+    opacity: 0.8;
+    color: #fff;
+    text-align: center;
+    height: 40px;
+    width: 160px;
+    line-height:40px;
+    
+}
 </style>
