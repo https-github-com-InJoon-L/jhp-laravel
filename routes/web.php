@@ -59,6 +59,10 @@ Route::get('/timetable',function() {
     return Inertia::render('TimeTable/TimeTable');
 })->name('timetable');
 
+Route::get('/chart',function() {
+    return Inertia::render('Chart/AttendChart');
+})->name('chart');
+
 Route::middleware(['auth:sanctum', 'verified'])
             ->get('/dashboard/professor',function(){
                 return Inertia::render('DashboardProfessor');
