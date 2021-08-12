@@ -65,7 +65,7 @@ class UsersController extends Controller
     }
 
     // 달리기 횟수 반별 랭킹
-    public function theMostestRunner() {
+    public function theMostestRunner($selected_user_id) {
         $wdj_runners = $this->getRunnersByClass(2);
         $cpj_runners = $this->getRunnersByClass(3);
 
@@ -74,9 +74,15 @@ class UsersController extends Controller
             'cpj' => $cpj_runners,
         ];
 
+        $user_run = User::find($selected_user_id)
+        ->run()
+        ->orderBy('totalRun', 'desc')
+        ->get();
+
         return response()->json([
             'status' => 'success',
-            'runners' => $runners
+            'runners' => $runners,
+            'user_run' => $user_run
         ], 200);
     }
 
@@ -91,8 +97,9 @@ class UsersController extends Controller
     }
 
     // 결석 횟수 반별 랭킹
-    public function theMostestAbsentee() {
-        $attends = $this->getAttends('결석');
+    public function theMostestAbsentee($selected_user_id) {
+        $attendState = '결석';
+        $attends = $this->getAttends($attendState);
 
         $wdj_absentees = $this->getUsersByClass($attends, 2);
         $cpj_absentees = $this->getUsersByClass($attends, 3);
@@ -102,15 +109,22 @@ class UsersController extends Controller
             'cpj' => $cpj_absentees,
         ];
 
+        $user_attend = User::find($selected_user_id)
+        ->attends()
+        ->where('attends.desc_value', $attendState)
+        ->get();
+
         return response()->json([
             'status' => 'success',
             'absentees' => $absentees,
+            'user_attend' => $user_attend
         ], 200);
     }
 
     // 지각 횟수 반별 랭킹
-    public function theMostestLatecomer() {
-        $attends = $this->getAttends('지각');
+    public function theMostestLatecomer($selected_user_id) {
+        $attendState = '지각';
+        $attends = $this->getAttends($attendState);
 
         $wdj_latecomers = $this->getUsersByClass($attends, 2);
         $cpj_latecomers = $this->getUsersByClass($attends, 3);
@@ -120,9 +134,15 @@ class UsersController extends Controller
             'cpj' => $cpj_latecomers,
         ];
 
+        $user_attend = User::find($selected_user_id)
+        ->attends()
+        ->where('attends.desc_value', $attendState)
+        ->get();
+
         return response()->json([
             'status' => 'success',
             'latecomers' => $latecomers,
+            'user_attend' => $user_attend
         ], 200);
     }
 

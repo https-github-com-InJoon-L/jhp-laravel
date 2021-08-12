@@ -51,9 +51,9 @@ Route::get('/users', [UsersController::class, 'read']);
 Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
 
 // 랭크 관련 (나중에 해당년도 별로 뽑아오기로 수정??)
-Route::get('/users/runners', [UsersController::class, 'theMostestRunner']);
-Route::get('/users/absentees', [UsersController::class, 'theMostestAbsentee']);
-Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer']);
+Route::get('/users/runners/{selected_user_id}', [UsersController::class, 'theMostestRunner']);
+Route::get('/users/absentees/{selected_user_id}', [UsersController::class, 'theMostestAbsentee']);
+Route::get('/users/latecomers/{selected_user_id}', [UsersController::class, 'theMostestLatecomer']);
 
 // 출결 현황
 Route::get('/user/attendance/{selected_user_id}', [UsersController::class, 'getAttendanceStatus']);
