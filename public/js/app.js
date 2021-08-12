@@ -17981,13 +17981,507 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=script&lang=js":
+/*!****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=script&lang=js ***!
+  \****************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Jetstream_DialogModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/DialogModal */ "./resources/js/Jetstream/DialogModal.vue");
+/* harmony import */ var _BadgeRed__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BadgeRed */ "./resources/js/Geofencing/BadgeRed.vue");
+/* harmony import */ var _BadgeGreen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BadgeGreen */ "./resources/js/Geofencing/BadgeGreen.vue");
+/* harmony import */ var _BadgeYellow__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BadgeYellow */ "./resources/js/Geofencing/BadgeYellow.vue");
+/* harmony import */ var _Pages_Board_LoadingBar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Pages/Board/LoadingBar */ "./resources/js/Pages/Board/LoadingBar.vue");
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      header: '',
+      header2: '',
+      msg: '',
+      user_name: document.head.querySelector('meta[name="user-name"]').content,
+      user_sid: document.head.querySelector('meta[name="user-sid"]').content,
+      user_class: document.head.querySelector('meta[name="user-class"]').content,
+      user_photo: document.head.querySelector('meta[name="user-photo"]').content,
+      user_id: document.head.querySelector('meta[name="user-id"]').content,
+      csrf: document.head.querySelector('meta[name="csrf-token"]').content,
+      dialogShow: false,
+      attends: [],
+      isLoading: 0,
+      showAttend: false
+    };
+  },
+  components: {
+    Dialog: _Jetstream_DialogModal__WEBPACK_IMPORTED_MODULE_0__.default,
+    BadgeRed: _BadgeRed__WEBPACK_IMPORTED_MODULE_1__.default,
+    BadgeGreen: _BadgeGreen__WEBPACK_IMPORTED_MODULE_2__.default,
+    BadgeYellow: _BadgeYellow__WEBPACK_IMPORTED_MODULE_3__.default,
+    LoadingBar: _Pages_Board_LoadingBar__WEBPACK_IMPORTED_MODULE_4__.default
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get('/api/user/attendance/' + this.user_id, null).then(function (response) {
+      _this.attends = response.data.attends;
+      _this.isLoading = 1;
+    })["catch"](function (err) {
+      console.log(err);
+    });
+  },
+  methods: {
+    attend: function attend() {
+      var _this2 = this;
+
+      var value = {
+        user_sid: this.user_sid
+      };
+      axios.post('/api/attends', null, {
+        params: value
+      }).then(function (response) {
+        console.log(response);
+        _this2.msg = response.statusText;
+        _this2.header = response.data.message;
+
+        _this2.openDialog();
+      })["catch"](function (response) {
+        console.log(response);
+        _this2.msg = '출석 실패';
+        _this2.header = '출석 서버와 통신에 실패했습니다';
+
+        _this2.openDialog();
+      });
+    },
+    absence: function absence() {
+      var _this3 = this;
+
+      var value = {
+        user_sid: this.user_sid
+      };
+      axios.post('/api/absence', null, {
+        params: value
+      }).then(function (response) {
+        console.log(response);
+        _this3.msg = response.statusText;
+        _this3.header = response.data.message;
+
+        _this3.openDialog();
+      })["catch"](function (response) {
+        console.log(response);
+        _this3.msg = '출석 실패';
+        _this3.header = '출석 서버와 통신에 실패했습니다';
+
+        _this3.openDialog();
+      });
+    },
+    openDialog: function openDialog() {
+      this.dialogShow = true;
+    },
+    closeDialog: function closeDialog() {
+      this.showAttend = false;
+    },
+    openAttendDialog: function openAttendDialog(index) {
+      this.msg = this.attends[index].desc_value;
+
+      if (this.attends[index].run) {
+        this.header = this.attends[index].attend + " : [" + this.attends[index].desc_value + "]입니다";
+        this.header2 = " 지각 패널티 : " + this.attends[index].run + "바퀴 ";
+      } else {
+        this.header = this.attends[index].attend + " : [" + this.attends[index].desc_value + "]입니다";
+        this.header2 = '';
+      }
+
+      this.showAttend = true;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeGreen.vue?vue&type=script&lang=js":
+/*!****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeGreen.vue?vue&type=script&lang=js ***!
+  \****************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    color: {
+      type: String,
+      "default": "teal"
+    },
+    showDot: {
+      type: Boolean,
+      "default": true
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeRed.vue?vue&type=script&lang=js":
+/*!**************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeRed.vue?vue&type=script&lang=js ***!
+  \**************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    color: {
+      type: String,
+      "default": "teal"
+    },
+    showDot: {
+      type: Boolean,
+      "default": true
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeYellow.vue?vue&type=script&lang=js":
+/*!*****************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeYellow.vue?vue&type=script&lang=js ***!
+  \*****************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    color: {
+      type: String,
+      "default": "teal"
+    },
+    showDot: {
+      type: Boolean,
+      "default": true
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=script&lang=js":
 /*!**************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=script&lang=js ***!
   \**************************************************************************************************************************************************************************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /Users/janghyeonseog/Desktop/laravel/checkmate_default/resources/js/Geofencing/KaKaoMap.vue: Unexpected token (153:0)\n\n\u001b[0m \u001b[90m 151 |\u001b[39m                             \u001b[36mthis\u001b[39m\u001b[33m.\u001b[39maddAttendButton()\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 152 |\u001b[39m                         } \u001b[36melse\u001b[39m {\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 153 |\u001b[39m \u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m     |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 154 |\u001b[39m \u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 155 |\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 156 |\u001b[39m \u001b[33m>>>\u001b[39m\u001b[33m>>>\u001b[39m\u001b[33m>\u001b[39m frontend\u001b[33m-\u001b[39mjhp\u001b[0m\n    at Parser._raise (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:788:17)\n    at Parser.raiseWithData (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:781:17)\n    at Parser.raise (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:742:17)\n    at Parser.unexpected (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:3250:16)\n    at Parser.parseExprAtom (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:11439:20)\n    at Parser.parseExprSubscripts (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:11004:23)\n    at Parser.parseUpdate (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:10984:21)\n    at Parser.parseMaybeUnary (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:10962:23)\n    at Parser.parseExprOps (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:10823:23)\n    at Parser.parseMaybeConditional (/Users/janghyeonseog/Desktop/laravel/checkmate_default/node_modules/@babel/parser/lib/index.js:10797:23)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Geofencing_AttendForm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Geofencing/AttendForm */ "./resources/js/Geofencing/AttendForm.vue");
+/* harmony import */ var _Geofencing_notVisibleAttend_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Geofencing/notVisibleAttend.vue */ "./resources/js/Geofencing/notVisibleAttend.vue");
+/* harmony import */ var _Pages_Board_LoadingBar__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Pages/Board/LoadingBar */ "./resources/js/Pages/Board/LoadingBar.vue");
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      counts: '0',
+      distance: '9999',
+      isPC: '0',
+      boundary: 300,
+      // 출석허용거리
+      isLoading: 0
+    };
+  },
+  computed: {},
+  mounted: function mounted() {
+    window.kakao && window.kakao.maps ? this.initMap() : this.addScript();
+
+    if (this.isMobile()) {
+      this.isPC = 1;
+    }
+  },
+  methods: {
+    initMap: function initMap() {
+      var _this = this;
+
+      var mapContainer = document.getElementById('map'),
+          // 지도를 표시할 div 
+      mapOption = {
+        center: new kakao.maps.LatLng(33.450701, 126.570667),
+        // 지도의 중심좌표
+        level: 4 // 지도의 확대 레벨 
+
+      };
+      var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+      // HTML5의 geolocation으로 사용할 수 있는지 확인합니다 
+
+      if (navigator.geolocation) {
+        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = position.coords.latitude,
+              // 위도
+          lon = position.coords.longitude; // 경도
+
+          var startlat = 35.896794008573096;
+          var startlon = 128.62092071087199;
+          var startPosition = new kakao.maps.LatLng(startlat, startlon),
+              // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+          check = '<div style="padding:5px;">영진전문대 본관</div>'; // 인포윈도우에 표시될 내용입니다
+
+          var locPosition = new kakao.maps.LatLng(lat, lon); // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+          // 인포윈도우에 표시될 내용입니다
+          // 마커와 인포윈도우를 표시합니다
+          // 마커를 생성합니다
+
+          var imageSrc = '/img/marker_yju.png',
+              // 마커이미지의 주소입니다    
+          imageSize = new kakao.maps.Size(64, 69),
+              // 마커이미지의 크기입니다
+          imageOption = {
+            offset: new kakao.maps.Point(22, 49)
+          }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+
+          var imageSrc2 = '/img/marker_me.png',
+              // 마커이미지의 주소입니다    
+          imageSize2 = new kakao.maps.Size(44, 49),
+              // 마커이미지의 크기입니다
+          imageOption2 = {
+            offset: new kakao.maps.Point(32, 49)
+          }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+          // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+
+          var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
+              markerPosition = new kakao.maps.LatLng(startlat, startlon); // 마커가 표시될 위치입니다
+          // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+
+          var markerImage2 = new kakao.maps.MarkerImage(imageSrc2, imageSize2, imageOption2),
+              markerPosition2 = new kakao.maps.LatLng(startlat, startlon); // 마커가 표시될 위치입니다
+
+          var marker = new kakao.maps.Marker({
+            position: markerPosition,
+            image: markerImage // 마커이미지 설정 
+
+          });
+          var currentMarker = new kakao.maps.Marker({
+            position: locPosition,
+            image: markerImage2 // 마커이미지 설정 
+
+          });
+          marker.setMap(map);
+          currentMarker.setMap(map);
+          var content = '<div class="customoverlay">' + '  <a href="//map.kakao.com/?itemId=17565943" target="_blank">' + '    <span class="title">영진전문대 본관</span>' + '  </a>' + '</div>';
+          var customOverlay = new kakao.maps.CustomOverlay({
+            map: map,
+            position: startPosition,
+            content: content,
+            yAnchor: 1
+          }); // 지도 중심좌표를 접속위치로 변경합니다
+
+          map.setCenter(locPosition);
+          var polyline = new kakao.maps.Polyline({
+            /* map:map, */
+            path: [new kakao.maps.LatLng(lat, lon), new kakao.maps.LatLng(startlat, startlon)],
+            strokeWeight: 5,
+            strokeColor: '#FF00FF',
+            strokeOpacity: 0.8,
+            strokeStyle: 'dashed'
+          });
+          var circle = new kakao.maps.Circle({
+            center: new kakao.maps.LatLng(startlat, startlon),
+            // 원의 중심좌표 입니다 
+            radius: _this.boundary,
+            // 미터 단위의 원의 반지름입니다 
+            strokeWeight: 5,
+            // 선의 두께입니다 
+            strokeColor: '#75B8FA',
+            // 선의 색깔입니다
+            strokeOpacity: 1,
+            // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+            strokeStyle: 'dashed',
+            // 선의 스타일 입니다
+            fillColor: '#CFE7FF',
+            // 채우기 색깔입니다
+            fillOpacity: 0.7 // 채우기 불투명도 입니다   
+
+          }); //return getTimeHTML(polyline.getLength());//미터단위로 길이 반환;
+
+          console.log("길이" + polyline.getLength());
+          var length = polyline.getLength();
+          _this.distance = length;
+          polyline.setMap(map);
+          circle.setMap(map);
+          var distance = Math.ceil(polyline.getLength());
+          var content2 = '<span class="info-title">' + '<a>' + "학교까지  " + distance + "M  " + '</a>' + '</span>';
+          var customOverlay2 = new kakao.maps.CustomOverlay({
+            map: map,
+            position: locPosition,
+            content: content2,
+            yAnchor: 1
+          });
+
+          if (polyline.getLength() <= _this.boundary) {
+            console.log("출석체크 버튼 생성");
+
+            _this.addAttendButton();
+          } else {}
+
+          _this.isLoading = 1;
+        });
+      } else {
+        // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+        var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
+            message = 'geolocation을 사용할수 없어요..';
+      }
+    },
+    addScript: function addScript() {
+      var _this2 = this;
+
+      var script = document.createElement('script');
+      /* global kakao */
+
+      script.onload = function () {
+        return kakao.maps.load(_this2.initMap);
+      };
+
+      script.src = '//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=dc92402fe9472a39910383183e108f9c';
+      document.head.appendChild(script);
+    },
+    addAttendButton: function addAttendButton() {
+      this.counts = 1;
+    },
+    isMobile: function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+  },
+  components: {
+    AttendForm: _Geofencing_AttendForm__WEBPACK_IMPORTED_MODULE_0__.default,
+    NotVisibleAttend: _Geofencing_notVisibleAttend_vue__WEBPACK_IMPORTED_MODULE_1__.default,
+    LoadingBar: _Pages_Board_LoadingBar__WEBPACK_IMPORTED_MODULE_2__.default
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=script&lang=js":
+/*!**********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=script&lang=js ***!
+  \**********************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _Jetstream_DialogModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/DialogModal */ "./resources/js/Jetstream/DialogModal.vue");
+/* harmony import */ var _BadgeRed__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BadgeRed */ "./resources/js/Geofencing/BadgeRed.vue");
+/* harmony import */ var _BadgeGreen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./BadgeGreen */ "./resources/js/Geofencing/BadgeGreen.vue");
+/* harmony import */ var _BadgeYellow__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./BadgeYellow */ "./resources/js/Geofencing/BadgeYellow.vue");
+/* harmony import */ var _Pages_Board_LoadingBar__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Pages/Board/LoadingBar */ "./resources/js/Pages/Board/LoadingBar.vue");
+
+
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  data: function data() {
+    return {
+      header: '',
+      header2: '',
+      msg: '',
+      user_name: document.head.querySelector('meta[name="user-name"]').content,
+      user_sid: document.head.querySelector('meta[name="user-sid"]').content,
+      user_class: document.head.querySelector('meta[name="user-class"]').content,
+      user_photo: document.head.querySelector('meta[name="user-photo"]').content,
+      user_id: document.head.querySelector('meta[name="user-id"]').content,
+      csrf: document.head.querySelector('meta[name="csrf-token"]').content,
+      dialogShow: false,
+      attends: [],
+      isLoading: 0,
+      showAttend: false
+    };
+  },
+  components: {
+    Dialog: _Jetstream_DialogModal__WEBPACK_IMPORTED_MODULE_0__.default,
+    BadgeRed: _BadgeRed__WEBPACK_IMPORTED_MODULE_1__.default,
+    BadgeGreen: _BadgeGreen__WEBPACK_IMPORTED_MODULE_2__.default,
+    BadgeYellow: _BadgeYellow__WEBPACK_IMPORTED_MODULE_3__.default,
+    LoadingBar: _Pages_Board_LoadingBar__WEBPACK_IMPORTED_MODULE_4__.default
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get('/api/user/attendance/' + this.user_id, null).then(function (response) {
+      _this.attends = response.data.attends;
+      _this.isLoading = 1;
+    })["catch"](function (err) {
+      console.log(err);
+    });
+  },
+  methods: {
+    absence: function absence() {
+      var _this2 = this;
+
+      var value = {
+        user_sid: this.user_sid
+      };
+      axios.post('/api/absence', null, {
+        params: value
+      }).then(function (response) {
+        console.log(response);
+        _this2.msg = response.statusText;
+        _this2.header = response.data.message;
+
+        _this2.openDialog();
+      })["catch"](function (response) {
+        console.log(response);
+        _this2.msg = '출석 실패';
+        _this2.header = '출석 서버와 통신에 실패했습니다';
+
+        _this2.openDialog();
+      });
+    },
+    openDialog: function openDialog() {
+      this.dialogShow = true;
+    },
+    closeDialog: function closeDialog() {
+      this.showAttend = false;
+    },
+    openAttendDialog: function openAttendDialog(index) {
+      this.msg = this.attends[index].desc_value;
+
+      if (this.attends[index].run) {
+        this.header = this.attends[index].attend + " : [" + this.attends[index].desc_value + "]입니다";
+        this.header2 = " 지각 패널티 : " + this.attends[index].run + "바퀴 ";
+      } else {
+        this.header = this.attends[index].attend + " : [" + this.attends[index].desc_value + "]입니다";
+        this.header2 = '';
+      }
+
+      this.showAttend = true;
+    }
+  }
+});
 
 /***/ }),
 
@@ -21202,6 +21696,344 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=template&id=0ffc6802":
+/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=template&id=0ffc6802 ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = {
+  "class": "bg-white shadow-lg p-4 rounded-lg flex justify-between w-full mb-3"
+};
+var _hoisted_2 = {
+  "class": "flex items-center"
+};
+var _hoisted_3 = {
+  "class": "ml-3"
+};
+var _hoisted_4 = {
+  "class": "text-gray-900 font-semibold tracking-wide text-sm"
+};
+var _hoisted_5 = {
+  "class": "flex text-sm"
+};
+var _hoisted_6 = {
+  "class": "font-semibold mr-1"
+};
+var _hoisted_7 = {
+  "class": "flex items-center"
+};
+
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("출석");
+
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("결석");
+
+var _hoisted_10 = {
+  "class": "bg-white shadow-lg p-4 rounded-lg flex flex-wrap justify-between w-full mb-3"
+};
+
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", {
+  "class": "text-gray-900 font-semibold tracking-wide text-sm"
+}, "최근 출석", -1
+/* HOISTED */
+);
+
+var _hoisted_12 = {
+  key: 0
+};
+var _hoisted_13 = {
+  key: 1,
+  "class": "flex flex-wrap m-3 items-center"
+};
+
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("출석정보 없음");
+
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 확인");
+
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 닫기 ");
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_badge_green = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("badge-green");
+
+  var _component_badge_red = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("badge-red");
+
+  var _component_loading_bar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("loading-bar");
+
+  var _component_badge_yellow = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("badge-yellow");
+
+  var _component_inertia_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("inertia-link");
+
+  var _component_jet_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("jet-button");
+
+  var _component_Dialog = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Dialog");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("li", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("img", {
+    "class": "w-12 h-12 rounded-full",
+    src: _ctx.user_photo,
+    alt: _ctx.user_name
+  }, null, 8
+  /* PROPS */
+  , ["src", "alt"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.user_name), 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.user_sid), 1
+  /* TEXT */
+  )])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_badge_green, {
+    value: "attend",
+    onClick: $options.attend
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_8];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onClick"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_badge_red, {
+    "class": "m-1",
+    value: "abcense",
+    onClick: $options.absence
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_9];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onClick"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" 최근 3개의 출석 내역 뽑아옴 "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("li", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [_ctx.isLoading == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_loading_bar)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_13, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.attends, function (attend, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", {
+      key: index,
+      "class": "m-1"
+    }, [attend.desc_value == '결석' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_red, {
+      key: 0,
+      onClick: function onClick($event) {
+        return $options.openAttendDialog(index);
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(attend.attend), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["onClick"])) : attend.desc_value == '지각' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_yellow, {
+      key: 1,
+      onClick: function onClick($event) {
+        return $options.openAttendDialog(index);
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(attend.attend), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["onClick"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_green, {
+      key: 2,
+      onClick: function onClick($event) {
+        return $options.openAttendDialog(index);
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(attend.attend), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["onClick"]))]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  )), _ctx.attends.length == '+0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_red, {
+    key: 0
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_14];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Dialog, {
+    show: _ctx.dialogShow,
+    onClose: $options.closeDialog
+  }, {
+    title: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.msg), 1
+      /* TEXT */
+      )];
+    }),
+    content: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.header), 1
+      /* TEXT */
+      )];
+    }),
+    footer: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_button, {
+        type: "button",
+        "class": "ml-2"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_inertia_link, {
+            href: _ctx.route('attend'),
+            "class": "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [_hoisted_15];
+            }),
+            _: 1
+            /* STABLE */
+
+          }, 8
+          /* PROPS */
+          , ["href"])];
+        }),
+        _: 1
+        /* STABLE */
+
+      })];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["show", "onClose"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Dialog, {
+    show: _ctx.showAttend,
+    onClose: $options.closeDialog
+  }, {
+    title: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.msg), 1
+      /* TEXT */
+      )];
+    }),
+    content: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.header) + " ", 1
+      /* TEXT */
+      ), _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.header2), 1
+      /* TEXT */
+      )];
+    }),
+    footer: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_button, {
+        type: "button",
+        "class": "ml-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded",
+        onClick: $options.closeDialog
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_17];
+        }),
+        _: 1
+        /* STABLE */
+
+      }, 8
+      /* PROPS */
+      , ["onClick"])];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["show", "onClose"])], 64
+  /* STABLE_FRAGMENT */
+  );
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeGreen.vue?vue&type=template&id=3e0eb5a4":
+/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeGreen.vue?vue&type=template&id=3e0eb5a4 ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", {
+    "class": ["px-4 h-6 rounded-full text-xs font-semibold flex items-center cursor-pointer truncate", "bg-green-100 text-green-700 hover:bg-green-500 hover:text-white"]
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", {
+    "class": ["w-2 h-2 rounded-full mr-1", "bg-green-400"]
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeRed.vue?vue&type=template&id=1583f672":
+/*!******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeRed.vue?vue&type=template&id=1583f672 ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", {
+    "class": ["px-4 h-6 rounded-full text-xs font-semibold flex items-center cursor-pointer truncate", "bg-red-100 text-red-700 hover:bg-red-500 hover:text-white"]
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", {
+    "class": ["w-2 h-2 rounded-full mr-1", "bg-red-400"]
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")]);
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeYellow.vue?vue&type=template&id=788500a3":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeYellow.vue?vue&type=template&id=788500a3 ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", {
+    "class": ["px-4 h-6 rounded-full text-xs font-semibold flex items-center cursor-pointer truncate", "bg-yellow-100 text-yellow-700 hover:bg-yellow-500 hover:text-white"]
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("span", {
+    "class": ["w-2 h-2 rounded-full mr-1", "bg-yellow-400"]
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "default")]);
+}
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=template&id=061e70bd":
 /*!******************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=template&id=061e70bd ***!
@@ -21278,16 +22110,271 @@ var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(
 /* HOISTED */
 );
 
-function render(_ctx, _cache) {
+function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_loading_bar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("loading-bar");
 
   var _component_attend_form = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("attend-form");
 
   var _component_not_visible_attend = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("not-visible-attend");
 
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [_ctx.isPC < 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_1, [_hoisted_2, _hoisted_3])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.isLoading == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_loading_bar)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_5, [_ctx.counts == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_attend_form)])) : _ctx.counts == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, "출석체크를 할려면 " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.boundary) + "M 이내에 접근하세요", 1
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$data.isPC < 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_1, [_hoisted_2, _hoisted_3])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.isLoading == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_loading_bar)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_5, [$data.counts == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_attend_form)])) : $data.counts == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_8, [_hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, "출석체크를 할려면 " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.boundary) + "M 이내에 접근하세요", 1
   /* TEXT */
   )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_not_visible_attend)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])), _hoisted_12], 64
+  /* STABLE_FRAGMENT */
+  );
+}
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=template&id=2bb99c7d":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=template&id=2bb99c7d ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
+var _hoisted_1 = {
+  "class": "bg-white shadow-lg p-4 rounded-lg flex justify-between w-full mb-3"
+};
+var _hoisted_2 = {
+  "class": "flex items-center"
+};
+var _hoisted_3 = {
+  "class": "ml-3"
+};
+var _hoisted_4 = {
+  "class": "text-gray-900 font-semibold tracking-wide text-sm"
+};
+var _hoisted_5 = {
+  "class": "flex text-sm"
+};
+var _hoisted_6 = {
+  "class": "font-semibold mr-1"
+};
+var _hoisted_7 = {
+  "class": "flex items-center"
+};
+
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("결석");
+
+var _hoisted_9 = {
+  "class": "bg-white shadow-lg p-4 rounded-lg flex justify-between w-full mb-3"
+};
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", {
+  "class": "text-gray-900 font-semibold tracking-wide text-sm"
+}, "최근 출석", -1
+/* HOISTED */
+);
+
+var _hoisted_11 = {
+  key: 0
+};
+var _hoisted_12 = {
+  key: 1,
+  "class": "flex flex-wrap m-3 items-center"
+};
+
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("출석정보 없음");
+
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 확인");
+
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" 닫기 ");
+
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  var _component_badge_red = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("badge-red");
+
+  var _component_loading_bar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("loading-bar");
+
+  var _component_badge_yellow = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("badge-yellow");
+
+  var _component_badge_green = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("badge-green");
+
+  var _component_inertia_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("inertia-link");
+
+  var _component_jet_button = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("jet-button");
+
+  var _component_Dialog = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Dialog");
+
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("li", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("img", {
+    "class": "w-12 h-12 rounded-full",
+    src: _ctx.user_photo,
+    alt: _ctx.user_name
+  }, null, 8
+  /* PROPS */
+  , ["src", "alt"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.user_name), 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.user_sid), 1
+  /* TEXT */
+  )])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_badge_red, {
+    "class": "m-1",
+    value: "abcense",
+    onClick: $options.absence
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_8];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["onClick"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" 최근 3개의 출석 내역 뽑아옴 "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("li", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", null, [_ctx.isLoading == 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_loading_bar)])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.attends, function (attend, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", {
+      key: index,
+      "class": "m-1"
+    }, [attend.desc_value == '결석' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_red, {
+      key: 0,
+      onClick: function onClick($event) {
+        return $options.openAttendDialog(index);
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(attend.attend), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["onClick"])) : attend.desc_value == '지각' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_yellow, {
+      key: 1,
+      onClick: function onClick($event) {
+        return $options.openAttendDialog(index);
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(attend.attend), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["onClick"])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_green, {
+      key: 2,
+      onClick: function onClick($event) {
+        return $options.openAttendDialog(index);
+      }
+    }, {
+      "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+        return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(attend.attend), 1
+        /* TEXT */
+        )];
+      }),
+      _: 2
+      /* DYNAMIC */
+
+    }, 1032
+    /* PROPS, DYNAMIC_SLOTS */
+    , ["onClick"]))]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  )), _ctx.attends.length == '+0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_badge_red, {
+    key: 0
+  }, {
+    "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [_hoisted_13];
+    }),
+    _: 1
+    /* STABLE */
+
+  })) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Dialog, {
+    show: _ctx.dialogShow,
+    onClose: $options.closeDialog
+  }, {
+    title: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.msg), 1
+      /* TEXT */
+      )];
+    }),
+    content: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.header), 1
+      /* TEXT */
+      )];
+    }),
+    footer: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_button, {
+        type: "button",
+        "class": "ml-2"
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_inertia_link, {
+            href: _ctx.route('attend'),
+            "class": "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          }, {
+            "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+              return [_hoisted_14];
+            }),
+            _: 1
+            /* STABLE */
+
+          }, 8
+          /* PROPS */
+          , ["href"])];
+        }),
+        _: 1
+        /* STABLE */
+
+      })];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["show", "onClose"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Dialog, {
+    show: _ctx.showAttend,
+    onClose: $options.closeDialog
+  }, {
+    title: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.msg), 1
+      /* TEXT */
+      )];
+    }),
+    content: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.header) + " ", 1
+      /* TEXT */
+      ), _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.header2), 1
+      /* TEXT */
+      )];
+    }),
+    footer: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_jet_button, {
+        type: "button",
+        "class": "ml-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded",
+        onClick: $options.closeDialog
+      }, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [_hoisted_16];
+        }),
+        _: 1
+        /* STABLE */
+
+      }, 8
+      /* PROPS */
+      , ["onClick"])];
+    }),
+    _: 1
+    /* STABLE */
+
+  }, 8
+  /* PROPS */
+  , ["show", "onClose"])], 64
   /* STABLE_FRAGMENT */
   );
 }
@@ -36036,6 +37123,30 @@ Object.defineProperty(exports, "RssHandler", ({ enumerable: true, get: function 
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css":
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\njet-button {\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css":
 /*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css ***!
@@ -36053,7 +37164,31 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.customoverlay {\n        position: relative;\n        bottom: 60px;\n        border-radius: 6px;\n        border: 1px solid #ccc;\n        border-bottom: 2px solid #ddd;\n        float: left;\n}\n.customoverlay:nth-of-type(n) {\n        border: 0;\n        box-shadow: 0px 1px 2px #888;\n}\n.customoverlay a {\n        display: block;\n        text-decoration: none;\n        color: #000;\n        text-align: center;\n        border-radius: 6px;\n        font-size: 14px;\n        font-weight: bold;\n        overflow: hidden;\n        background: #248EFC;\n        background: #248EFC url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;\n}\n.customoverlay .title {\n        display: block;\n        text-align: center;\n        background: #fff;\n        margin-right: 35px;\n        padding: 10px 15px;\n        font-size: 14px;\n        font-weight: bold;\n}\n.customoverlay:after {\n        content: '';\n        position: absolute;\n        margin-left: -12px;\n        left: 50%;\n        bottom: -12px;\n        width: 22px;\n        height: 12px;\n        background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')\n}\n<<<<<<< HEAD\n=======\n\n>>>>>>> frontend-jhp\n    .info-title {\n        position: relative;\n        top: 50px;\n        right: 10px;\n        border-radius: 6px;\n        border: 4px solid #fff;\n        border-bottom: 4px solid #fff;\n        float: right;\n}\n.info-title>a {\n        display: block;\n        background: #F87171;\n        opacity: 0.8;\n        color: #fff;\n        text-align: center;\n        height: 40px;\n        width: 160px;\n        line-height: 40px;\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.customoverlay {\n        position: relative;\n        bottom: 60px;\n        border-radius: 6px;\n        border: 1px solid #ccc;\n        border-bottom: 2px solid #ddd;\n        float: left;\n}\n.customoverlay:nth-of-type(n) {\n        border: 0;\n        box-shadow: 0px 1px 2px #888;\n}\n.customoverlay a {\n        display: block;\n        text-decoration: none;\n        color: #000;\n        text-align: center;\n        border-radius: 6px;\n        font-size: 14px;\n        font-weight: bold;\n        overflow: hidden;\n        background: #248EFC;\n        background: #248EFC url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;\n}\n.customoverlay .title {\n        display: block;\n        text-align: center;\n        background: #fff;\n        margin-right: 35px;\n        padding: 10px 15px;\n        font-size: 14px;\n        font-weight: bold;\n}\n.customoverlay:after {\n        content: '';\n        position: absolute;\n        margin-left: -12px;\n        left: 50%;\n        bottom: -12px;\n        width: 22px;\n        height: 12px;\n        background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')\n}\n.info-title {\n        position: relative;\n        top: 50px;\n        right: 10px;\n        border-radius: 6px;\n        border: 4px solid #fff;\n        border-bottom: 4px solid #fff;\n        float: right;\n}\n.info-title>a {\n        display: block;\n        background: #F87171;\n        opacity: 0.8;\n        color: #fff;\n        text-align: center;\n        height: 40px;\n        width: 160px;\n        line-height: 40px;\n}\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\njet-button {\n    -webkit-appearance: none;\n    -moz-appearance: none;\n    appearance: none;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -72804,6 +73939,36 @@ module.exports = function getSideChannel() {
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_style_index_0_id_0ffc6802_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_style_index_0_id_0ffc6802_lang_css__WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_style_index_0_id_0ffc6802_lang_css__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css ***!
@@ -72831,6 +73996,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_KaKaoMap_vue_vue_type_style_index_0_id_061e70bd_lang_css__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css":
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_style_index_0_id_2bb99c7d_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_style_index_0_id_2bb99c7d_lang_css__WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_style_index_0_id_2bb99c7d_lang_css__WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
 
 /***/ }),
 
@@ -73660,6 +74855,113 @@ function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 /***/ }),
 
+/***/ "./resources/js/Geofencing/AttendForm.vue":
+/*!************************************************!*\
+  !*** ./resources/js/Geofencing/AttendForm.vue ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _AttendForm_vue_vue_type_template_id_0ffc6802__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AttendForm.vue?vue&type=template&id=0ffc6802 */ "./resources/js/Geofencing/AttendForm.vue?vue&type=template&id=0ffc6802");
+/* harmony import */ var _AttendForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AttendForm.vue?vue&type=script&lang=js */ "./resources/js/Geofencing/AttendForm.vue?vue&type=script&lang=js");
+/* harmony import */ var _AttendForm_vue_vue_type_style_index_0_id_0ffc6802_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css */ "./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css");
+
+
+
+
+;
+_AttendForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.render = _AttendForm_vue_vue_type_template_id_0ffc6802__WEBPACK_IMPORTED_MODULE_0__.render
+/* hot reload */
+if (false) {}
+
+_AttendForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/Geofencing/AttendForm.vue"
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_AttendForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeGreen.vue":
+/*!************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeGreen.vue ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _BadgeGreen_vue_vue_type_template_id_3e0eb5a4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BadgeGreen.vue?vue&type=template&id=3e0eb5a4 */ "./resources/js/Geofencing/BadgeGreen.vue?vue&type=template&id=3e0eb5a4");
+/* harmony import */ var _BadgeGreen_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BadgeGreen.vue?vue&type=script&lang=js */ "./resources/js/Geofencing/BadgeGreen.vue?vue&type=script&lang=js");
+
+
+
+_BadgeGreen_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.render = _BadgeGreen_vue_vue_type_template_id_3e0eb5a4__WEBPACK_IMPORTED_MODULE_0__.render
+/* hot reload */
+if (false) {}
+
+_BadgeGreen_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/Geofencing/BadgeGreen.vue"
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_BadgeGreen_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeRed.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/Geofencing/BadgeRed.vue ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _BadgeRed_vue_vue_type_template_id_1583f672__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BadgeRed.vue?vue&type=template&id=1583f672 */ "./resources/js/Geofencing/BadgeRed.vue?vue&type=template&id=1583f672");
+/* harmony import */ var _BadgeRed_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BadgeRed.vue?vue&type=script&lang=js */ "./resources/js/Geofencing/BadgeRed.vue?vue&type=script&lang=js");
+
+
+
+_BadgeRed_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.render = _BadgeRed_vue_vue_type_template_id_1583f672__WEBPACK_IMPORTED_MODULE_0__.render
+/* hot reload */
+if (false) {}
+
+_BadgeRed_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/Geofencing/BadgeRed.vue"
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_BadgeRed_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeYellow.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeYellow.vue ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _BadgeYellow_vue_vue_type_template_id_788500a3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BadgeYellow.vue?vue&type=template&id=788500a3 */ "./resources/js/Geofencing/BadgeYellow.vue?vue&type=template&id=788500a3");
+/* harmony import */ var _BadgeYellow_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BadgeYellow.vue?vue&type=script&lang=js */ "./resources/js/Geofencing/BadgeYellow.vue?vue&type=script&lang=js");
+
+
+
+_BadgeYellow_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.render = _BadgeYellow_vue_vue_type_template_id_788500a3__WEBPACK_IMPORTED_MODULE_0__.render
+/* hot reload */
+if (false) {}
+
+_BadgeYellow_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/Geofencing/BadgeYellow.vue"
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_BadgeYellow_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/***/ }),
+
 /***/ "./resources/js/Geofencing/KaKaoMap.vue":
 /*!**********************************************!*\
   !*** ./resources/js/Geofencing/KaKaoMap.vue ***!
@@ -73686,6 +74988,35 @@ if (false) {}
 _KaKaoMap_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/Geofencing/KaKaoMap.vue"
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_KaKaoMap_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/notVisibleAttend.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/Geofencing/notVisibleAttend.vue ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _notVisibleAttend_vue_vue_type_template_id_2bb99c7d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./notVisibleAttend.vue?vue&type=template&id=2bb99c7d */ "./resources/js/Geofencing/notVisibleAttend.vue?vue&type=template&id=2bb99c7d");
+/* harmony import */ var _notVisibleAttend_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./notVisibleAttend.vue?vue&type=script&lang=js */ "./resources/js/Geofencing/notVisibleAttend.vue?vue&type=script&lang=js");
+/* harmony import */ var _notVisibleAttend_vue_vue_type_style_index_0_id_2bb99c7d_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css */ "./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css");
+
+
+
+
+;
+_notVisibleAttend_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.render = _notVisibleAttend_vue_vue_type_template_id_2bb99c7d__WEBPACK_IMPORTED_MODULE_0__.render
+/* hot reload */
+if (false) {}
+
+_notVisibleAttend_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file = "resources/js/Geofencing/notVisibleAttend.vue"
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_notVisibleAttend_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default);
 
 /***/ }),
 
@@ -75447,6 +76778,70 @@ _Welcome_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__.default.__file
 
 /***/ }),
 
+/***/ "./resources/js/Geofencing/AttendForm.vue?vue&type=script&lang=js":
+/*!************************************************************************!*\
+  !*** ./resources/js/Geofencing/AttendForm.vue?vue&type=script&lang=js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.default)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AttendForm.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeGreen.vue?vue&type=script&lang=js":
+/*!************************************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeGreen.vue?vue&type=script&lang=js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeGreen_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.default)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeGreen_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./BadgeGreen.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeGreen.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeRed.vue?vue&type=script&lang=js":
+/*!**********************************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeRed.vue?vue&type=script&lang=js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeRed_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.default)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeRed_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./BadgeRed.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeRed.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeYellow.vue?vue&type=script&lang=js":
+/*!*************************************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeYellow.vue?vue&type=script&lang=js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeYellow_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.default)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeYellow_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./BadgeYellow.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeYellow.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
 /***/ "./resources/js/Geofencing/KaKaoMap.vue?vue&type=script&lang=js":
 /*!**********************************************************************!*\
   !*** ./resources/js/Geofencing/KaKaoMap.vue?vue&type=script&lang=js ***!
@@ -75459,6 +76854,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_KaKaoMap_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.default)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_KaKaoMap_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./KaKaoMap.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/notVisibleAttend.vue?vue&type=script&lang=js":
+/*!******************************************************************************!*\
+  !*** ./resources/js/Geofencing/notVisibleAttend.vue?vue&type=script&lang=js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__.default)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./notVisibleAttend.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=script&lang=js");
  
 
 /***/ }),
@@ -76439,6 +77850,70 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Geofencing/AttendForm.vue?vue&type=template&id=0ffc6802":
+/*!******************************************************************************!*\
+  !*** ./resources/js/Geofencing/AttendForm.vue?vue&type=template&id=0ffc6802 ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_template_id_0ffc6802__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_template_id_0ffc6802__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AttendForm.vue?vue&type=template&id=0ffc6802 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=template&id=0ffc6802");
+
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeGreen.vue?vue&type=template&id=3e0eb5a4":
+/*!******************************************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeGreen.vue?vue&type=template&id=3e0eb5a4 ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeGreen_vue_vue_type_template_id_3e0eb5a4__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeGreen_vue_vue_type_template_id_3e0eb5a4__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./BadgeGreen.vue?vue&type=template&id=3e0eb5a4 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeGreen.vue?vue&type=template&id=3e0eb5a4");
+
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeRed.vue?vue&type=template&id=1583f672":
+/*!****************************************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeRed.vue?vue&type=template&id=1583f672 ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeRed_vue_vue_type_template_id_1583f672__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeRed_vue_vue_type_template_id_1583f672__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./BadgeRed.vue?vue&type=template&id=1583f672 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeRed.vue?vue&type=template&id=1583f672");
+
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/BadgeYellow.vue?vue&type=template&id=788500a3":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/Geofencing/BadgeYellow.vue?vue&type=template&id=788500a3 ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeYellow_vue_vue_type_template_id_788500a3__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_BadgeYellow_vue_vue_type_template_id_788500a3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./BadgeYellow.vue?vue&type=template&id=788500a3 */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/BadgeYellow.vue?vue&type=template&id=788500a3");
+
+
+/***/ }),
+
 /***/ "./resources/js/Geofencing/KaKaoMap.vue?vue&type=template&id=061e70bd":
 /*!****************************************************************************!*\
   !*** ./resources/js/Geofencing/KaKaoMap.vue?vue&type=template&id=061e70bd ***!
@@ -76451,6 +77926,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_KaKaoMap_vue_vue_type_template_id_061e70bd__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_KaKaoMap_vue_vue_type_template_id_061e70bd__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./KaKaoMap.vue?vue&type=template&id=061e70bd */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=template&id=061e70bd");
+
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/notVisibleAttend.vue?vue&type=template&id=2bb99c7d":
+/*!************************************************************************************!*\
+  !*** ./resources/js/Geofencing/notVisibleAttend.vue?vue&type=template&id=2bb99c7d ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_template_id_2bb99c7d__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_template_id_2bb99c7d__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./notVisibleAttend.vue?vue&type=template&id=2bb99c7d */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=template&id=2bb99c7d");
 
 
 /***/ }),
@@ -77527,6 +79018,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css ***!
+  \********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AttendForm_vue_vue_type_style_index_0_id_0ffc6802_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/AttendForm.vue?vue&type=style&index=0&id=0ffc6802&lang=css");
+
+
+/***/ }),
+
 /***/ "./resources/js/Geofencing/KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css":
 /*!******************************************************************************************!*\
   !*** ./resources/js/Geofencing/KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css ***!
@@ -77536,6 +79040,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_KaKaoMap_vue_vue_type_style_index_0_id_061e70bd_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/KaKaoMap.vue?vue&type=style&index=0&id=061e70bd&lang=css");
+
+
+/***/ }),
+
+/***/ "./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_notVisibleAttend_vue_vue_type_style_index_0_id_2bb99c7d_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/js/Geofencing/notVisibleAttend.vue?vue&type=style&index=0&id=2bb99c7d&lang=css");
 
 
 /***/ }),

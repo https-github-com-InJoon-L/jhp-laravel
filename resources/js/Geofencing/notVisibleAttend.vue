@@ -162,9 +162,6 @@
             }
         }
     }
-<<<<<<< HEAD
-</script>
-=======
 </script>
 <style>
 jet-button {
@@ -173,4 +170,3 @@ jet-button {
     appearance: none;
 }
 </style>
->>>>>>> frontend-jhp
