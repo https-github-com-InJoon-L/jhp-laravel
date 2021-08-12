@@ -29,7 +29,11 @@ class AttendsController extends Controller
         // $userId = Auth::user()->id; // api.php는 비저장 상태라 토큰을 받아오지 않는 한 인증이 불가
         $userId = User::where('sid', $req->user_sid)->first()->id;
 
+<<<<<<< HEAD
         // 오늘 출석 했는지 판단 후 했다면 디비에 넣지 않고 return false
+=======
+        // 오늘 출결 했는지 판단 후 했다면 디비에 넣지 않고 return false
+>>>>>>> de5e21e9150e364fd491e131497870130c6baf0f
         if (Attend::where('attend', $date)->where('user_id', $userId)->get()->count() != 0) {
             return $res = response()->json([
                 'status' => 'false',
@@ -54,8 +58,12 @@ class AttendsController extends Controller
 
         $res = response()->json([
             'status' => 'success',
+<<<<<<< HEAD
             'data' => $attend,
             'message' => $date.' 출석했습니다.',
+=======
+            'data' => $attend
+>>>>>>> de5e21e9150e364fd491e131497870130c6baf0f
         ], 200);
 
         return $res;
@@ -135,7 +143,11 @@ class AttendsController extends Controller
         $date = date("Y-m-d");
         $userId = User::where('sid', $req->user_sid)->first()->id;
 
+<<<<<<< HEAD
         // 오늘 결석 했는지 판단 후 했다면 디비에 넣지 않고 return false
+=======
+        // 오늘 출결 했는지 판단 후 했다면 디비에 넣지 않고 return false
+>>>>>>> de5e21e9150e364fd491e131497870130c6baf0f
         if (Attend::where('attend', $date)->where('user_id', $userId)->get()->count() != 0) {
             return response()->json([
                 'status' => 'false',
@@ -152,8 +164,12 @@ class AttendsController extends Controller
 
         $res = response()-> json([
             'status' => 'success',
+<<<<<<< HEAD
             'data' => $absent_user,
             'message' => $date.' 결석했습니다.',
+=======
+            'data' => $absent_user
+>>>>>>> de5e21e9150e364fd491e131497870130c6baf0f
         ]);
 
         return $res;
