@@ -186,6 +186,10 @@
                             console.log("출석체크 버튼 생성");
                             this.addAttendButton();
                         } else {
+<<<<<<< HEAD
+=======
+
+>>>>>>> frontend-jhp
                         }
                         this.isLoading = 1;
                     });
@@ -268,6 +272,10 @@
         height: 12px;
         background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> frontend-jhp
     .info-title {
         position: relative;
         top: 50px;

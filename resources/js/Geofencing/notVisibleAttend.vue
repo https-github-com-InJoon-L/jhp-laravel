@@ -162,4 +162,15 @@
             }
         }
     }
+<<<<<<< HEAD
 </script>
+=======
+</script>
+<style>
+jet-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+</style>
+>>>>>>> frontend-jhp
