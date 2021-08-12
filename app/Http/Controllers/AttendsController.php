@@ -21,7 +21,10 @@ class AttendsController extends Controller
 
         $date = date("Y-m-d");
         $time = date("H:i:s");
+        $attend_start = strtotime('08:30:00');
+        $attend_end = strtotime('18:00:00');
         $point = strtotime('09:00:00');
+
         $timestamp = strtotime($time);
         $result = $timestamp - $point;
 
@@ -37,14 +40,26 @@ class AttendsController extends Controller
             ]);
         }
 
+        // 8:30 ~ 18:00에만 출석이 가능
+        if ($timestamp < $attend_start || $timestamp > $attend_end) {
+            return $res = response()->json([
+                'status' => 'false',
+                'message' => '지금은 출석 할 수 없는 시간입니다.',
+            ]);
+        }
+
         if ($result > 0) {
             $cul = number_format($result/60/5); // 바퀴 수
             $cul++;
+            if ($cul > 20) $cul = 20;
+
             $attend->run = $cul;
             $attend->desc_value = '지각';
 
             // 첫 번째 인자 학번, 두 번째 인자 오늘 run 수 세 번째 인자 user_id
             $this->insertRun($attend->run, $userId);
+        } else {
+            $attend->desc_value = '출석';
         }
 
         $attend->user_id = $userId;

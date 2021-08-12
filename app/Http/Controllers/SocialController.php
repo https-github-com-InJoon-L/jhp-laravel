@@ -74,6 +74,7 @@ class SocialController extends Controller
             $user->class = $req->class;
             $user->sid = $req->sid;
             $user->position = $req->position;
+            $user->name = $req->name;
 
             $user->save();
 
