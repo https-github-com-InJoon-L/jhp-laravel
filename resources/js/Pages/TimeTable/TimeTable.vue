@@ -103,7 +103,6 @@
         components: {
             AppLayout,
             LoadingBar,
-
         },
         data: () => ({
             t9: [],
@@ -119,11 +118,8 @@
             ifLoading: 0,
         }),
         computed: {
-
         },
         mounted() {
-
-
             axios.get("api/timetables")
                 .then(res => {
                     this.data = res.data.data;
@@ -153,14 +149,9 @@
                             this.t18.splice(element.day, 1, element);
                         }
                     });
-
             this.ifLoading = 1;
                 })
-
         }
-
-
-
         ,
         methods: {},
     }

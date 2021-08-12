@@ -76,8 +76,6 @@
             kakao,
             Dialog,
         },
-
-
     }
 </script>
 

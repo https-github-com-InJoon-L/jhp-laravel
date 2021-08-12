@@ -112,7 +112,6 @@
             LoadingBar,
         },
         mounted() {
-
             axios.get('/api/user/attendance/' + this.user_id, null)
                 .then(response => {
                     this.attends = response.data.attends;

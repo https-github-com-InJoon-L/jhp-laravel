@@ -57,7 +57,6 @@
             ifLoading: 0,
         }),
         computed: {
-
         },
         mounted() {
             if (this.isMobile()) {
@@ -70,11 +69,9 @@
                         const span = $('ol').children('li');
                         var posts = []
                         span.map(function (i, elem) {
-
                             var title = $(this).find('.rt_area h3').text()
                             var time = $(this).find('.info span b').first().text()
                             var href = $(this).find('a:nth-child(2)').attr('href')
-
                             let value = {
                                 time: time,
                                 title: title,
@@ -82,7 +79,6 @@
                             }
                             console.log(value);
                             posts.push(value);
-
                         })
                         this.posts = posts;
                         this.ifLoading = 1;
@@ -95,11 +91,9 @@
                         const span = $('tbody').children('tr');
                         var posts = []
                         span.map(function (i, elem) {
-
                             var time = $(this).find('.time').text()
                             var title = $(this).find('.title a').text().trim()
                             var href = $(this).find('.title a').attr('href')
-
                             let value = {
                                 time: time,
                                 title: title,
@@ -113,8 +107,6 @@
                         this.ifLoading = 1;
                     })
             }
-
-
         },
         methods: {
             isMobile() {
