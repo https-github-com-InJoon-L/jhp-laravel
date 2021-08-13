@@ -65,7 +65,7 @@ class UsersController extends Controller
     }
 
     // 달리기 횟수 반별 랭킹
-    public function theMostestRunner($selected_user_id) {
+    public function theMostestRunner() {
         $wdj_runners = $this->getRunnersByClass(2);
         $cpj_runners = $this->getRunnersByClass(3);
 
@@ -74,15 +74,9 @@ class UsersController extends Controller
             'cpj' => $cpj_runners,
         ];
 
-        $user_run = User::find($selected_user_id)
-        ->run()
-        ->orderBy('totalRun', 'desc')
-        ->get();
-
         return response()->json([
             'status' => 'success',
             'runners' => $runners,
-            'user_run' => $user_run
         ], 200);
     }
 
@@ -97,7 +91,7 @@ class UsersController extends Controller
     }
 
     // 결석 횟수 반별 랭킹
-    public function theMostestAbsentee($selected_user_id) {
+    public function theMostestAbsentee() {
         $attendState = '결석';
         $attends = $this->getAttends($attendState);
 
@@ -109,20 +103,14 @@ class UsersController extends Controller
             'cpj' => $cpj_absentees,
         ];
 
-        $user_attend = User::find($selected_user_id)
-        ->attends()
-        ->where('attends.desc_value', $attendState)
-        ->get();
-
         return response()->json([
             'status' => 'success',
             'absentees' => $absentees,
-            'user_attend' => $user_attend
         ], 200);
     }
 
     // 지각 횟수 반별 랭킹
-    public function theMostestLatecomer($selected_user_id) {
+    public function theMostestLatecomer() {
         $attendState = '지각';
         $attends = $this->getAttends($attendState);
 
@@ -134,15 +122,9 @@ class UsersController extends Controller
             'cpj' => $cpj_latecomers,
         ];
 
-        $user_attend = User::find($selected_user_id)
-        ->attends()
-        ->where('attends.desc_value', $attendState)
-        ->get();
-
         return response()->json([
             'status' => 'success',
             'latecomers' => $latecomers,
-            'user_attend' => $user_attend
         ], 200);
     }
 
@@ -166,8 +148,8 @@ class UsersController extends Controller
     }
 
     // 출석 현황 최근 3개
-    public function getAttendanceStatus($selected_user_id) {
-        $attends = User::find($selected_user_id)
+    public function getAttendanceStatus($user_id) {
+        $attends = User::find($user_id)
         ->attends()
         ->latest()
         ->take(3)
@@ -176,6 +158,24 @@ class UsersController extends Controller
         return response()->json([
             'status' => 'success',
             'attends' => $attends,
+        ], 200);
+    }
+
+    // 사용자 달리기, 출석 현황
+    public function getUserStatus($user_id) {
+        $user_attend = User::find($user_id)
+        ->attends()
+        ->get();
+
+        $user_run = User::find($user_id)
+        ->run()
+        ->orderBy('totalRun', 'desc')
+        ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'user_attend' => $user_attend,
+            'user_run' => $user_run
         ], 200);
     }
 }
