@@ -138,7 +138,7 @@
                         break;
                 }
                 
-                console.log('선택된 유저: ',this.user);
+                console.log('선택된 유저의 변경내용: ',this.user);
                 
                 if(!this.user.name||this.user.name==''||
                     !this.user.email||this.user.email==''||
