@@ -24,7 +24,10 @@
                                                                 Name
                                                             </th>
                                                             <th scope="col" class="w-1/3 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                                <span class="">Sid</span>
+                                                                Sid
+                                                            </th>
+                                                            <th scope="col" class="w-1/3 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                                Class
                                                             </th>
                                                             <th scope="col" class="w-1/3 px-6 py-3">
                                                                 <span class="sr-only">Edit</span>

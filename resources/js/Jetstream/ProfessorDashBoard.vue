@@ -1,6 +1,6 @@
 <template>
         <tr class="flex">
-            <td class=" w-1/3 px-6 py-4 whitespace-nowrap text-center">
+            <td class=" w-1/4 px-6 py-4 whitespace-nowrap text-center">
                 <div class="max-w-max min-w-max text-center inline">
                     <span v-if="user.name" class="text-sm text-center text-gray-900">
                         {{user.name}}
@@ -10,7 +10,7 @@
                     </span>
                 </div>
             </td>
-            <td class="w-1/3 px-6 py-4 whitespace-nowrap text-center">
+            <td class="w-1/4 px-6 py-4 whitespace-nowrap text-center">
                 <div class="max-w-max min-w-max text-center inline">
                     <span v-if="user.sid" class="text-sm text-center text-gray-900">
                         {{user.sid}}
@@ -20,7 +20,17 @@
                     </span>
                 </div>
             </td>
-            <td class="w-1/3 px-6 py-4 whitespace-nowrap text-right font-medium">
+            <td class="w-1/4 px-6 py-4 whitespace-nowrap text-center">
+                <div class="max-w-max min-w-max text-center inline">
+                    <span v-if="user.class" class="text-sm text-center text-gray-900">
+                        {{user.class}}
+                    </span>
+                    <span v-else class="px-2 text-center inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                        미등록 사용자
+                    </span>
+                </div>
+            </td>
+            <td class="w-1/4 px-6 py-4 whitespace-nowrap text-right font-medium">
                 <div class="max-w-max min-w-max text-center inline">
                     <a href="" @click="open" @click.prevent="openThread" class="text-sm text-indigo-600 hover:text-indigo-900 p-3">수정</a>
                 </div>
