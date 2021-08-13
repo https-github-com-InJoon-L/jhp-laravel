@@ -11,6 +11,7 @@
         <meta name="user-class" content="{{ Auth::user()->class }}">
         <meta name="user-photo" content="{{ Auth::user()->profile_photo_path }}">
         <meta name="user-id" content="{{ Auth::user()->id }}">
+        <meta name="user-current_team_id" content="{{ Auth::user()->current_team_id }}">
         @endif 
         <title>{{ config('app.name', 'Laravel') }}</title>
 

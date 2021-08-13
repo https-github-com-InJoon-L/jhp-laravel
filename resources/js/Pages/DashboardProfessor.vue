@@ -85,6 +85,7 @@
         },
         data(){
             return{
+                current_user:document.head.querySelector('meta[name="user-current_team_id"]').content,
                 dialogShow:false,
                 errorDialogShow:false,
                 selectedUser:{},
@@ -133,16 +134,16 @@
                         if(this.selectedUser == this.selectedTeam[key]){
                             delete this.selectedTeam[key];
                             switch(this.selectedUser.current_team_id){
-                                case "1":
+                                case 1:
                                     this.allTeam.none[key]=this.selectedUser;
                                     break;
-                                case '2':
+                                case 2:
                                     this.allTeam.wdj[key]=this.selectedUser;
                                     break;
-                                case '3':
+                                case 3:
                                     this.allTeam.cpj[key]=this.selectedUser;
                                     break;
-                                case '4':
+                                case 4:
                                     this.allTeam.professor[key]=this.selectedUser;
                                     break;
                                 default:
@@ -151,7 +152,10 @@
                             break;
                         }
                     }
+                }else if(state==4027){
+                    this.errState=4027;
                 }
+                console.log('asdf');
                 this.errorDialogShow=true;
                 console.log('추가창 생성');
             },
@@ -172,6 +176,9 @@
                     this.dialogShow=false;
                 }
                 this.errorDialogShow=false;
+                if(errState==4027){
+                    location.replace('/');
+                }
             },
             changeList(tagIdx){
                 console.log('Nav Tag 변경',tagIdx);
@@ -192,6 +199,12 @@
             }
         },
         mounted(){
+            console.log(this.current_user);
+            if(!(this.current_user==4)){
+                this.errState=4027;
+                this.errorDialogShow=true;
+            }
+
             axios.get('/api/users')
                 .then(res=>{
                     console.log(res.data.status);

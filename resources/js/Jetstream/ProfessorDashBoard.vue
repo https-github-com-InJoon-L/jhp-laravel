@@ -46,6 +46,10 @@
             open() {
                 console.log('사용자 정보 열람');
                 console.log(this.user);
+                console.log('선택 유저의 id타입',typeof this.user.id);
+                console.log('선택 유저의 sid타입',typeof this.user.sid);
+                console.log('선택 유저의 phone타입',typeof this.user.phone_number);
+                console.log('선택 유저의 current_team_id타입',typeof this.user.current_team_id);
                 this.$emit('open',this.user)
             },
         }

@@ -114,16 +114,19 @@
                 this.ifLoading=0;
                 this.waiting=true;
                 console.log('저장 후 닫기');
-                let checked = document.querySelector('input[name="class"]:checked');
-                console.log('선택한 반: ',checked.value);
-                if(!(checked&&(checked.value>=1&&checked.value<5))){
+                const checked = document.querySelector('input[name="class"]:checked');
+                const checkedNumber = Number(checked.value);
+                console.log('선택한 반: ',typeof checkedNumber);
+                console.log('체크 했나?',checked)
+                
+                if(!(checked&&(checkedNumber>=1&&checkedNumber<5))){
                     console.log('비정상적인 접근 1번으로 대체함');
                     document.querySelector('input[name="class"]').checked=true;
                     checked=document.querySelector('input[name="class"]:checked');
                 }
-                this.user.current_team_id=checked.value;
+                this.user.current_team_id=checkedNumber;
                 this.user.class='미등록 사용자';
-                switch(checked.value){
+                switch(checkedNumber){
                     case 1:
                         this.user.class='미등록 사용자';
                         break;
@@ -137,8 +140,6 @@
                         this.user.class='교수';
                         break;
                 }
-                
-                console.log('선택된 유저의 변경내용: ',this.user);
                 
                 if(!this.user.name||this.user.name==''||
                     !this.user.email||this.user.email==''||
@@ -170,13 +171,20 @@
                     this.$emit('close',3,errMsg);
                     return;
                 }
+                const user_team_id=document.head.querySelector('meta[name="user-current_team_id"]').content;
+                const user_id =document.head.querySelector('meta[name="user-id"]').content;
                 axios.patch('/api/user/'+this.user.id,this.user)
                     .then(res=>{
                         console.log('변경 성공');
                         console.log(res)
                         this.waiting=false;
                         this.ifLoading=1;
-                        this.$emit('close',2,['변경하였습니다.']);
+
+                        if(this.user.id==user_id&&this.user.current_team_id!=user_team_id){
+                            this.$emit('close',4027,['변경하였습니다.','보안을 위해 홈으로 갑니다.']);
+                        }else{
+                            this.$emit('close',2,['변경하였습니다.']);
+                        }
                     })
                     .catch(err=>{
                         console.log('에러로 빠짐');

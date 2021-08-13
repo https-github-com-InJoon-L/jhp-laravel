@@ -61,12 +61,7 @@
         methods: {
             errorClose() {
                 console.log('에러창 닫기');
-                if(this.errState==1){
-                    this.$emit('errorClose',1);
-                }else{
-                    this.$emit('errorClose',0);
-                }
-                
+                this.$emit('errorClose',this.errState);
             },
         },
     }
