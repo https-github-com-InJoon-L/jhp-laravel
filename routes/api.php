@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RunsController;
 use App\Http\Controllers\TimetablesController;
 
 /*
@@ -35,9 +36,10 @@ Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
 
 // test용
 Route::post('/token', [AuthController::class, 'createApiToken']);
-// logout이 어디서 작동하는 지 몰라서 못 넣음 로그아웃 button 클릭 시 이 api에 요청 보내주세욤ㅎㅎ
+// 회원탈퇴시 할 것
 Route::delete('/token/delete', [AuthController::class, 'deleteApiToken']);
 
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
-
+// run 달리면
+Route::patch('/minus_run', [RunsController::class, 'minusRun']);
