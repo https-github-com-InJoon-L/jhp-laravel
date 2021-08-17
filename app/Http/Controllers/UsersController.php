@@ -186,6 +186,7 @@ class UsersController extends Controller
         $teamId = $request->query('teamId');
         $attend = $request->query('attend');
 
+        // 일주일 전 2021-08-17 -> 2021-08-09T15:00:00.000000Z
         $date = Carbon::now()->previous();
 
         $data = DB::table('users')
