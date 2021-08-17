@@ -195,7 +195,7 @@ class UsersController extends Controller
         ->where('attends.desc_value', $attend)
         ->where('attends.created_at', '>=', $date)
         ->select(
-            DB::raw("DATE_FORMAT(attends.created_at, '%Y-%m-%d') as date"),
+            DB::raw("DATE_FORMAT(attends.created_at, '%m/%d') as date"),
             DB::raw('COUNT(*) as count'),
         )
         ->groupBy('date')
