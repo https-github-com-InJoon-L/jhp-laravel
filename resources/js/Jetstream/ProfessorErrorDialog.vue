@@ -66,3 +66,13 @@
         },
     }
 </script>
+
+<style>
+    .loading {
+        position: absolute;
+        height: 100%;
+        left:50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+    }
+</style>
