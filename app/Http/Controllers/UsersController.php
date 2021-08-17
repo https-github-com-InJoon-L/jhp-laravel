@@ -199,7 +199,7 @@ class UsersController extends Controller
             DB::raw('COUNT(*) as count'),
         )
         ->groupBy('date')
-        ->orderBy('date', 'desc')
+        ->orderBy('date')
         ->get();
 
         return response()->json([
