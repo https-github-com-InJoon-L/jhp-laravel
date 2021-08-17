@@ -54,6 +54,7 @@ Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
 Route::get('/users/runners', [UsersController::class, 'theMostestRunner']);
 Route::get('/users/absentees', [UsersController::class, 'theMostestAbsentee']);
 Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer']);
+Route::get('/users/rank', [UsersController::class, 'getUsersAttendsByDate']);
 
 // 출결 현황
 Route::get('/user/attendance/{user_id}', [UsersController::class, 'getAttendanceStatus']);

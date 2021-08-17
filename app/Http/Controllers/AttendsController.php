@@ -66,7 +66,6 @@ class AttendsController extends Controller
         $attend->attend = $date;
         $attend->save();
 
-
         $res = response()->json([
             'status' => 'success',
             'data' => $attend,
@@ -81,7 +80,6 @@ class AttendsController extends Controller
         $run = null;
         $countRun = $todayRun;
         $totalRun = User::find($userId)->attends()->sum('run');
-
 
         if (Run::where('user_id', $userId)->get()->count() == 0) {
             $run = new Run();

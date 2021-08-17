@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attend;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -176,6 +178,28 @@ class UsersController extends Controller
             'status' => 'success',
             'user_attend' => $user_attend,
             'user_run' => $user_run
+        ], 200);
+    }
+
+    //  반별 일주일간 지각 or 결석 현황
+    public function getUsersAttendsByDate(Request $request) {
+        $teamId = $request->query('teamId');
+        $attend = $request->query('attend');
+
+        $date = Carbon::now()->previous();
+
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->where('users.current_team_id', $teamId)
+        ->where('attends.desc_value', $attend)
+        ->where('attends.created_at', '>=', $date)
+        ->orderBy('attends.created_at', 'desc')
+        ->select('users.name', 'attends.created_at')
+        ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
         ], 200);
     }
 }
