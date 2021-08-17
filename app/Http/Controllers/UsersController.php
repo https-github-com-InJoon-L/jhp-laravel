@@ -194,8 +194,12 @@ class UsersController extends Controller
         ->where('users.current_team_id', $teamId)
         ->where('attends.desc_value', $attend)
         ->where('attends.created_at', '>=', $date)
-        ->orderBy('attends.created_at', 'desc')
-        ->select('users.name', 'attends.created_at')
+        ->select(
+            DB::raw("DATE_FORMAT(attends.created_at, '%Y-%m-%d') as date"),
+            DB::raw('COUNT(*) as count'),
+        )
+        ->groupBy('date')
+        ->orderBy('date', 'desc')
         ->get();
 
         return response()->json([
