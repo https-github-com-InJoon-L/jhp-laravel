@@ -33,7 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::post('/attends', [AttendsController::class, 'attend']);
 Route::post('/attends/absent', [AttendsController::class, 'absent']);
 Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
-
+Route::patch('/attend/{selected_user_id}', [AttendsController::class, 'update']);
 // test용
 Route::post('/token', [AuthController::class, 'createApiToken']);
 // 회원탈퇴시 할 것
@@ -42,4 +42,4 @@ Route::delete('/token/delete', [AuthController::class, 'deleteApiToken']);
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 // run 달리면
-Route::patch('/minus_run', [RunsController::class, 'minusRun']);
+Route::patch('/run/{selected_user_id}', [RunsController::class, 'minusRun']);
