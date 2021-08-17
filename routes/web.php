@@ -18,11 +18,11 @@ use Inertia\Inertia;
 */
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('DashBoard/Temporarily');
 })->name('main');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('DashBoard/Temporarily');
 })->name('dashboard');
 
 Route::get('/login/kakao',[SocialController::class,'redirect'])->name('kakao.login');
