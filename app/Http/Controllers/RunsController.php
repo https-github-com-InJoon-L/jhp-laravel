@@ -12,7 +12,7 @@ class RunsController extends Controller
     public function minusRun(Request $req) {
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
-            'minus_run' => 'required|integer',
+            'run' => 'required|integer',
         ]);
 
         if($validator->fails()){
@@ -21,8 +21,8 @@ class RunsController extends Controller
 
         $run = Run::where('user_id', $req->user_id)->first();
 
-        $run->countRun = $run->countRun - $req->minus_run;
-        $run->minusRun = $run->minusRun + $req->minus_run;
+        $run->countRun = $run->countRun - $req->run;
+        $run->minusRun = $run->minusRun + $req->run;
 
         $run->save();
 

@@ -195,7 +195,7 @@ class AttendsController extends Controller
             $updateAttend->run = $req->run;
         }
 
-        // $updateAttend->save();
+        $updateAttend->save();
 
         $res = response()-> json([
             'status' => 'success',
