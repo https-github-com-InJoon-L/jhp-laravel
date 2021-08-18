@@ -211,4 +211,54 @@ class UsersController extends Controller
             'data' => $data,
         ], 200);
     }
+
+    // 한달치 반별 출결 현황 (도넛)
+    public function classAttendStatusByMonth(Request $request) {
+        $teamId = $request->query('teamId');
+        
+        $dateSubMonth = Carbon::now()->subMonth();
+        
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->selectRaw('attends.desc_value, count(*) as count')
+        ->where('users.current_team_id', $teamId)
+        ->where('attends.created_at', '>=', $dateSubMonth)
+        ->groupBy('desc_value')
+        ->get();
+
+        return response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
+    }
+
+    // 한달치 개인별 출결 현황 (도넛)
+    public function userAttendStatusByMonth(Request $request, $userId) {
+        $date = $request->query('date'); // month or week
+
+        if($date === 'month') {
+            $date = Carbon::now()->subMonth();
+        } else if($date === 'week') {
+            $date = Carbon::now()->subWeek();
+        } else {
+            return response()->json([
+                'state' => 'failed',
+                'message' => 'date is not month or week!',
+            ]);
+        }
+        
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->selectRaw('attends.desc_value, count(*) as count')
+        ->where('users.id', $userId)
+        ->where('attends.created_at', '>=', $date)
+        ->groupBy('desc_value')
+        ->get();
+
+        return response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
+    }
+
 }
