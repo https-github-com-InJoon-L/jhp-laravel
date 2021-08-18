@@ -58,6 +58,7 @@ Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer'])
 Route::get('/users/rank', [UsersController::class, 'getUsersAttendsByDate']);
 
 // 출결 현황
+Route::get('/user/attendStatusByMonth', [AttendsController::class, 'getAttendStatusByMonth']);
 Route::get('/user/attendance/{user_id}', [UsersController::class, 'getAttendanceStatus']);
 Route::get('/user/attendStatus/{user_id}', [UsersController::class, 'getUserStatus']);
 // run 달리면

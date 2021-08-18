@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Attend;
 use App\Models\Run;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AttendsController extends Controller
@@ -210,5 +212,21 @@ class AttendsController extends Controller
         $runDate->totalRun = $runDate->totalRun - $run;
 
         $runDate->save();
+    }
+
+    // 한달치 출결 현황 (도넛)
+    public function getAttendStatusByMonth() {
+        $dateSubMonth = Carbon::now()->subMonth();
+        
+        $data = DB::table('attends')
+        ->selectRaw('desc_value, count(*) as count')
+        ->where('created_at', '>=', $dateSubMonth)
+        ->groupBy('desc_value')
+        ->get();
+
+        return response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
     }
 }
