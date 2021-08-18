@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Attend_postsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RunsController;
 use App\Http\Controllers\TimetablesController;
+use App\Models\Attend_posts;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,3 +45,7 @@ Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 // run 달리면
 Route::patch('/run/{selected_user_id}', [RunsController::class, 'minusRun']);
+
+//Attend_posts 달리기 인증 게시판
+Route::post('/attend_posts/create', [Attend_postsController::class, 'create']);
+

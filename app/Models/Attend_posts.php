@@ -9,6 +9,13 @@ class Attend_posts extends Model
 {
     use HasFactory;
 
+    public function imagePath() {
+        $path = env('IMAGE_PATH', '/storage/images/');
+        $imageFile = $this->image ?? 'noImage.png';
+
+        return  $path . $imageFile;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
