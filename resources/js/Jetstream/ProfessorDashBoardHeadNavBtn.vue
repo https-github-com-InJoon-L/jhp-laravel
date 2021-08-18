@@ -1,6 +1,6 @@
 <template>
-    <a href="" @click.prevent="openThread"  :class="classes">
-        <span class="px-5 flex">
+    <a href="" @click.prevent="openThread"  :class="classes" >
+        <span class="flex flex-nowrap">
             {{this.navName}}
         </span>
     </a>

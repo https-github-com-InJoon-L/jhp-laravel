@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attend;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -165,6 +167,10 @@ class UsersController extends Controller
     public function getUserStatus($user_id) {
         $user_attend = User::find($user_id)
         ->attends()
+        ->select(
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %T') as date"),
+            DB::raw('id, user_id, run, device_id, desc_value, attend, updated_at'),
+        )
         ->get();
 
         $user_run = User::find($user_id)
@@ -176,6 +182,33 @@ class UsersController extends Controller
             'status' => 'success',
             'user_attend' => $user_attend,
             'user_run' => $user_run
+        ], 200);
+    }
+
+    //  반별 일주일간 지각 or 결석 현황
+    public function getUsersAttendsByDate(Request $request) {
+        $teamId = $request->query('teamId');
+        $attend = $request->query('attend');
+
+        // 일주일 전 2021-08-17 -> 2021-08-09T15:00:00.000000Z
+        $date = Carbon::now()->previous();
+
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->where('users.current_team_id', $teamId)
+        ->where('attends.desc_value', $attend)
+        ->where('attends.created_at', '>=', $date)
+        ->select(
+            DB::raw("DATE_FORMAT(attends.created_at, '%m/%d') as date"),
+            DB::raw('COUNT(*) as count'),
+        )
+        ->groupBy('date')
+        ->orderBy('date', 'asc')
+        ->get();
+        
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
         ], 200);
     }
 }

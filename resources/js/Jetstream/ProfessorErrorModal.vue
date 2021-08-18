@@ -102,7 +102,7 @@ export default {
         position: absolute;
         width: 90%;
         left:50%;
-        transform: translate(-50%,-0%);
+        transform: translate(-50%,-50%);
         bottom: 20%;
     }
 </style>

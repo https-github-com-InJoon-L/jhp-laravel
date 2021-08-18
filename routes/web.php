@@ -18,11 +18,11 @@ use Inertia\Inertia;
 */
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/', function () {
-    return Inertia::render('DashBoard/Temporarily');
+    return Inertia::render('Dashboard/Dashboard');
 })->name('main');
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('DashBoard/Temporarily');
+    return Inertia::render('Dashboard/Dashboard');
 })->name('dashboard');
 
 Route::get('/login/kakao',[SocialController::class,'redirect'])->name('kakao.login');
@@ -36,6 +36,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/setInfo', function () {
 Route::middleware(['auth:sanctum', 'verified','auth'])->get('/attend', function () {
     return Inertia::render('Menu/Attend');
 })->name('attend');
+
+Route::middleware(['auth:sanctum', 'verified','auth'])->get('/attendstatus', function () {
+    return Inertia::render('Menu/AttendStatus');
+})->name('attendstatus');
 
 Route::post('setInfo/save', [SocialController::class, 'inputData'])->name('input');
 
@@ -51,10 +55,6 @@ Route::middleware(['cors'])->group(function () {
 Route::get('/timetable',function() {
     return Inertia::render('TimeTable/TimeTable');
 })->name('timetable');
-
-Route::get('/chart',function() {
-    return Inertia::render('Chart/AttendChart');
-})->name('chart');
 
 Route::middleware(['auth:sanctum', 'verified'])
             ->get('/dashboard/professor',function(){

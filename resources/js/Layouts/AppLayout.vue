@@ -2,8 +2,8 @@
     <div>
         <jet-banner />
 
-        <div class="min-h-screen bg-gray-100">
-            <nav class="bg-white border-b border-gray-100">
+        <div class="min-h-screen bg-primary-100">
+            <nav class=" mb-2 shadow-lg bg-primary text-primary-content">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="flex justify-between h-16">
@@ -11,14 +11,17 @@
                             <!-- Logo -->
                             <div class="flex-shrink-0 flex items-center">
                                 <inertia-link :href="route('dashboard')">
-                                    <jet-application-mark class="block h-9 w-auto" />
+                                    <span class="text-lg font-bold">
+                                        체크메이트
+                                    </span>
                                 </inertia-link>
                             </div>
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+
                                 <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                    홈
+                                    대시보드
                                 </jet-nav-link>
                                 <jet-nav-link :href="route('notice')" :active="route().current('notice')">
                                     공지사항
@@ -26,13 +29,15 @@
                                 <jet-nav-link :href="route('attend')" :active="route().current('attend')">
                                     출석
                                 </jet-nav-link>
+                                <jet-nav-link :href="route('attendstatus')" :active="route().current('attendstatus')">
+                                    출석현황
+                                </jet-nav-link>
                                 <jet-nav-link :href="route('timetable')" :active="route().current('timetable')">
                                     시간표
                                 </jet-nav-link>
-                                <jet-nav-link :href="route('chart')" :active="route().current('chart')">
-                                    Chart
-                                </jet-nav-link>
-                                <jet-nav-link v-if="$page.props.user.current_team_id==4" :href="route('dashboard.professor')" :active="route().current('dashboard.professor')">
+                                <jet-nav-link v-if="$page.props.user.current_team_id==4"
+                                    :href="route('dashboard.professor')"
+                                    :active="route().current('dashboard.professor')">
                                     교수용 대시보드
                                 </jet-nav-link>
                             </div>
@@ -41,19 +46,14 @@
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
                             <div class="ml-3 relative">
                                 <!-- Teams Dropdown -->
-                                <jet-dropdown align="right" width="60" v-if="$page.props.jetstream.hasTeamFeatures">
+                                <jet-dropdown align="right" width="80" v-if="$page.props.jetstream.hasTeamFeatures"
+                                    class="text-primary-content">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
                                             <button type="button" v-if="$page.props.user"
-                                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
+                                                class="badge badge-lg badge-accent badge-outline text-primary-content">
                                                 {{ $page.props.user.current_team.name }}
 
-                                                <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 20 20" fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                        d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
-                                                        clip-rule="evenodd" />
-                                                </svg>
                                             </button>
                                             <button type="button" v-else
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:bg-gray-50 active:bg-gray-50 transition">
@@ -104,10 +104,11 @@
                                 <jet-dropdown align="right" width="48">
                                     <template #trigger>
                                         <button v-if="$page.props.jetstream.managesProfilePhotos && $page.props.user"
-                                            class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
-                                            <img class="h-8 w-8 rounded-full object-cover"
+                                            class="flex text-sm border-2 border-transparent rounded-full focus:outline focus:border-gray-300 transition ">
+                                            <img class="h-10 w-10 rounded-full object-cover"
                                                 :src="$page.props.user.profile_photo_path"
                                                 :alt="$page.props.user.name" />
+
                                         </button>
 
                                         <span v-else class="inline-flex rounded-md">
@@ -176,30 +177,45 @@
                 <!-- 모바일 -->
                 <!-- Responsive Navigation Menu -->
                 <div :class="{'block': showingNavigationDropdown, 'hidden': ! showingNavigationDropdown}"
-                    class="sm:hidden">
-                    <div class="pt-2 pb-3 space-y-1">
-                        <jet-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                            홈
-                        </jet-responsive-nav-link>
-                        <jet-responsive-nav-link :href="route('notice')" :active="route().current('notice')">
-                            공지사항
-                        </jet-responsive-nav-link>
-                        <jet-responsive-nav-link :href="route('attend')" :active="route().current('attend')">
-                            출석
-                        </jet-responsive-nav-link>
-                        <jet-responsive-nav-link :href="route('timetable')" :active="route().current('timetable')">
-                            시간표
-                        </jet-responsive-nav-link>
-                        <jet-responsive-nav-link :href="route('chart')" :active="route().current('chart')">
-                            Chart
-                        </jet-responsive-nav-link>
-                        <jet-responsive-nav-link v-if="$page.props.user.current_team_id==4" :href="route('dashboard.professor')" :active="route().current('dashboard.professor')">
+                    class="sm:hidden bg-white">
+                    <div class="px-7 bg-white shadow-lg rounded-2xl">
+                        <div class="flex">
+                            <div class="flex-1 group">
+                                <jet-responsive-nav-link :href="route('dashboard')"
+                                    :active="route().current('dashboard')" :home="route('dashboard')">
+
+                                </jet-responsive-nav-link>
+                            </div>
+                            <div class="flex-1 group">
+                                <jet-responsive-nav-link :href="route('notice')" :active="route().current('notice')"
+                                    :notice="route('dashboard')">
+                                </jet-responsive-nav-link>
+                            </div>
+                            <div class="flex-1 group">
+                                <jet-responsive-nav-link :href="route('attend')" :active="route().current('attend')"
+                                    :attend="route('dashboard')">
+                                </jet-responsive-nav-link>
+                            </div>
+                            <div class="flex-1 group">
+                                <jet-responsive-nav-link :href="route('attendstatus')"
+                                    :active="route().current('attendstatus')" :attendstatus="route('attendstatus')">
+                                </jet-responsive-nav-link>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 pb-2 space-y-1">
+                                                        <jet-responsive-nav-link :href="route('timetable')"
+                                    :active="route().current('timetable')" :timetable="route('dashboard')">
+                                </jet-responsive-nav-link>
+                        <jet-responsive-nav-link v-if="$page.props.user.current_team_id==4"
+                            :href="route('dashboard.professor')" :active="route().current('dashboard.professor')">
                             교수용 대시보드
                         </jet-responsive-nav-link>
                     </div>
 
                     <!-- Responsive Settings Options -->
-                    <div class="pt-4 pb-1 border-t border-gray-200">
+                    <div class="pt-4 pb-1 border-t border-primary">
                         <div class="flex items-center px-4">
                             <div v-if="$page.props.jetstream.managesProfilePhotos" class="flex-shrink-0 mr-3">
                                 <img v-if="$page.props.user" class="h-10 w-10 rounded-full object-cover"
@@ -208,21 +224,18 @@
                             </div>
 
                             <div>
-                                <div v-if="$page.props.user" class="font-medium text-base text-gray-800">
+                                <div v-if="$page.props.user" class="font-medium text-base text-primary">
                                     {{ $page.props.user.name }}</div>
                                 <div v-else class="font-medium text-base text-gray-800">게스트</div>
-                                <div v-if="$page.props.user" class="font-medium text-sm text-gray-500">
+                                <div v-if="$page.props.user" class="font-medium text-sm text-gray-700">
                                     {{ $page.props.user.email }}</div>
                                 <div v-else class="font-medium text-sm text-gray-500"></div>
                             </div>
                         </div>
 
-                        <div class="mt-3 space-y-1">
-                            <jet-responsive-nav-link v-if="$page.props.user" :href="route('profile.show')"
-                                :active="route().current('profile.show')">
-                                프로필 설정
-                            </jet-responsive-nav-link>
-                            <jet-responsive-nav-link v-else :href="route('login')" :active="route().current('login')">
+                        <div class="mt-4 space-y-1">
+                            <jet-responsive-nav-link v-if="!$page.props.user" :href="route('login')"
+                                :active="route().current('login')">
                                 로그인
                             </jet-responsive-nav-link>
                             <jet-responsive-nav-link :href="route('api-tokens.index')"
@@ -240,7 +253,7 @@
 
                             <!-- Team Management -->
                             <template v-if="$page.props.jetstream.hasTeamFeatures && $page.props.user">
-                                <div class="border-t border-gray-200"></div>
+                                <div class="border-t border-primary"></div>
 
                                 <div class="block px-4 py-2 text-xs text-gray-400">
                                     소속 그룹
@@ -251,7 +264,8 @@
                                         viewBox="0 0 24 24">
                                         <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
-                                    <div v-if="$page.props.user">{{ $page.props.user.current_team.name }}</div>
+                                    <div v-if="$page.props.user" class="text-primary">
+                                        {{ $page.props.user.current_team.name }}</div>
 
                                 </div>
 

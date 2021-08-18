@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Timetable extends Model
 {
-    use HasFactory;
-
     protected $table = 'timetable';
+
+    use HasFactory;
 }
