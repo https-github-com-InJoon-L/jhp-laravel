@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RunsController;
 use App\Http\Controllers\TimetablesController;
 use App\Http\Controllers\UsersController;
 
@@ -33,10 +34,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::post('/attends', [AttendsController::class, 'attend']);
 Route::post('/attends/absent', [AttendsController::class, 'absent']);
 Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
-
+Route::patch('/attend/{selected_user_id}', [AttendsController::class, 'update']);
 // test용
 Route::post('/token', [AuthController::class, 'createApiToken']);
-// logout이 어디서 작동하는 지 몰라서 못 넣음 로그아웃 button 클릭 시 이 api에 요청 보내주세욤ㅎㅎ
+// 회원탈퇴시 할 것
 Route::delete('/token/delete', [AuthController::class, 'deleteApiToken']);
 
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
@@ -59,3 +60,5 @@ Route::get('/users/rank', [UsersController::class, 'getUsersAttendsByDate']);
 // 출결 현황
 Route::get('/user/attendance/{user_id}', [UsersController::class, 'getAttendanceStatus']);
 Route::get('/user/attendStatus/{user_id}', [UsersController::class, 'getUserStatus']);
+// run 달리면
+Route::patch('/run/{selected_user_id}', [RunsController::class, 'minusRun']);

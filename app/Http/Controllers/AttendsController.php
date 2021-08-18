@@ -160,6 +160,7 @@ class AttendsController extends Controller
         $absent_user->user_id = $userId;
         $absent_user->desc_value = '결석';
         $absent_user->attend = $date;
+        $absent_user->run = 20;
 
         $absent_user->save();
 
@@ -170,5 +171,44 @@ class AttendsController extends Controller
         ]);
 
         return $res;
+    }
+
+    // 출석정보 수정
+    public function update(Request $req, $selected_user_id) {
+        $validator = Validator::make($req->all(), [
+            'run' => 'required|integer',
+            'desc_value' => 'required|string',
+            'attend' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $updateAttend = User::find($selected_user_id)->attends()->where('attend', $req->attend)->first();
+        $updateAttend->desc_value = $req->desc_value;
+
+        if ($updateAttend->run != $req->run) {
+            $this->updateRun($selected_user_id, $updateAttend->run);
+            $updateAttend->run = $req->run;
+        }
+
+        $updateAttend->save();
+
+        $res = response()-> json([
+            'status' => 'success',
+            'data' => $updateAttend,
+            'message' => '출석정보가 변경되었습니다.',
+        ]);
+
+        return $res;
+    }
+
+    public function updateRun($user_id, $run) {
+        $runDate = Run::where('user_id', $user_id)->first();
+        $runDate->countRun = $runDate->countRun - $run;
+        $runDate->totalRun = $runDate->totalRun - $run;
+
+        $runDate->save();
     }
 }
