@@ -167,6 +167,10 @@ class UsersController extends Controller
     public function getUserStatus($user_id) {
         $user_attend = User::find($user_id)
         ->attends()
+        ->select(
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %T') as date"),
+            DB::raw('id, user_id, run, device_id, desc_value, attend, updated_at'),
+        )
         ->get();
 
         $user_run = User::find($user_id)
