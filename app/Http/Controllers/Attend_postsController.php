@@ -55,5 +55,17 @@ class Attend_postsController extends Controller
         return $res;
     }
 
+    // post 전체 보여주기
+    public function index() {
+        $posts = Attend_posts::latest()->paginate(20);
+
+        $res = response()->json([
+            'status' => 'success',
+            'posts' => $posts
+        ], 200);
+
+        return $res;
+    }
+
 
 }
