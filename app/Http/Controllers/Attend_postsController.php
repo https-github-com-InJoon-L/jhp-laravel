@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attend_posts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -78,4 +79,45 @@ class Attend_postsController extends Controller
         return $res;
     }
 
+    // post 수정
+    public function update(Request $req, $selected_post_id) {
+        $validator = Validator::make($req->all(), [
+            'user_id' => 'required|integer',
+            'title' => 'required|string',
+            'content' => 'required|string',
+            'imageFile' => 'image|Max:2000'
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $post = Attend_posts::find($selected_post_id);
+
+        if ($req->user_id != $post->user_id) {
+            $res = response()->json([
+                'status' => 'false',
+                'message' => '작성자가 아닙니다.',
+            ], 403);
+
+            return $res;
+        }
+
+        if ($req->file('imageFile')) {
+            $imagePath = 'public/images/' . $post->image;
+            Storage::delete($imagePath);
+            $post->image = $this->uploadPostImage($req);
+        }
+
+        $post->title = $req->title;
+        $post->content = $req->content;
+        $post->save();
+
+        $res = response()->json([
+            'status' => 'success',
+            'post' => $post,
+        ], 200);
+
+        return $res;
+    }
 }
