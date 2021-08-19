@@ -30,6 +30,7 @@ class Attend_postsController extends Controller
             'user_id' => 'required|integer',
             'title' => 'required|string',
             'content' => 'required|string',
+            'run' => 'required|integer',
             'imageFile' => 'image|Max:2000'
         ]);
 
@@ -41,6 +42,7 @@ class Attend_postsController extends Controller
         $post->user_id = $req->user_id;
         $post->title = $req->title;
         $post->content = $req->content;
+        $post->run = $req->run;
 
         if ($req->file('imageFile')) {
             $post->image = $this->uploadPostImage($req);

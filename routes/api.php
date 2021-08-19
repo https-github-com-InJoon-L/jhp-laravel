@@ -44,7 +44,7 @@ Route::delete('/token/delete', [AuthController::class, 'deleteApiToken']);
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
 
 // run 달리면
-Route::patch('/run/{selected_user_id}', [RunsController::class, 'minusRun']);
+Route::patch('/run/{selected_post_id}', [RunsController::class, 'minusRun']);
 
 //Attend_posts 달리기 인증 게시판
 Route::post('/attend_posts/create', [Attend_postsController::class, 'create']);
