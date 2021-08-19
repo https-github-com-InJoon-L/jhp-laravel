@@ -137,4 +137,39 @@ class Attend_postsController extends Controller
 
         return $res;
     }
+
+    public function destroy(Request $req, $selected_post_id) {
+        $validator = Validator::make($req->all(), [
+            'user_id' => 'required|integer',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $post = Attend_posts::find($selected_post_id);
+
+        if ($req->user_id != $post->user_id) {
+            $res = response()->json([
+                'status' => 'false',
+                'message' => '작성자가 아닙니다.',
+            ], 403);
+
+            return $res;
+        }
+
+        if ($post->image) {
+            $imagePath = 'public/images/' . $post->image;
+            Storage::delete($imagePath);
+        }
+
+        $post->delete();
+
+        $res = response()->json([
+            'status' => 'ture',
+            'message' => '삭제가 되었습니다.',
+        ], 200);
+
+        return $res;
+    }
 }

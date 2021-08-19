@@ -51,4 +51,5 @@ Route::post('/attend_posts/create', [Attend_postsController::class, 'create']);
 Route::get('/attend_posts/index', [Attend_postsController::class, 'index']);
 Route::get('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'show']);
 Route::put('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'update']);
+Route::delete('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'destroy']);
 
