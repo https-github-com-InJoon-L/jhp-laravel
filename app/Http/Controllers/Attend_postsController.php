@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attend_posts;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -57,7 +58,15 @@ class Attend_postsController extends Controller
 
     // post 전체 보여주기
     public function index() {
-        $posts = Attend_posts::latest()->get()->fresh('user');
+        $posts = DB::table('attend_posts')
+        ->join('users', 'users.id', '=', 'attend_posts.user_id')
+        ->select(
+            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d %T') as date"),
+            DB::raw('attend_posts.id, attend_posts.title, attend_posts.content,
+            attend_posts.user_id, attend_posts.image, attend_posts.flag,
+            attend_posts.updated_at, attend_posts.run, users.name'),
+        )->orderBy('date', 'desc')->get();
+
 
         $res = response()->json([
             'status' => 'success',
@@ -69,7 +78,15 @@ class Attend_postsController extends Controller
 
     // post 상세보기
     public function show($selected_post_id) {
-        $post = Attend_posts::find($selected_post_id)->fresh('user');
+        $post = DB::table('attend_posts')
+        ->join('users', 'users.id', '=', 'attend_posts.user_id')
+        ->where('attend_posts.id', '=', $selected_post_id)
+        ->select(
+            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d %T') as date"),
+            DB::raw('attend_posts.id, attend_posts.title, attend_posts.content,
+            attend_posts.user_id, attend_posts.image, attend_posts.flag,
+            attend_posts.updated_at, attend_posts.run, users.name'),
+        )->get();
 
         $res = response()->json([
             'status' => 'success',
