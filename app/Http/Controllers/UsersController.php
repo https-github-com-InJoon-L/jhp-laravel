@@ -212,16 +212,43 @@ class UsersController extends Controller
         ], 200);
     }
 
-    // 한달치 반별 출결 현황 (도넛)
-    public function classAttendStatusByMonth(Request $request) {
-        $teamId = $request->query('teamId');
-        
-        $dateSubMonth = Carbon::now()->subMonth();
+    // 한달간 or 오늘 반별 출결 현황 (도넛)
+    public function classAttendStatus(Request $request, $teamId) {
+        $range = $request->query('range'); // month, today
+
+        if ($range === 'month') {
+            $range = Carbon::now()->subMonth();
+        } else if ($range === 'today') {
+            $range = Carbon::now();
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'range must month or today!',
+            ], 403);
+        };
         
         $data = DB::table('users')
         ->join('attends', 'users.id', '=', 'attends.user_id')
         ->selectRaw('attends.desc_value, count(*) as count')
         ->where('users.current_team_id', $teamId)
+        ->where('attends.created_at', '>=', $range)
+        ->groupBy('desc_value')
+        ->get();
+
+        return response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
+    }
+
+    // 한달간 개인별 출결 현황 (도넛)
+    public function userAttendStatusByMonth($userId) {
+        $dateSubMonth = Carbon::now()->subMonth();
+        
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->selectRaw('attends.desc_value, count(*) as count')
+        ->where('users.id', $userId)
         ->where('attends.created_at', '>=', $dateSubMonth)
         ->groupBy('desc_value')
         ->get();
@@ -232,33 +259,29 @@ class UsersController extends Controller
         ]);
     }
 
-    // 한달치 개인별 출결 현황 (도넛)
-    public function userAttendStatusByMonth(Request $request, $userId) {
-        $date = $request->query('date'); // month or week
+    // 일주일간 개인별 날짜에대한 출결현황
+    public function userAttendStatusByWeek($userId) {
+        $today = Carbon::now()->format('Y-m-d');
+        $subDate = Carbon::now()->subWeek()->format('Y-m-d');
 
-        if($date === 'month') {
-            $date = Carbon::now()->subMonth();
-        } else if($date === 'week') {
-            $date = Carbon::now()->subWeek();
-        } else {
-            return response()->json([
-                'state' => 'failed',
-                'message' => 'date is not month or week!',
-            ]);
-        }
-        
-        $data = DB::table('users')
-        ->join('attends', 'users.id', '=', 'attends.user_id')
-        ->selectRaw('attends.desc_value, count(*) as count')
-        ->where('users.id', $userId)
-        ->where('attends.created_at', '>=', $date)
-        ->groupBy('desc_value')
-        ->get();
+        $data = DB::select(
+            DB::raw("
+                WITH RECURSIVE cte  AS (
+                    SELECT '{$subDate}' AS date FROM DUAL
+                    UNION ALL
+                    SELECT date_add(date, INTERVAL 1 DAY) FROM cte
+                    WHERE date < '{$today}'
+                )
+                SELECT u.id, u.name, a.desc_value, c.date
+                FROM (SELECT id, name FROM users WHERE id = {$userId}) u
+                JOIN attends a ON u.id = a.user_id
+                RIGHT JOIN cte c ON c.date = DATE_FORMAT(a.created_at, '%Y-%m-%d');
+            ")
+        );
 
-        return response()->json([
+        return  response()->json([
             'state' => 'success',
             'data' => $data,
         ]);
     }
-
 }

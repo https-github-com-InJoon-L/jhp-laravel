@@ -58,9 +58,11 @@ Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer'])
 Route::get('/users/rank', [UsersController::class, 'getUsersAttendsByDate']);
 
 // 출결 현황
-Route::get('/user/class/attendStatusByMonth', [UsersController::class, 'classAttendStatusByMonth']);
-Route::get('/user/attendStatusByMonth/{user_id}', [UsersController::class, 'userAttendStatusByMonth']);
+Route::get('/class/{team_id}/attend', [UsersController::class, 'classAttendStatus']);
+Route::get('/user/{user_id}/attend/month', [UsersController::class, 'userAttendStatusByMonth']);
+Route::get('/user/{user_id}/attend/week', [UsersController::class, 'userAttendStatusByWeek']);
 Route::get('/user/attendance/{user_id}', [UsersController::class, 'getAttendanceStatus']);
 Route::get('/user/attendStatus/{user_id}', [UsersController::class, 'getUserStatus']);
+
 // run 달리면
 Route::patch('/run/{selected_user_id}', [RunsController::class, 'minusRun']);
