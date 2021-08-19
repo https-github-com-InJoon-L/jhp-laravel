@@ -22,7 +22,6 @@ class Attend_postsController extends Controller
         return $fileName;
     }
 
-
     // post 생성
     public function create(Request $req) {
         $validator = Validator::make($req->all(), [
@@ -57,7 +56,7 @@ class Attend_postsController extends Controller
 
     // post 전체 보여주기
     public function index() {
-        $posts = Attend_posts::latest()->paginate(20);
+        $posts = Attend_posts::latest()->get()->fresh('user');
 
         $res = response()->json([
             'status' => 'success',
@@ -67,5 +66,16 @@ class Attend_postsController extends Controller
         return $res;
     }
 
+    // post 상세보기
+    public function show($selected_post_id) {
+        $post = Attend_posts::find($selected_post_id)->fresh('user');
+
+        $res = response()->json([
+            'status' => 'success',
+            'post' => $post,
+        ]);
+
+        return $res;
+    }
 
 }

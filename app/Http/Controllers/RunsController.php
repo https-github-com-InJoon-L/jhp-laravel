@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RunsController extends Controller
 {
-    // user_id랑 달린 수(minus_run)
+    // user_id랑 달린 수(run)
     public function minusRun(Request $req) {
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',

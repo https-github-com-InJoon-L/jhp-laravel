@@ -49,4 +49,5 @@ Route::patch('/run/{selected_user_id}', [RunsController::class, 'minusRun']);
 //Attend_posts 달리기 인증 게시판
 Route::post('/attend_posts/create', [Attend_postsController::class, 'create']);
 Route::get('/attend_posts/index', [Attend_postsController::class, 'index']);
+Route::get('/attend_posts/show/{selected_post_id}', [Attend_postsController::class, 'show']);
 
