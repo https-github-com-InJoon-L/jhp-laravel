@@ -100,7 +100,8 @@ class Attend_postsController extends Controller
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
             'content' => 'required|string',
-            'imageFile' => 'image|Max:2000'
+            'imageFile' => 'image|Max:2000',
+            'run' => 'integer'
         ]);
 
         if($validator->fails()){
@@ -125,6 +126,10 @@ class Attend_postsController extends Controller
         }
 
         $post->content = $req->content;
+        if ($req->run != null) {
+            $post->run = $req->run;
+        }
+
         $post->save();
 
         $res = response()->json([
