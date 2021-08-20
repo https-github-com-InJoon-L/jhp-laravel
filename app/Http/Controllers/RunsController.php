@@ -37,10 +37,20 @@ class RunsController extends Controller
         $post = Attend_posts::find($selected_post_id);
 
         if ($post->flag == true) {
+            $post->flag = false;
+
+            $run->countRun = $run->countRun + $req->run;
+            $run->minusRun = $run->minusRun - $req->run;
+
+            $run->save();
+            $post-> save();
+
             $res = response()->json([
-                'status' => 'false',
-                'message' => '이미 승인처리가 된 게시글입니다.',
-            ], 403);
+                'status' => 'true',
+                'run' => $run,
+                'flag' => $post->flag,
+                'message' => '승인이 취소되었습니다.',
+            ], 200);
 
             return $res;
         }
