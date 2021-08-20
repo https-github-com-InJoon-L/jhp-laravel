@@ -67,8 +67,7 @@ class Attend_postsController extends Controller
             DB::raw('attend_posts.id, attend_posts.title, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name'),
-        )->orderBy('date', 'desc')->get();
-
+        )->orderBy('date', 'desc')->paginate(10);
 
         $res = response()->json([
             'status' => 'success',
