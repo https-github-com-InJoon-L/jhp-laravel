@@ -87,7 +87,7 @@ class Attend_postsController extends Controller
             DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d %T') as date"),
             DB::raw('attend_posts.id, attend_posts.title, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
-            attend_posts.updated_at, attend_posts.run, users.name'),
+            attend_posts.updated_at, attend_posts.run, users.name, users.profile_photo_path'),
         )->get();
 
         $res = response()->json([
