@@ -28,7 +28,6 @@ class Attend_postsController extends Controller
     public function create(Request $req) {
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
-            'title' => 'required|string',
             'content' => 'required|string',
             'run' => 'required|integer',
             'imageFile' => 'image|Max:2000'
@@ -40,7 +39,6 @@ class Attend_postsController extends Controller
 
         $post = new Attend_posts();
         $post->user_id = $req->user_id;
-        $post->title = $req->title;
         $post->content = $req->content;
         $post->run = $req->run;
 
@@ -64,7 +62,7 @@ class Attend_postsController extends Controller
         ->join('users', 'users.id', '=', 'attend_posts.user_id')
         ->select(
             DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d %T') as date"),
-            DB::raw('attend_posts.id, attend_posts.title, attend_posts.content,
+            DB::raw('attend_posts.id, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name'),
         )->orderBy('date', 'desc')->paginate(10);
@@ -84,7 +82,7 @@ class Attend_postsController extends Controller
         ->where('attend_posts.id', '=', $selected_post_id)
         ->select(
             DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d %T') as date"),
-            DB::raw('attend_posts.id, attend_posts.title, attend_posts.content,
+            DB::raw('attend_posts.id, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name, users.profile_photo_path'),
         )->get();
@@ -101,7 +99,6 @@ class Attend_postsController extends Controller
     public function update(Request $req, $selected_post_id) {
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
-            'title' => 'required|string',
             'content' => 'required|string',
             'imageFile' => 'image|Max:2000'
         ]);
@@ -127,7 +124,6 @@ class Attend_postsController extends Controller
             $post->image = $this->uploadPostImage($req);
         }
 
-        $post->title = $req->title;
         $post->content = $req->content;
         $post->save();
 
