@@ -30,7 +30,7 @@ class Attend_postsController extends Controller
             'user_id' => 'required|integer',
             'content' => 'required|string',
             'run' => 'required|integer',
-            'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000'
+            'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
         ]);
 
         if($validator->fails()){
@@ -123,6 +123,10 @@ class Attend_postsController extends Controller
             $imagePath = 'public/images/' . $post->image;
             Storage::delete($imagePath);
             $post->image = $this->uploadPostImage($req);
+        } else {
+            $imagePath = 'public/images/' . $post->image;
+            Storage::delete($imagePath);
+            $post->image = '';
         }
 
         $post->content = $req->content;
