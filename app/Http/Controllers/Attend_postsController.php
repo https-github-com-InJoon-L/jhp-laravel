@@ -88,9 +88,14 @@ class Attend_postsController extends Controller
         )
         ->get();
 
+        $comment = DB::table('attend_comments')
+        ->where('attend_post_id', '=', $selected_post_id)
+        ->get();
+
         $res = response()->json([
             'status' => 'success',
             'post' => $post,
+            'comment' => $comment,
         ]);
 
         return $res;

@@ -79,3 +79,4 @@ Route::delete('/attend_posts/{selected_post_id}', [Attend_postsController::class
 // Attend_comments 달리기 인증 게시판 댓글
 Route::post('/post/{postId}/comment', [Attend_commentsController::class, 'create']);
 Route::delete('/comment/{comment}', [Attend_commentsController::class, 'destroy']);
+Route::patch('/comment/{comment}', [Attend_commentsController::class, 'update']);

@@ -33,11 +33,30 @@ class Attend_commentsController extends Controller
     }
 
     // 댓글 삭제
-    public function destroy(Request $req, Attend_comments $comment) {
+    public function destroy(Attend_comments $comment) {
         $comment->delete();
 
         return response()->json([
             'status' => 'success',
+        ], 200);
+    }
+
+    // 댓글 수정
+    public function update(Request $req, Attend_comments $comment) {
+        $validator = Validator::make($req->all(), [
+            'content' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $comment->content = $req->content;
+        $comment->save();
+
+        return response()->json([
+            'status' => 'success',
+            'comment' => $comment,
         ], 200);
     }
 }
