@@ -25,6 +25,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // axios.Post('/api/attends') <- 요청 방법
 Route::post('/attends', [AttendsController::class, 'attend']);
+Route::post('/attends/absent', [AttendsController::class, 'absent']);
+Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
+Route::patch('/attends/{selected_user_id}', [AttendsController::class, 'update']);
 
 Route::post('/absence', [AttendsController::class, 'absent']);
 

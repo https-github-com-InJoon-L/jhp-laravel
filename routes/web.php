@@ -58,6 +58,6 @@ Route::get('/timetable',function() {
 
 Route::middleware(['auth:sanctum', 'verified'])
             ->get('/dashboard/professor',function(){
-                return Inertia::render('DashboardProfessor');
+                return Inertia::render('Professor/DashboardProfessor');
             })
             ->name('dashboard.professor');

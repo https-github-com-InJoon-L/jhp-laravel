@@ -66,7 +66,7 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetButton from './Button'
+    import JetButton from '@/Jetstream/Button'
     import LoadingBar from "@/Pages/Board/LoadingBar"
     import axios from 'axios';
 

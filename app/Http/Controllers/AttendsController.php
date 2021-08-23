@@ -3,208 +3,214 @@
 namespace App\Http\Controllers;
 
 use App\Models\Attend;
+use App\Models\Run;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
-class UsersController extends Controller
+class AttendsController extends Controller
 {
-    // team_id 별 전체 사용자
-    public function read() {
-        // 읽기 권한 검사
-        
-        $users = [
-            'none' => User::all()->where('current_team_id', 1),
-            'wdj' => User::all()->where('current_team_id', 2),
-            'cpj' => User::all()->where('current_team_id', 3),
-            'professor' => User::all()->where('current_team_id', 4)
-        ];
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $users
-        ], 200);
-    }
-
-    // 사용자 정보 수정
-    public function update(Request $request, $selected_user_id) {
-        // 수정 권한 검사
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone_number' => 'required|string|max:255',
-            'class' => 'required|string|max:255',
-            'sid' => 'required|integer',
-            'current_team_id' => 'required|integer',
+    public function attend(Request $req) {
+        $validator = Validator::make($req->all(), [
+            'user_sid' => 'required|integer',
         ]);
 
         if($validator->fails()){
-            return response()->json([
-                'states' => 'false',
-                'message' => $validator->errors()->toJson()
-            ], 400);
+            return response()->json($validator->errors()->toJson(), 400);
         }
 
-        try {
-            $user = User::find($selected_user_id);
-            $user->update($request->all());
-        } catch(QueryException $e){
-            return response()->json([
-                'states' => 'false',
-                'message' => $e->getMessage()
-            ], 403);
+        $date = date("Y-m-d");
+        $time = date("H:i:s");
+        $attend_start = strtotime('08:30:00');
+        $attend_end = strtotime('18:00:00');
+        $point = strtotime('09:00:00');
+
+        $timestamp = strtotime($time);
+        $result = $timestamp - $point;
+
+        $attend = new Attend();
+        // $userId = Auth::user()->id; // api.php는 비저장 상태라 토큰을 받아오지 않는 한 인증이 불가
+        $userId = User::where('sid', $req->user_sid)->first()->id;
+
+        // 오늘 출석 했는지 판단 후 했다면 디비에 넣지 않고 return false
+        if (Attend::where('attend', $date)->where('user_id', $userId)->get()->count() != 0) {
+            return $res = response()->json([
+                'status' => 'false',
+                'message' => '오늘은 이미 출결 했습니다.',
+            ]);
         }
 
-        $user->save();
+        // 8:30 ~ 18:00에만 출석이 가능
+        if ($timestamp < $attend_start || $timestamp > $attend_end) {
+            return $res = response()->json([
+                'status' => 'false',
+                'message' => '지금은 출석 할 수 없는 시간입니다.',
+            ]);
+        }
 
-        return response()->json([
-            'status' => 'success'
-        ], 200);
-    }
+        if ($result > 0) {
+            $cul = number_format($result/60/5); // 바퀴 수
+            $cul++;
+            if ($cul > 20) $cul = 20;
 
-    // 달리기 횟수 반별 랭킹
-    public function theMostestRunner() {
-        $wdj_runners = $this->getRunnersByClass(2);
-        $cpj_runners = $this->getRunnersByClass(3);
+            $attend->run = $cul;
+            $attend->desc_value = '지각';
 
-        $runners = [
-            'wdj' => $wdj_runners,
-            'cpj' => $cpj_runners,
-        ];
+            // 첫 번째 인자 학번, 두 번째 인자 오늘 run 수 세 번째 인자 user_id
+            $this->insertRun($attend->run, $userId);
+        } else {
+            $attend->desc_value = '출석';
+        }
 
-        return response()->json([
+        $attend->user_id = $userId;
+        $attend->attend = $date;
+        $attend->save();
+
+
+        $res = response()->json([
             'status' => 'success',
-            'runners' => $runners,
+            'data' => $attend,
+            'message' => $date.' 출석했습니다.',
         ], 200);
+
+        return $res;
     }
 
-    // 반별 유저 + 달리기 총 횟수 테이블
-    protected function getRunnersByClass($class_value) {
-        return DB::table('users')
-        ->join('runs', 'users.id', '=', 'runs.user_id')
-        ->where('users.current_team_id', $class_value)
-        ->select('users.*', 'runs.totalRun')
-        ->orderBy('totalRun', 'desc')
-        ->get();
+    // 첫 번째 인자 오늘 run 두 세 번째 인자 user_id
+    public function insertRun($todayRun, $userId) {
+        $run = null;
+        $countRun = $todayRun;
+        $totalRun = User::find($userId)->attends()->sum('run');
+
+
+        if (Run::where('user_id', $userId)->get()->count() == 0) {
+            $run = new Run();
+            $run->user_id = $userId;
+        } else {
+            $run = Run::where('user_id', $userId)->first();
+        }
+
+        $run->countRun = $run->countRun + $countRun;
+        // 오늘 출석 데이터가 디비에 들어가기 전에 실행 되기 때문에 전날까지만 가져오므로 오늘꺼 더해준다.
+        $run->totalRun = $totalRun + $countRun;
+
+        $run->save();
     }
 
-    // 결석 횟수 반별 랭킹
-    public function theMostestAbsentee() {
-        $attendState = '결석';
-        $attends = $this->getAttends($attendState);
+    // 출석하지 않은 유저들 반별로
+    public function notAttendUsers(Request $req) {
+        $validator = Validator::make($req->all(), [
+            'class' => 'required|string',
+        ]);
 
-        $wdj_absentees = $this->getUsersByClass($attends, 2);
-        $cpj_absentees = $this->getUsersByClass($attends, 3);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
 
-        $absentees = [
-            'wdj' => $wdj_absentees,
-            'cpj' => $cpj_absentees,
-        ];
+        $date = date("Y-m-d");
+        $users = User::where('class', $req->class)->get();
+        $attend_users = Attend::where('attend', $date)->get();
+        $users_array = $users->toArray();
 
-        return response()->json([
+        // 하루에 한명도 출석 안할 시
+        if ($attend_users->count() == 0) {
+            $res = response()-> json([
+                'status' => 'success',
+                'users' => $users_array
+            ]);
+
+            return $res;
+        }
+
+        // 한명이라도 출석 했다면
+        for ($i = 0; $i < $users->count(); $i++) {
+            if($users[$i]->id == $attend_users[$i]->user_id) {
+                array_splice($users_array, $i);
+            }
+        }
+
+        $res = response()-> json([
             'status' => 'success',
-            'absentees' => $absentees,
-        ], 200);
+            'users' => $users_array
+        ]);
+
+        return $res;
     }
 
-    // 지각 횟수 반별 랭킹
-    public function theMostestLatecomer() {
-        $attendState = '지각';
-        $attends = $this->getAttends($attendState);
+    // 결석 처리
+    public function absent(Request $req) {
+        $validator = Validator::make($req->all(), [
+            'user_sid' => 'required|integer',
+        ]);
 
-        $wdj_latecomers = $this->getUsersByClass($attends, 2);
-        $cpj_latecomers = $this->getUsersByClass($attends, 3);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
 
-        $latecomers = [
-            'wdj' => $wdj_latecomers,
-            'cpj' => $cpj_latecomers,
-        ];
+        $date = date("Y-m-d");
+        $userId = User::where('sid', $req->user_sid)->first()->id;
 
-        return response()->json([
+        // 오늘 결석 했는지 판단 후 했다면 디비에 넣지 않고 return false
+        if (Attend::where('attend', $date)->where('user_id', $userId)->get()->count() != 0) {
+            return response()->json([
+                'status' => 'false',
+                'message' => '오늘은 이미 출결 했습니다.',
+            ]);
+        }
+
+        $absent_user = new Attend();
+        $absent_user->user_id = $userId;
+        $absent_user->desc_value = '결석';
+        $absent_user->attend = $date;
+        $absent_user->run = 20;
+
+        $absent_user->save();
+
+        $res = response()-> json([
             'status' => 'success',
-            'latecomers' => $latecomers,
-        ], 200);
+            'data' => $absent_user,
+            'message' => $date.' 결석했습니다.',
+        ]);
+
+        return $res;
     }
 
-    // 지각 or 결석 명단 뽑아온 테이블
-    protected function getAttends($where_value) {
-        return DB::table('attends')
-        ->selectRaw("user_id, count(*) as total_count")
-        ->where('attends.desc_value', $where_value)
-        ->groupBy('user_id');
-    }
+    // 출석정보 수정
+    public function update(Request $req, $selected_user_id) {
+        $validator = Validator::make($req->all(), [
+            'run' => 'required|integer',
+            'desc_value' => 'required|string',
+            'attend' => 'required|string',
+        ]);
 
-    // 반별 유저 + (지각 or 결석) 총 횟수 테이블
-    protected function getUsersByClass($attends, $class_value) {
-        return User::query()
-        ->joinSub($attends, 'attends', function($join) {
-            $join->on('id', '=', 'attends.user_id');
-        })
-        ->where('users.current_team_id', $class_value)
-        ->orderBy('attends.total_count', 'desc')
-        ->get();
-    }
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
 
-    // 출석 현황 최근 3개
-    public function getAttendanceStatus($user_id) {
-        $attends = User::find($user_id)
-        ->attends()
-        ->latest()
-        ->take(3)
-        ->get();
+        $updateAttend = User::find($selected_user_id)->attends()->where('attend', $req->attend)->first();
+        $updateAttend->desc_value = $req->desc_value;
 
-        return response()->json([
+        if ($updateAttend->run != $req->run) {
+            $this->updateRun($selected_user_id, $updateAttend->run);
+            $updateAttend->run = $req->run;
+        }
+
+        $updateAttend->save();
+
+        $res = response()-> json([
             'status' => 'success',
-            'attends' => $attends,
-        ], 200);
+            'data' => $updateAttend,
+            'message' => '출석정보가 변경되었습니다.',
+        ]);
+
+        return $res;
     }
 
-    // 사용자 달리기, 출석 현황
-    public function getUserStatus($user_id) {
-        $user_attend = User::find($user_id)
-        ->attends()
-        ->get();
+    public function updateRun($user_id, $run) {
+        $runDate = Run::where('user_id', $user_id)->first();
+        $runDate->countRun = $runDate->countRun - $run;
+        $runDate->totalRun = $runDate->totalRun - $run;
 
-        $user_run = User::find($user_id)
-        ->run()
-        ->orderBy('totalRun', 'desc')
-        ->get();
-
-        return response()->json([
-            'status' => 'success',
-            'user_attend' => $user_attend,
-            'user_run' => $user_run
-        ], 200);
-    }
-
-    //  반별 일주일간 지각 or 결석 현황
-    public function getUsersAttendsByDate(Request $request) {
-        $teamId = $request->query('teamId');
-        $attend = $request->query('attend');
-
-        // 일주일 전 2021-08-17 -> 2021-08-09T15:00:00.000000Z
-        $date = Carbon::now()->previous();
-
-        $data = DB::table('users')
-        ->join('attends', 'users.id', '=', 'attends.user_id')
-        ->where('users.current_team_id', $teamId)
-        ->where('attends.desc_value', $attend)
-        ->where('attends.created_at', '>=', $date)
-        ->select(
-            DB::raw("DATE_FORMAT(attends.created_at, '%m/%d') as date"),
-            DB::raw('COUNT(*) as count'),
-        )
-        ->groupBy('date')
-        ->orderBy('date')
-        ->get();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $data,
-        ], 200);
+        $runDate->save();
     }
 }
