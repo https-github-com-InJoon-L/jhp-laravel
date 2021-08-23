@@ -273,7 +273,7 @@ class UsersController extends Controller
                     SELECT date_add(date, INTERVAL 1 DAY) FROM cte
                     WHERE date < '{$today}'
                 )
-                SELECT u.id, u.name, a.desc_value, c.date
+                SELECT u.id, u.name, a.desc_value, c.date, a.run
                 FROM (SELECT id, name FROM users WHERE id = {$userId}) u
                 JOIN attends a ON u.id = a.user_id
                 RIGHT JOIN cte c ON c.date = DATE_FORMAT(a.created_at, '%Y-%m-%d');
