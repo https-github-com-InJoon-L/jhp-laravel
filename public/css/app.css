@@ -8606,8 +8606,11 @@ html {
 .w-1\/10 {
 	width: 10%;
 }
-.w-1\/5 {
+.w-2\/10 {
 	width: 20%;
+}
+.w-4\/10 {
+	width: 40%;
 }
 .w-2\/5 {
 	width: 40%;
@@ -8617,12 +8620,6 @@ html {
 }
 .w-1\/6 {
 	width: 16.666667%;
-}
-.w-2\/10 {
-	width: 20%;
-}
-.w-4\/10 {
-	width: 40%;
 }
 .min-w-0 {
 	min-width: 0px;
@@ -9020,9 +9017,6 @@ html {
 }
 .p-3 {
 	padding: 0.75rem;
-}
-.p-0 {
-	padding: 0px;
 }
 .px-4 {
 	padding-left: 1rem;

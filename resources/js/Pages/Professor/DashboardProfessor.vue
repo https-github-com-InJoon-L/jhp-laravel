@@ -307,7 +307,9 @@
             console.log(this.current_user);
             if(!(this.current_user==4)){
                 this.errState=4027;
+                this.errMsg=['볼 권한이 없습니다. 홈으로 돌아갑니다.'];
                 this.errorDialogShow=true;
+                return;
             }
 
             axios.get('/api/users')

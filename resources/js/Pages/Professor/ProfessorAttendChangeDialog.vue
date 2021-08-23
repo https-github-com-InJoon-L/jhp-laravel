@@ -90,7 +90,7 @@
         },
         methods: {
             close() {
-                console.log('상세창 닫기');
+                console.log(this.current_user);
                 this.$emit('attendChangeClose',6,['attend창 닫기']);
             },
             change(){
