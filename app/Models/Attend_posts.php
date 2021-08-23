@@ -20,4 +20,9 @@ class Attend_posts extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Attend_comments::class);
+    }
 }

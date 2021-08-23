@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Attend_commentsController;
 use App\Http\Controllers\Attend_postsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -75,3 +76,6 @@ Route::get('/attend_posts/{selected_post_id}', [Attend_postsController::class, '
 Route::put('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'update']);
 Route::delete('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'destroy']);
 
+// Attend_comments 달리기 인증 게시판 댓글
+Route::post('/post/{postId}/comment', [Attend_commentsController::class, 'create']);
+Route::delete('/comment/{comment}', [Attend_commentsController::class, 'destroy']);

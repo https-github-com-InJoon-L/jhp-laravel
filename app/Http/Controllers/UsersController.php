@@ -190,8 +190,8 @@ class UsersController extends Controller
         $teamId = $request->query('teamId');
         $attend = $request->query('attend');
 
-        // 일주일 전 2021-08-17 -> 2021-08-09T15:00:00.000000Z
-        $date = Carbon::now()->previous();
+        // 일주일 전 2021-08-17 -> 2021-08-09
+        $date = Carbon::now()->previous()->toDateString();
 
         $data = DB::table('users')
         ->join('attends', 'users.id', '=', 'attends.user_id')
@@ -217,16 +217,16 @@ class UsersController extends Controller
         $range = $request->query('range'); // month, today
 
         if ($range === 'month') {
-            $range = Carbon::now()->subMonth();
+            $range = Carbon::now()->subMonth()->toDateString(); // 2021-07-23
         } else if ($range === 'today') {
-            $range = Carbon::now();
+            $range = Carbon::now()->toDateString(); // 2021-08-23
         } else {
             return response()->json([
                 'status' => 'failed',
                 'message' => 'range must month or today!',
             ], 403);
         };
-        
+
         $data = DB::table('users')
         ->join('attends', 'users.id', '=', 'attends.user_id')
         ->selectRaw('attends.desc_value, count(*) as count')
@@ -243,8 +243,9 @@ class UsersController extends Controller
 
     // 한달간 개인별 출결 현황 (도넛)
     public function userAttendStatusByMonth($userId) {
-        $dateSubMonth = Carbon::now()->subMonth();
-        
+        $dateSubMonth = Carbon::now()->subMonth()->toDateString();
+        // 2021-07-23
+
         $data = DB::table('users')
         ->join('attends', 'users.id', '=', 'attends.user_id')
         ->selectRaw('attends.desc_value, count(*) as count')
