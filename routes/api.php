@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Attend_postsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
@@ -34,7 +35,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 Route::post('/attends', [AttendsController::class, 'attend']);
 Route::post('/attends/absent', [AttendsController::class, 'absent']);
 Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
-Route::patch('/attend/{selected_user_id}', [AttendsController::class, 'update']);
+Route::patch('/attends/{selected_user_id}', [AttendsController::class, 'update']);
 // test용
 Route::post('/token', [AuthController::class, 'createApiToken']);
 // 회원탈퇴시 할 것
@@ -65,4 +66,12 @@ Route::get('/user/attendance/{user_id}', [UsersController::class, 'getAttendance
 Route::get('/user/attendStatus/{user_id}', [UsersController::class, 'getUserStatus']);
 
 // run 달리면
-Route::patch('/run/{selected_user_id}', [RunsController::class, 'minusRun']);
+Route::patch('/run/{selected_post_id}', [RunsController::class, 'minusRun']);
+
+//Attend_posts 달리기 인증 게시판
+Route::post('/attend_posts/create', [Attend_postsController::class, 'create']);
+Route::get('/attend_posts/index', [Attend_postsController::class, 'index']);
+Route::get('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'show']);
+Route::put('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'update']);
+Route::delete('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'destroy']);
+
