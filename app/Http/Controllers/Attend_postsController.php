@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attend_comments;
 use App\Models\Attend_posts;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -67,6 +69,11 @@ class Attend_postsController extends Controller
             attend_posts.updated_at, attend_posts.run, users.name'),
         )->orderBy('date', 'desc')->paginate(10);
 
+        foreach($posts as $row) {
+            $row->updated_at = Carbon::parse($row->updated_at);
+            $row->updated_at = $row->updated_at->diffForHumans(Carbon::now());
+        }
+
         $res = response()->json([
             'status' => 'success',
             'posts' => $posts
@@ -89,8 +96,18 @@ class Attend_postsController extends Controller
         ->get();
 
         $comment = DB::table('attend_comments')
+        ->join('users', 'users.id', '=', 'attend_comments.user_id')
         ->where('attend_post_id', '=', $selected_post_id)
+        ->select(
+            DB::raw('attend_comments.id, attend_comments.content, users.name, attend_comments.attend_post_id,
+            attend_comments.created_at, attend_comments.updated_at')
+        )
         ->get();
+
+        for ($i = 0; $i < $comment->count(); $i++) {
+            $comment[$i]->updated_at = Carbon::parse($comment[$i]->updated_at);
+            $comment[$i]->updated_at = $comment[$i]->updated_at->diffForHumans(Carbon::now());
+        }
 
         $res = response()->json([
             'status' => 'success',
