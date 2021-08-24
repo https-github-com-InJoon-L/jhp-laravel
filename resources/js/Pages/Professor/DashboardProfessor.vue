@@ -78,7 +78,6 @@
         :errMsg="errMsg" :errState="errState" @errorClose="closeErrorDialog">
         </professor-error-dialog>
     </div>
-    
 </template>
 
 <script>
@@ -178,25 +177,25 @@
                                     if(Object.keys(this.allTeam.none).length==0)
                                         this.allTeam.none={};
                                     this.allTeam.none[key]=this.selectedUser;
-                                    this.changeList(1);
+                                    // this.changeList(1);
                                     break;
                                 case 2:
                                     if(Object.keys(this.allTeam.wdj).length==0)
                                         this.allTeam.wdj={};
                                     this.allTeam.wdj[key]=this.selectedUser;
-                                    this.changeList(2);
+                                    // this.changeList(2);
                                     break;
                                 case 3:
                                     if(Object.keys(this.allTeam.cpj).length==0)
                                         this.allTeam.cpj={};
                                     this.allTeam.cpj[key]=this.selectedUser;
-                                    this.changeList(3);
+                                    // this.changeList(3);
                                     break;
                                 case 4:
                                     if(Object.keys(this.allTeam.professor).length==0)
                                         this.allTeam.professor={};
                                     this.allTeam.professor[key]=this.selectedUser;
-                                    this.changeList(4);
+                                    // this.changeList(4);
                                     break;
                                 default:
                                     loaction.reload();
@@ -311,7 +310,6 @@
                 this.errorDialogShow=true;
                 return;
             }
-
             axios.get('/api/users')
                 .then(res=>{
                     console.log(res.data.status);

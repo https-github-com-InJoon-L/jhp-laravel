@@ -37,7 +37,7 @@
         </td>
     </tr>
     <tr v-else class="flex">
-        <td class=" w-1/4 py-4 whitespace-nowrap text-center">
+        <td class="py-4 w-full whitespace-nowrap text-center">
             <div class="text-center inline">
                 <span class="text-sm text-center text-gray-900">
                     해당 반에 등록된 유저가 없습니다.
