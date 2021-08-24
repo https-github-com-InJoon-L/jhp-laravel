@@ -69,9 +69,30 @@ class Attend_postsController extends Controller
             attend_posts.updated_at, attend_posts.run, users.name'),
         )->orderBy('date', 'desc')->paginate(10);
 
+        $commentsCount = DB::table('attend_comments')
+        ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
+        ->select(
+            DB::raw('attend_posts.id, COUNT(attend_comments.id) as count')
+        )->groupBy('attend_posts.id')->orderBy('attend_posts.created_at', 'desc')
+        ->get();
+
+        $i = 0;
+        $flag = true;
+
         foreach($posts as $row) {
             $row->updated_at = Carbon::parse($row->updated_at);
             $row->updated_at = $row->updated_at->diffForHumans(Carbon::now());
+
+            if ($flag && $row->id == $commentsCount[$i]->id) {
+                $row->comments_count = $commentsCount[$i]->count;
+                $i++;
+
+                if ($commentsCount->count() <= $i) {
+                    $flag = false;
+                }
+            } else {
+                $row->comments_count = null;
+            }
         }
 
         $res = response()->json([
