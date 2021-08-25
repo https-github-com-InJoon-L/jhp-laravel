@@ -156,7 +156,7 @@ class Attend_postsController extends Controller
             $res = response()->json([
                 'status' => 'false',
                 'message' => '작성자가 아닙니다.',
-            ], 403, [], JSON_UNESCAPED_UNICODE);
+            ], 200, [], JSON_UNESCAPED_UNICODE);
 
             return $res;
         }
@@ -201,7 +201,7 @@ class Attend_postsController extends Controller
             $res = response()->json([
                 'status' => 'false',
                 'message' => '작성자가 아닙니다.',
-            ], 403, [], JSON_UNESCAPED_UNICODE);
+            ], 200, [], JSON_UNESCAPED_UNICODE);
 
             return $res;
         }
