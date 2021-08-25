@@ -63,7 +63,8 @@ class Attend_postsController extends Controller
         $posts = DB::table('attend_posts')
         ->join('users', 'users.id', '=', 'attend_posts.user_id')
         ->select(
-            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d %T') as date"),
+            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d') as date"),
+            DB::raw("DATE_FORMAT(attend_posts.updated_at, '%Y-%m-%d') as updated_date"),
             DB::raw('attend_posts.id, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name'),
@@ -80,9 +81,6 @@ class Attend_postsController extends Controller
         $flag = true;
 
         foreach($posts as $row) {
-            $row->updated_at = Carbon::parse($row->updated_at);
-            $row->updated_at = $row->updated_at->diffForHumans(Carbon::now());
-
             if ($flag && $row->id == $commentsCount[$i]->id) {
                 $row->comments_count = $commentsCount[$i]->count;
                 $i++;
