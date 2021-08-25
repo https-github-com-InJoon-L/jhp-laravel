@@ -28,7 +28,7 @@ class RunsController extends Controller
             $res = response()->json([
                 'status' => 'false',
                 'message' => '권한이 없습니다.',
-            ], 403);
+            ], 200);
 
             return $res;
         }
