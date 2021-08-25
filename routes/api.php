@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RunsController;
 use App\Http\Controllers\TimetablesController;
 use App\Http\Controllers\UsersController;
+use App\Models\Attend_posts;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,7 @@ Route::get('/attend_posts/index', [Attend_postsController::class, 'index']);
 Route::get('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'show']);
 Route::put('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'update']);
 Route::delete('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'destroy']);
+Route::get('/attend_posts/search/{searched_user_name}', [Attend_postsController::class, 'search']);
 
 // Attend_comments 달리기 인증 게시판 댓글
 Route::post('/post/{postId}/comment', [Attend_commentsController::class, 'create']);

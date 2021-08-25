@@ -220,4 +220,47 @@ class Attend_postsController extends Controller
 
         return $res;
     }
+
+    // post 검색
+    public function search($searched_user_name) {
+        $posts = DB::table('attend_posts')
+        ->join('users', 'users.id', '=', 'attend_posts.user_id')
+        ->where('users.name', 'like', '%'.$searched_user_name.'%')
+        ->select(
+            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d') as date"),
+            DB::raw("DATE_FORMAT(attend_posts.updated_at, '%Y-%m-%d') as updated_date"),
+            DB::raw('attend_posts.id, attend_posts.content,
+            attend_posts.user_id, attend_posts.image, attend_posts.flag,
+            attend_posts.updated_at, attend_posts.run, users.name'),
+        )->orderBy('date', 'desc')->paginate(10);
+
+        $commentsCount = DB::table('attend_comments')
+        ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
+        ->select(
+            DB::raw('attend_posts.id, COUNT(attend_comments.id) as count')
+        )->groupBy('attend_posts.id')->orderBy('attend_posts.created_at', 'desc')
+        ->get();
+
+        foreach($posts as $row) {
+            $flag = true;
+            for ($j = 0; $j < $commentsCount->count(); $j++) {
+                if ($row->id == $commentsCount[$j]->id) {
+                    $row->comments_count = $commentsCount[$j]->count;
+                    $flag = false;
+                    break;
+                }
+            }
+
+            if ($flag) {
+                $row->comments_count = null;
+            }
+        }
+
+        $res = response()->json([
+            'status' => 'success',
+            'posts' => $posts
+        ], 200);
+
+        return $res;
+    }
 }
