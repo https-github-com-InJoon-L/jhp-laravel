@@ -286,7 +286,7 @@ class UsersController extends Controller
         ]);
     }
 
-    // 반별 한정 전체인원  군침이 싸악
+    // 반별 한정 전체인원
      public function attendStatusByDate(Request $request, $team_id) {
         $date = $request->query('date');
 
@@ -294,7 +294,7 @@ class UsersController extends Controller
         ->join('attends', 'attends.user_id', '=', 'users.id')
         ->where('users.current_team_id', $team_id)
         ->where(DB::raw("(DATE_FORMAT(attends.created_at, '%Y-%m-%d'))"), $date)
-        ->select("users.name", "attends.desc_value")
+        ->selectRaw("users.name, attends.desc_value, DATE_FORMAT(attends.created_at, '%Y-%m-%d') as date")
         ->orderBy('users.id')
         ->paginate(10);
 
