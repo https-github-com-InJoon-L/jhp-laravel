@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\RunsController;
 use App\Http\Controllers\TimetablesController;
 use App\Http\Controllers\UsersController;
@@ -77,6 +78,14 @@ Route::get('/attend_posts/{selected_post_id}', [Attend_postsController::class, '
 Route::put('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'update']);
 Route::delete('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'destroy']);
 Route::get('/attend_posts/search/{searched_user_name}', [Attend_postsController::class, 'search']);
+
+// Post 자유 게시판
+Route::post('/posts/create', [PostsController::class, 'create']);
+Route::get('/posts/index', [PostsController::class, 'index']);
+Route::get('/posts/{selected_post_id}', [PostsController::class, 'show']);
+Route::put('/posts/{selected_post_id}', [PostsController::class, 'update']);
+Route::delete('/posts/{selected_post_id}', [PostsController::class, 'destroy']);
+Route::get('/posts/search/{searched_title}', [PostsController::class, 'search']);
 
 // Attend_comments 달리기 인증 게시판 댓글
 Route::post('/post/{postId}/comment', [Attend_commentsController::class, 'create']);
