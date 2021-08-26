@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Attend_comments extends Model
+class Comment extends Model
 {
     use HasFactory;
 
     public function post()
     {
-        return $this->belongsTo(Attend_posts::class);
+        return $this->belongsTo(Post::class);
     }
 }
