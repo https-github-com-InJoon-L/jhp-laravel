@@ -10,7 +10,7 @@ use App\Http\Controllers\PostsController;
 use App\Http\Controllers\RunsController;
 use App\Http\Controllers\TimetablesController;
 use App\Http\Controllers\UsersController;
-use App\Models\Attend_posts;
+use App\Http\Controllers\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -91,3 +91,8 @@ Route::get('/posts/search/{searched_title}', [PostsController::class, 'search'])
 Route::post('/post/{postId}/comment', [Attend_commentsController::class, 'create']);
 Route::delete('/comment/{comment}', [Attend_commentsController::class, 'destroy']);
 Route::patch('/comment/{comment}', [Attend_commentsController::class, 'update']);
+
+// Comment 자유 게시판 댓글
+Route::post('/post_free/{postId}/comment', [CommentsController::class, 'create']);
+Route::delete('/comment_free/{comment}', [CommentsController::class, 'destroy']);
+Route::patch('/comment_free/{comment}', [CommentsController::class, 'update']);
