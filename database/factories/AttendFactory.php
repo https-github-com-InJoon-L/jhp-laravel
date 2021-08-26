@@ -33,7 +33,7 @@ class AttendFactory extends Factory
         return [
             'user_id' => $this->users->random()->id,
             'run' => $this->faker->numberBetween(1, 20),
-            'desc_value' => '결석', // '지각', '결석'
+            'desc_value' => '출석', // '지각', '결석'
             'attend' => $this->faker->date(),
         ];
     }
