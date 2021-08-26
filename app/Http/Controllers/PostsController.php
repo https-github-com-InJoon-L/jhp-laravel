@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -69,29 +70,28 @@ class PostsController extends Controller
             posts.updated_at, users.name'),
         )->orderBy('date', 'desc')->paginate(10);
 
-        // 댓글은 따로 또 만들어야 함
-        // $commentsCount = DB::table('attend_comments')
-        // ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
-        // ->select(
-        //     DB::raw('attend_posts.id, COUNT(attend_comments.id) as count')
-        // )->groupBy('attend_posts.id')->orderBy('attend_posts.created_at', 'desc')
-        // ->get();
+        $commentsCount = DB::table('comments')
+        ->join('posts', 'posts.id', '=', 'comments.post_id')
+        ->select(
+            DB::raw('posts.id, COUNT(comments.id) as count')
+        )->groupBy('posts.id')->orderBy('posts.created_at', 'desc')
+        ->get();
 
-        // $i = 0;
-        // $flag = true;
+        $i = 0;
+        $flag = true;
 
-        // foreach($posts as $row) {
-        //     if ($flag && $row->id == $commentsCount[$i]->id) {
-        //         $row->comments_count = $commentsCount[$i]->count;
-        //         $i++;
+        foreach($posts as $row) {
+            if ($flag && $row->id == $commentsCount[$i]->id) {
+                $row->comments_count = $commentsCount[$i]->count;
+                $i++;
 
-        //         if ($commentsCount->count() <= $i) {
-        //             $flag = false;
-        //         }
-        //     } else {
-        //         $row->comments_count = null;
-        //     }
-        // }
+                if ($commentsCount->count() <= $i) {
+                    $flag = false;
+                }
+            } else {
+                $row->comments_count = null;
+            }
+        }
 
         $res = response()->json([
             'status' => 'success',
@@ -114,25 +114,24 @@ class PostsController extends Controller
         )
         ->get();
 
-        // 댓글 따로 만들어야함
-        // $comment = DB::table('attend_comments')
-        // ->join('users', 'users.id', '=', 'attend_comments.user_id')
-        // ->where('attend_post_id', '=', $selected_post_id)
-        // ->select(
-        //     DB::raw('attend_comments.id, attend_comments.content, users.name, attend_comments.attend_post_id,
-        //     attend_comments.created_at, attend_comments.updated_at')
-        // )
-        // ->get();
+        $comment = DB::table('comments')
+        ->join('users', 'users.id', '=', 'comments.user_id')
+        ->where('post_id', '=', $selected_post_id)
+        ->select(
+            DB::raw('comments.id, comments.content, users.name, comments.post_id,
+            comments.created_at, comments.updated_at')
+        )
+        ->get();
 
-        // for ($i = 0; $i < $comment->count(); $i++) {
-        //     $comment[$i]->updated_at = Carbon::parse($comment[$i]->updated_at);
-        //     $comment[$i]->updated_at = $comment[$i]->updated_at->diffForHumans(Carbon::now());
-        // }
+        for ($i = 0; $i < $comment->count(); $i++) {
+            $comment[$i]->updated_at = Carbon::parse($comment[$i]->updated_at);
+            $comment[$i]->updated_at = $comment[$i]->updated_at->diffForHumans(Carbon::now());
+        }
 
         $res = response()->json([
             'status' => 'success',
             'post' => $post,
-            // 'comment' => $comment,
+            'comment' => $comment,
         ]);
 
         return $res;
@@ -235,28 +234,27 @@ class PostsController extends Controller
         )->orderBy('date', 'desc')->paginate(10);
 
 
-        // 댓글은 다시
-        // $commentsCount = DB::table('attend_comments')
-        // ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
-        // ->select(
-        //     DB::raw('attend_posts.id, COUNT(attend_comments.id) as count')
-        // )->groupBy('attend_posts.id')->orderBy('attend_posts.created_at', 'desc')
-        // ->get();
+        $commentsCount = DB::table('comments')
+        ->join('posts', 'posts.id', '=', 'comments.post_id')
+        ->select(
+            DB::raw('posts.id, COUNT(comments.id) as count')
+        )->groupBy('posts.id')->orderBy('posts.created_at', 'desc')
+        ->get();
 
-        // foreach($posts as $row) {
-        //     $flag = true;
-        //     for ($j = 0; $j < $commentsCount->count(); $j++) {
-        //         if ($row->id == $commentsCount[$j]->id) {
-        //             $row->comments_count = $commentsCount[$j]->count;
-        //             $flag = false;
-        //             break;
-        //         }
-        //     }
+        foreach($posts as $row) {
+            $flag = true;
+            for ($j = 0; $j < $commentsCount->count(); $j++) {
+                if ($row->id == $commentsCount[$j]->id) {
+                    $row->comments_count = $commentsCount[$j]->count;
+                    $flag = false;
+                    break;
+                }
+            }
 
-        //     if ($flag) {
-        //         $row->comments_count = null;
-        //     }
-        // }
+            if ($flag) {
+                $row->comments_count = null;
+            }
+        }
 
         $res = response()->json([
             'status' => 'success',
