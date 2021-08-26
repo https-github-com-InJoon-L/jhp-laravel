@@ -98,17 +98,9 @@ class AttendsController extends Controller
     }
 
     // 출석하지 않은 유저들 반별로
-    public function notAttendUsers(Request $req) {
-        $validator = Validator::make($req->all(), [
-            'class' => 'required|string',
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
+    public function notAttendUsers($selected_class) {
         $date = date("Y-m-d");
-        $users = User::where('class', $req->class)->get();
+        $users = User::where('class', $selected_class)->get();
         $attend_users = Attend::where('attend', $date)->get();
         $users_array = $users->toArray();
 
@@ -116,7 +108,9 @@ class AttendsController extends Controller
         if ($attend_users->count() == 0) {
             $res = response()-> json([
                 'status' => 'success',
-                'users' => $users_array
+                'not_users' => $users_array,
+                'absent' => null,
+                'tardy' => null
             ]);
 
             return $res;
@@ -124,14 +118,44 @@ class AttendsController extends Controller
 
         // 한명이라도 출석 했다면
         for ($i = 0; $i < $users->count(); $i++) {
-            if($users[$i]->id == $attend_users[$i]->user_id) {
-                array_splice($users_array, $i);
+            for ($j = 0; $j < $attend_users->count(); $j++) {
+                if($users[$i]->id == $attend_users[$j]->user_id) {
+                    array_splice($users_array, $i, 1);
+                }
             }
         }
 
+        // 지각한 사람
+        $tardy = DB::table('attends')
+        ->join('users', 'users.id', '=', 'attends.user_id')
+        ->where('attends.attend', '=', $date)
+        ->where('attends.desc_value', 'like', '%지각%')
+        ->where('users.class', '=', $selected_class)
+        ->select(
+            DB::raw("users.id, users.name, users.email, users.class,
+            users.sid, users.profile_photo_path, attends.id, attends.run,
+            attends.desc_value"),
+            DB::raw("DATE_FORMAT(attends.updated_at, '%Y-%m-%d %T') as updated_date")
+        )->get();
+
+        $absent = DB::table('attends')
+        ->join('users', 'users.id', '=', 'attends.user_id')
+        ->where('attends.attend', '=', $date)
+        ->where('attends.desc_value', 'like', '%결석%')
+        ->where('users.class', '=', $selected_class)
+        ->select(
+            DB::raw("users.id, users.name, users.email, users.class,
+            users.sid, users.profile_photo_path, attends.id, attends.run,
+            attends.desc_value"),
+            DB::raw("DATE_FORMAT(attends.updated_at, '%Y-%m-%d %T') as updated_date")
+        )->get();
+
+
         $res = response()-> json([
             'status' => 'success',
-            'users' => $users_array
+            'not_users' => $users_array,
+            'absent' => $absent,
+            'tardy' => $tardy
         ]);
 
         return $res;
