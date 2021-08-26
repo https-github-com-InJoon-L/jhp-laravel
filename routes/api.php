@@ -60,6 +60,7 @@ Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer'])
 Route::get('/users/rank', [UsersController::class, 'getUsersAttendsByDate']);
 
 // 출결 현황
+Route::get('/class/{team_id}', [UsersController::class, 'attendStatusByDate']); // GET /api/class/2?date=2021-08-26
 Route::get('/class/{team_id}/attend', [UsersController::class, 'classAttendStatus']);
 Route::get('/user/{user_id}/attend/month', [UsersController::class, 'userAttendStatusByMonth']);
 Route::get('/user/{user_id}/attend/week', [UsersController::class, 'userAttendStatusByWeek']);

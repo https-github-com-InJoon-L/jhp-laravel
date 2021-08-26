@@ -285,4 +285,23 @@ class UsersController extends Controller
             'data' => $data,
         ]);
     }
+
+    // 반별 한정 전체인원 싸악
+    public function attendStatusByDate(Request $request) {
+        $teamId = $request->query('teamId');
+        $date = $request->query('date');
+
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->where('users.current_team_id', $teamId)
+        ->where('attends.created_at', $date)
+        ->select('users.name', 'attends.desc_value')
+        ->orderBy('users.id')
+        ->paginate(10);
+
+        return response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
+    }
 }
