@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attend_comments;
-use App\Models\Attend_posts;
+use App\Models\Post;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,7 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-class Attend_postsController extends Controller
+class PostsController extends Controller
 {
     public function uploadPostImage($req) {
         // 이름에 시간 넣기
@@ -26,23 +25,24 @@ class Attend_postsController extends Controller
         return $fileName;
     }
 
-    // post 생성
+
+    // 자유 게시판 생성
     public function create(Request $req) {
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
+            'title' => 'required|string',
             'content' => 'required|string',
-            'run' => 'required|integer',
-            'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            'imageFile' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048'
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $post = new Attend_posts();
+        $post = new Post();
         $post->user_id = $req->user_id;
+        $post->title = $req->title;
         $post->content = $req->content;
-        $post->run = $req->run;
 
         if ($req->file('imageFile')) {
             $post->image = $this->uploadPostImage($req);
@@ -58,23 +58,23 @@ class Attend_postsController extends Controller
         return $res;
     }
 
-    // post 전체 보여주기
+    // 자유 게시판 전체 보여주기
     public function index() {
-        $posts = DB::table('attend_posts')
-        ->join('users', 'users.id', '=', 'attend_posts.user_id')
+        $posts = DB::table('posts')
+        ->join('users', 'users.id', '=', 'posts.user_id')
         ->select(
-            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d') as date"),
-            DB::raw("DATE_FORMAT(attend_posts.updated_at, '%Y-%m-%d') as updated_date"),
-            DB::raw('attend_posts.id, attend_posts.content,
-            attend_posts.user_id, attend_posts.image, attend_posts.flag,
-            attend_posts.updated_at, attend_posts.run, users.name'),
+            DB::raw("DATE_FORMAT(posts.created_at, '%Y-%m-%d') as date"),
+            DB::raw("DATE_FORMAT(posts.updated_at, '%Y-%m-%d') as updated_date"),
+            DB::raw('posts.id, posts.title,
+            posts.content, posts.user_id, posts.image,
+            posts.updated_at, users.name'),
         )->orderBy('date', 'desc')->paginate(10);
 
-        $commentsCount = DB::table('attend_comments')
-        ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
+        $commentsCount = DB::table('comments')
+        ->join('posts', 'posts.id', '=', 'comments.post_id')
         ->select(
-            DB::raw('attend_posts.id, COUNT(attend_comments.id) as count')
-        )->groupBy('attend_posts.id')->orderBy('attend_posts.created_at', 'desc')
+            DB::raw('posts.id, COUNT(comments.id) as count')
+        )->groupBy('posts.id')->orderBy('posts.created_at', 'desc')
         ->get();
 
         $i = 0;
@@ -101,25 +101,25 @@ class Attend_postsController extends Controller
         return $res;
     }
 
-    // post 상세보기
+    // 자유게시판 상세보기
     public function show($selected_post_id) {
-        $post = DB::table('attend_posts')
-        ->join('users', 'users.id', '=', 'attend_posts.user_id')
-        ->where('attend_posts.id', '=', $selected_post_id)
+        $post = DB::table('posts')
+        ->join('users', 'users.id', '=', 'posts.user_id')
+        ->where('posts.id', '=', $selected_post_id)
         ->select(
-            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d %T') as date"),
-            DB::raw('attend_posts.id, attend_posts.content,
-            attend_posts.user_id, attend_posts.image, attend_posts.flag,
-            attend_posts.updated_at, attend_posts.run, users.name, users.profile_photo_path'),
+            DB::raw("DATE_FORMAT(posts.created_at, '%Y-%m-%d %T') as date"),
+            DB::raw('posts.id, posts.title, posts.content,
+            posts.user_id, posts.image,
+            posts.updated_at, users.name, users.profile_photo_path'),
         )
         ->get();
 
-        $comment = DB::table('attend_comments')
-        ->join('users', 'users.id', '=', 'attend_comments.user_id')
-        ->where('attend_post_id', '=', $selected_post_id)
+        $comment = DB::table('comments')
+        ->join('users', 'users.id', '=', 'comments.user_id')
+        ->where('post_id', '=', $selected_post_id)
         ->select(
-            DB::raw('attend_comments.id, attend_comments.content, users.name, attend_comments.attend_post_id,
-            attend_comments.created_at, attend_comments.updated_at')
+            DB::raw('comments.id, comments.content, users.name, comments.post_id,
+            comments.created_at, comments.updated_at')
         )
         ->get();
 
@@ -137,20 +137,20 @@ class Attend_postsController extends Controller
         return $res;
     }
 
-    // post 수정
+    // 자유 게시판 수정
     public function update(Request $req, $selected_post_id) {
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
+            'title' => 'required|string',
             'content' => 'required|string',
             'imageFile' => 'image|Max:2000',
-            'run' => 'integer'
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $post = Attend_posts::find($selected_post_id);
+        $post = Post::find($selected_post_id);
 
         if ($req->user_id != $post->user_id) {
             $res = response()->json([
@@ -171,10 +171,8 @@ class Attend_postsController extends Controller
             $post->image = '';
         }
 
+        $post->title = $req->title;
         $post->content = $req->content;
-        if ($req->run != null) {
-            $post->run = $req->run;
-        }
 
         $post->save();
 
@@ -186,6 +184,7 @@ class Attend_postsController extends Controller
         return $res;
     }
 
+    // 자유 게시판 삭제
     public function destroy(Request $req, $selected_post_id) {
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
@@ -195,7 +194,7 @@ class Attend_postsController extends Controller
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $post = Attend_posts::find($selected_post_id);
+        $post = Post::find($selected_post_id);
 
         if ($req->user_id != $post->user_id) {
             $res = response()->json([
@@ -221,24 +220,25 @@ class Attend_postsController extends Controller
         return $res;
     }
 
-    // post 검색
-    public function search($searched_user_name) {
-        $posts = DB::table('attend_posts')
-        ->join('users', 'users.id', '=', 'attend_posts.user_id')
-        ->where('users.name', 'like', '%'.$searched_user_name.'%')
+    // 자유 게시판 검색하기
+    public function search($searched_title) {
+        $posts = DB::table('posts')
+        ->join('users', 'users.id', '=', 'posts.user_id')
+        ->where('posts.title', 'like', '%'.$searched_title.'%')
         ->select(
-            DB::raw("DATE_FORMAT(attend_posts.created_at, '%Y-%m-%d') as date"),
-            DB::raw("DATE_FORMAT(attend_posts.updated_at, '%Y-%m-%d') as updated_date"),
-            DB::raw('attend_posts.id, attend_posts.content,
-            attend_posts.user_id, attend_posts.image, attend_posts.flag,
-            attend_posts.updated_at, attend_posts.run, users.name'),
+            DB::raw("DATE_FORMAT(posts.created_at, '%Y-%m-%d') as date"),
+            DB::raw("DATE_FORMAT(posts.updated_at, '%Y-%m-%d') as updated_date"),
+            DB::raw('posts.id, posts.title, posts.content,
+            posts.user_id, posts.image,
+            posts.updated_at, users.name'),
         )->orderBy('date', 'desc')->paginate(10);
 
-        $commentsCount = DB::table('attend_comments')
-        ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
+
+        $commentsCount = DB::table('comments')
+        ->join('posts', 'posts.id', '=', 'comments.post_id')
         ->select(
-            DB::raw('attend_posts.id, COUNT(attend_comments.id) as count')
-        )->groupBy('attend_posts.id')->orderBy('attend_posts.created_at', 'desc')
+            DB::raw('posts.id, COUNT(comments.id) as count')
+        )->groupBy('posts.id')->orderBy('posts.created_at', 'desc')
         ->get();
 
         foreach($posts as $row) {

@@ -15,7 +15,7 @@ class UsersController extends Controller
     // team_id 별 전체 사용자
     public function read() {
         // 읽기 권한 검사
-        
+
         $users = [
             'none' => User::all()->where('current_team_id', 1),
             'wdj' => User::all()->where('current_team_id', 2),
@@ -56,7 +56,7 @@ class UsersController extends Controller
             return response()->json([
                 'states' => 'false',
                 'message' => $e->getMessage()
-            ], 403);
+            ], 200);
         }
 
         $user->save();
@@ -224,7 +224,7 @@ class UsersController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'range must month or today!',
-            ], 403);
+            ], 200);
         };
 
         $data = DB::table('users')
