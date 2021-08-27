@@ -77,18 +77,19 @@ class Attend_postsController extends Controller
         )->groupBy('attend_posts.id')->orderBy('attend_posts.created_at', 'desc')
         ->get();
 
-        $i = 0;
-        $flag = true;
 
         foreach($posts as $row) {
-            if ($flag && $row->id == $commentsCount[$i]->id) {
-                $row->comments_count = $commentsCount[$i]->count;
-                $i++;
+            $flag = true;
 
-                if ($commentsCount->count() <= $i) {
+            for ($i = 0; $i < $commentsCount->count(); $i++) {
+                if ($row->id == $commentsCount[$i]->id) {
+                    $row->comments_count = $commentsCount[$i]->count;
                     $flag = false;
+                    break;
                 }
-            } else {
+            }
+
+            if ($flag) {
                 $row->comments_count = null;
             }
         }
