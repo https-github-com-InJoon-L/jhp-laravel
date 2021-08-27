@@ -164,24 +164,40 @@ class UsersController extends Controller
     }
 
     // 사용자 달리기, 출석 현황
-    public function getUserStatus($user_id) {
-        $user_attend = User::find($user_id)
-        ->attends()
-        ->select(
-            DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %T') as date"),
-            DB::raw('id, user_id, run, device_id, desc_value, attend, updated_at'),
-        )
-        ->get();
+    public function getUserStatus(Request $request, $user_id) {
+        $attend = $request->query('attend'); // 출석, 지각, 결석, 전체
+
+        if($attend !== "전체") {
+            $user_attend = User::find($user_id)
+            ->attends()
+            ->select(
+                DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %T') as date"),
+                DB::raw('id, user_id, run, device_id, desc_value, attend, updated_at'),
+            )
+            ->orderBy('created_at', 'desc')
+            ->where('desc_value', $attend)
+            ->paginate(10);
+        } else if($attend === "전체") {
+            $user_attend = User::find($user_id)
+            ->attends()
+            ->select(
+                DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %T') as date"),
+                DB::raw('id, user_id, run, device_id, desc_value, attend, updated_at'),
+            )
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        }
 
         $user_run = User::find($user_id)
         ->run()
         ->orderBy('totalRun', 'desc')
-        ->get();
+        ->paginate(10);
 
         return response()->json([
             'status' => 'success',
             'user_attend' => $user_attend,
-            'user_run' => $user_run
+            'user_run' => $user_run,
+            'attend' => $attend
         ], 200);
     }
 
