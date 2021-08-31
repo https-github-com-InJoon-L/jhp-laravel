@@ -146,7 +146,7 @@ class Attend_postsController extends Controller
         $validator = Validator::make($req->all(), [
             'user_id' => 'required|integer',
             'content' => 'required|string',
-            'imageFile' => 'image|Max:2000',
+            'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'run' => 'integer'
         ]);
 
