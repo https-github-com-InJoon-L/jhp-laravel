@@ -36,7 +36,10 @@ class PostsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $post = new Post();
@@ -147,9 +150,11 @@ class PostsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
-
         $post = Post::find($selected_post_id);
 
         if ($req->user_id != $post->user_id) {
@@ -191,7 +196,10 @@ class PostsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $post = Post::find($selected_post_id);

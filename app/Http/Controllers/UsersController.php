@@ -44,9 +44,9 @@ class UsersController extends Controller
 
         if($validator->fails()){
             return response()->json([
-                'states' => 'false',
-                'message' => $validator->errors()->toJson()
-            ], 400);
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         try {
