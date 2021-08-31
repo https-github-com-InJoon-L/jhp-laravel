@@ -256,9 +256,11 @@ export default {
     },
     methods: {
         attendClose() {
+            console.log("상세창 닫기");
             this.$emit("attendClose");
         },
         acceptClick(attend) {
+            console.log("Attend Dialog클릭 받음");
             this.$emit("acceptClick", attend);
         },
     },
