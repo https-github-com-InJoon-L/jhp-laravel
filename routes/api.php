@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\Attend_commentsController;
+use App\Http\Controllers\Attend_postsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostsController;
+use App\Http\Controllers\RunsController;
 use App\Http\Controllers\TimetablesController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CommentsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,11 +37,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // axios.Post('/api/attends') <- 요청 방법
 Route::post('/attends', [AttendsController::class, 'attend']);
 Route::post('/attends/absent', [AttendsController::class, 'absent']);
-Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
-
+Route::get('/attends/not_users/{selected_class}', [AttendsController::class, 'notAttendUsers']);
+Route::patch('/attends/{selected_user_id}', [AttendsController::class, 'update']);
 // test용
 Route::post('/token', [AuthController::class, 'createApiToken']);
-// logout이 어디서 작동하는 지 몰라서 못 넣음 로그아웃 button 클릭 시 이 api에 요청 보내주세욤ㅎㅎ
+// 회원탈퇴시 할 것
 Route::delete('/token/delete', [AuthController::class, 'deleteApiToken']);
 
 Route::get('/timetables', [TimetablesController::class, 'getTimetables']);
@@ -51,9 +56,43 @@ Route::get('/users', [UsersController::class, 'read']);
 Route::patch('/user/{selected_user_id}', [UsersController::class, 'update']);
 
 // 랭크 관련 (나중에 해당년도 별로 뽑아오기로 수정??)
-Route::get('/users/runners/{selected_user_id}', [UsersController::class, 'theMostestRunner']);
-Route::get('/users/absentees/{selected_user_id}', [UsersController::class, 'theMostestAbsentee']);
-Route::get('/users/latecomers/{selected_user_id}', [UsersController::class, 'theMostestLatecomer']);
+Route::get('/users/runners', [UsersController::class, 'theMostestRunner']);
+Route::get('/users/absentees', [UsersController::class, 'theMostestAbsentee']);
+Route::get('/users/latecomers', [UsersController::class, 'theMostestLatecomer']);
+Route::get('/users/rank', [UsersController::class, 'getUsersAttendsByDate']);
 
 // 출결 현황
-Route::get('/user/attendance/{selected_user_id}', [UsersController::class, 'getAttendanceStatus']);
+Route::get('/class/{team_id}/attend', [UsersController::class, 'classAttendStatus']);
+Route::get('/user/{user_id}/attend/month', [UsersController::class, 'userAttendStatusByMonth']);
+Route::get('/user/{user_id}/attend/week', [UsersController::class, 'userAttendStatusByWeek']);
+Route::get('/user/attendance/{user_id}', [UsersController::class, 'getAttendanceStatus']);
+Route::get('/user/attendStatus/{user_id}', [UsersController::class, 'getUserStatus']);
+
+// run 달리면
+Route::patch('/run/{selected_post_id}', [RunsController::class, 'minusRun']);
+
+//Attend_posts 달리기 인증 게시판
+Route::post('/attend_posts/create', [Attend_postsController::class, 'create']);
+Route::get('/attend_posts/index', [Attend_postsController::class, 'index']);
+Route::get('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'show']);
+Route::put('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'update']);
+Route::delete('/attend_posts/{selected_post_id}', [Attend_postsController::class, 'destroy']);
+Route::get('/attend_posts/search/{searched_user_name}', [Attend_postsController::class, 'search']);
+
+// Post 자유 게시판
+Route::post('/posts/create', [PostsController::class, 'create']);
+Route::get('/posts/index', [PostsController::class, 'index']);
+Route::get('/posts/{selected_post_id}', [PostsController::class, 'show']);
+Route::put('/posts/{selected_post_id}', [PostsController::class, 'update']);
+Route::delete('/posts/{selected_post_id}', [PostsController::class, 'destroy']);
+Route::get('/posts/search/{searched_title}', [PostsController::class, 'search']);
+
+// Attend_comments 달리기 인증 게시판 댓글
+Route::post('/post/{postId}/comment', [Attend_commentsController::class, 'create']);
+Route::delete('/comment/{comment}', [Attend_commentsController::class, 'destroy']);
+Route::patch('/comment/{comment}', [Attend_commentsController::class, 'update']);
+
+// Comment 자유 게시판 댓글
+Route::post('/post_free/{postId}/comment', [CommentsController::class, 'create']);
+Route::delete('/comment_free/{comment}', [CommentsController::class, 'destroy']);
+Route::patch('/comment_free/{comment}', [CommentsController::class, 'update']);

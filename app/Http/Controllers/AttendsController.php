@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Attend;
 use App\Models\Run;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class AttendsController extends Controller
@@ -66,7 +68,6 @@ class AttendsController extends Controller
         $attend->attend = $date;
         $attend->save();
 
-
         $res = response()->json([
             'status' => 'success',
             'data' => $attend,
@@ -81,7 +82,6 @@ class AttendsController extends Controller
         $run = null;
         $countRun = $todayRun;
         $totalRun = User::find($userId)->attends()->sum('run');
-
 
         if (Run::where('user_id', $userId)->get()->count() == 0) {
             $run = new Run();
@@ -98,17 +98,9 @@ class AttendsController extends Controller
     }
 
     // 출석하지 않은 유저들 반별로
-    public function notAttendUsers(Request $req) {
-        $validator = Validator::make($req->all(), [
-            'class' => 'required|string',
-        ]);
-
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-
+    public function notAttendUsers($selected_class) {
         $date = date("Y-m-d");
-        $users = User::where('class', $req->class)->get();
+        $users = User::where('class', $selected_class)->get();
         $attend_users = Attend::where('attend', $date)->get();
         $users_array = $users->toArray();
 
@@ -116,7 +108,9 @@ class AttendsController extends Controller
         if ($attend_users->count() == 0) {
             $res = response()-> json([
                 'status' => 'success',
-                'users' => $users_array
+                'not_users' => $users_array,
+                'absent' => null,
+                'tardy' => null
             ]);
 
             return $res;
@@ -124,14 +118,44 @@ class AttendsController extends Controller
 
         // 한명이라도 출석 했다면
         for ($i = 0; $i < $users->count(); $i++) {
-            if($users[$i]->id == $attend_users[$i]->user_id) {
-                array_splice($users_array, $i);
+            for ($j = 0; $j < $attend_users->count(); $j++) {
+                if($users[$i]->id == $attend_users[$j]->user_id) {
+                    array_splice($users_array, $i, 1);
+                }
             }
         }
 
+        // 지각한 사람
+        $tardy = DB::table('attends')
+        ->join('users', 'users.id', '=', 'attends.user_id')
+        ->where('attends.attend', '=', $date)
+        ->where('attends.desc_value', 'like', '%지각%')
+        ->where('users.class', '=', $selected_class)
+        ->select(
+            DB::raw("users.id, users.name, users.email, users.class,
+            users.sid, users.profile_photo_path, attends.id, attends.run,
+            attends.desc_value"),
+            DB::raw("DATE_FORMAT(attends.updated_at, '%Y-%m-%d %T') as updated_date")
+        )->get();
+
+        $absent = DB::table('attends')
+        ->join('users', 'users.id', '=', 'attends.user_id')
+        ->where('attends.attend', '=', $date)
+        ->where('attends.desc_value', 'like', '%결석%')
+        ->where('users.class', '=', $selected_class)
+        ->select(
+            DB::raw("users.id, users.name, users.email, users.class,
+            users.sid, users.profile_photo_path, attends.id, attends.run,
+            attends.desc_value"),
+            DB::raw("DATE_FORMAT(attends.updated_at, '%Y-%m-%d %T') as updated_date")
+        )->get();
+
+
         $res = response()-> json([
             'status' => 'success',
-            'users' => $users_array
+            'not_users' => $users_array,
+            'absent' => $absent,
+            'tardy' => $tardy
         ]);
 
         return $res;
@@ -162,6 +186,7 @@ class AttendsController extends Controller
         $absent_user->user_id = $userId;
         $absent_user->desc_value = '결석';
         $absent_user->attend = $date;
+        $absent_user->run = 20;
 
         $absent_user->save();
 
@@ -172,5 +197,44 @@ class AttendsController extends Controller
         ]);
 
         return $res;
+    }
+
+    // 출석정보 수정
+    public function update(Request $req, $selected_user_id) {
+        $validator = Validator::make($req->all(), [
+            'run' => 'required|integer',
+            'desc_value' => 'required|string',
+            'attend' => 'required|string',
+        ]);
+
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        $updateAttend = User::find($selected_user_id)->attends()->where('attend', $req->attend)->first();
+        $updateAttend->desc_value = $req->desc_value;
+
+        if ($updateAttend->run != $req->run) {
+            $this->updateRun($selected_user_id, $updateAttend->run);
+            $updateAttend->run = $req->run;
+        }
+
+        $updateAttend->save();
+
+        $res = response()-> json([
+            'status' => 'success',
+            'data' => $updateAttend,
+            'message' => '출석정보가 변경되었습니다.',
+        ]);
+
+        return $res;
+    }
+
+    public function updateRun($user_id, $run) {
+        $runDate = Run::where('user_id', $user_id)->first();
+        $runDate->countRun = $runDate->countRun - $run;
+        $runDate->totalRun = $runDate->totalRun - $run;
+
+        $runDate->save();
     }
 }

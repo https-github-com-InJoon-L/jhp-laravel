@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attend;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +15,7 @@ class UsersController extends Controller
     // team_id 별 전체 사용자
     public function read() {
         // 읽기 권한 검사
-        
+
         $users = [
             'none' => User::all()->where('current_team_id', 1),
             'wdj' => User::all()->where('current_team_id', 2),
@@ -54,7 +56,7 @@ class UsersController extends Controller
             return response()->json([
                 'states' => 'false',
                 'message' => $e->getMessage()
-            ], 403);
+            ], 200);
         }
 
         $user->save();
@@ -65,7 +67,7 @@ class UsersController extends Controller
     }
 
     // 달리기 횟수 반별 랭킹
-    public function theMostestRunner($selected_user_id) {
+    public function theMostestRunner() {
         $wdj_runners = $this->getRunnersByClass(2);
         $cpj_runners = $this->getRunnersByClass(3);
 
@@ -74,15 +76,9 @@ class UsersController extends Controller
             'cpj' => $cpj_runners,
         ];
 
-        $user_run = User::find($selected_user_id)
-        ->run()
-        ->orderBy('totalRun', 'desc')
-        ->get();
-
         return response()->json([
             'status' => 'success',
             'runners' => $runners,
-            'user_run' => $user_run
         ], 200);
     }
 
@@ -97,7 +93,7 @@ class UsersController extends Controller
     }
 
     // 결석 횟수 반별 랭킹
-    public function theMostestAbsentee($selected_user_id) {
+    public function theMostestAbsentee() {
         $attendState = '결석';
         $attends = $this->getAttends($attendState);
 
@@ -109,20 +105,14 @@ class UsersController extends Controller
             'cpj' => $cpj_absentees,
         ];
 
-        $user_attend = User::find($selected_user_id)
-        ->attends()
-        ->where('attends.desc_value', $attendState)
-        ->get();
-
         return response()->json([
             'status' => 'success',
             'absentees' => $absentees,
-            'user_attend' => $user_attend
         ], 200);
     }
 
     // 지각 횟수 반별 랭킹
-    public function theMostestLatecomer($selected_user_id) {
+    public function theMostestLatecomer() {
         $attendState = '지각';
         $attends = $this->getAttends($attendState);
 
@@ -134,15 +124,9 @@ class UsersController extends Controller
             'cpj' => $cpj_latecomers,
         ];
 
-        $user_attend = User::find($selected_user_id)
-        ->attends()
-        ->where('attends.desc_value', $attendState)
-        ->get();
-
         return response()->json([
             'status' => 'success',
             'latecomers' => $latecomers,
-            'user_attend' => $user_attend
         ], 200);
     }
 
@@ -166,8 +150,8 @@ class UsersController extends Controller
     }
 
     // 출석 현황 최근 3개
-    public function getAttendanceStatus($selected_user_id) {
-        $attends = User::find($selected_user_id)
+    public function getAttendanceStatus($user_id) {
+        $attends = User::find($user_id)
         ->attends()
         ->latest()
         ->take(3)
@@ -177,5 +161,128 @@ class UsersController extends Controller
             'status' => 'success',
             'attends' => $attends,
         ], 200);
+    }
+
+    // 사용자 달리기, 출석 현황
+    public function getUserStatus($user_id) {
+        $user_attend = User::find($user_id)
+        ->attends()
+        ->select(
+            DB::raw("DATE_FORMAT(created_at, '%Y-%m-%d %T') as date"),
+            DB::raw('id, user_id, run, device_id, desc_value, attend, updated_at'),
+        )
+        ->get();
+
+        $user_run = User::find($user_id)
+        ->run()
+        ->orderBy('totalRun', 'desc')
+        ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'user_attend' => $user_attend,
+            'user_run' => $user_run
+        ], 200);
+    }
+
+    //  반별 일주일간 지각 or 결석 현황
+    public function getUsersAttendsByDate(Request $request) {
+        $teamId = $request->query('teamId');
+        $attend = $request->query('attend');
+
+        // 일주일 전 2021-08-17 -> 2021-08-09
+        $date = Carbon::now()->previous()->toDateString();
+
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->where('users.current_team_id', $teamId)
+        ->where('attends.desc_value', $attend)
+        ->where('attends.created_at', '>=', $date)
+        ->select(
+            DB::raw("DATE_FORMAT(attends.created_at, '%m/%d') as date"),
+            DB::raw('COUNT(*) as count'),
+        )
+        ->groupBy('date')
+        ->orderBy('date')
+        ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data,
+        ], 200);
+    }
+
+    // 한달간 or 오늘 반별 출결 현황 (도넛)
+    public function classAttendStatus(Request $request, $teamId) {
+        $range = $request->query('range'); // month, today
+
+        if ($range === 'month') {
+            $range = Carbon::now()->subMonth()->toDateString(); // 2021-07-23
+        } else if ($range === 'today') {
+            $range = Carbon::now()->toDateString(); // 2021-08-23
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'range must month or today!',
+            ], 200);
+        };
+
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->selectRaw('attends.desc_value, count(*) as count')
+        ->where('users.current_team_id', $teamId)
+        ->where('attends.created_at', '>=', $range)
+        ->groupBy('desc_value')
+        ->get();
+
+        return response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
+    }
+
+    // 한달간 개인별 출결 현황 (도넛)
+    public function userAttendStatusByMonth($userId) {
+        $dateSubMonth = Carbon::now()->subMonth()->toDateString();
+        // 2021-07-23
+
+        $data = DB::table('users')
+        ->join('attends', 'users.id', '=', 'attends.user_id')
+        ->selectRaw('attends.desc_value, count(*) as count')
+        ->where('users.id', $userId)
+        ->where('attends.created_at', '>=', $dateSubMonth)
+        ->groupBy('desc_value')
+        ->get();
+
+        return response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
+    }
+
+    // 일주일간 개인별 날짜에대한 출결현황
+    public function userAttendStatusByWeek($userId) {
+        $today = Carbon::now()->format('Y-m-d');
+        $subDate = Carbon::now()->subWeek()->format('Y-m-d');
+
+        $data = DB::select(
+            DB::raw("
+                WITH RECURSIVE cte  AS (
+                    SELECT '{$subDate}' AS date FROM DUAL
+                    UNION ALL
+                    SELECT date_add(date, INTERVAL 1 DAY) FROM cte
+                    WHERE date < '{$today}'
+                )
+                SELECT u.id, u.name, a.desc_value, c.date, a.run
+                FROM (SELECT id, name FROM users WHERE id = {$userId}) u
+                JOIN attends a ON u.id = a.user_id
+                RIGHT JOIN cte c ON c.date = DATE_FORMAT(a.created_at, '%Y-%m-%d');
+            ")
+        );
+
+        return  response()->json([
+            'state' => 'success',
+            'data' => $data,
+        ]);
     }
 }
