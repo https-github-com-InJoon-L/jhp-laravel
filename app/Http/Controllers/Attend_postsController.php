@@ -36,7 +36,7 @@ class Attend_postsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json($validator->errors(), 200);
         }
 
         $post = new Attend_posts();
@@ -148,7 +148,7 @@ class Attend_postsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json($validator->errors(), 200);
         }
 
         $post = Attend_posts::find($selected_post_id);
@@ -193,7 +193,7 @@ class Attend_postsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json($validator->errors(), 200);
         }
 
         $post = Attend_posts::find($selected_post_id);
