@@ -143,16 +143,11 @@ export default {
     },
     methods: {
         close() {
-            console.log(this.current_user);
             this.$emit("attendChangeClose", 6, ["attend창 닫기"]);
         },
         change() {
             this.ifLoading = 0;
             this.waiting = true;
-            console.log(this.attend.desc_value);
-            console.log(this.attend.run);
-            console.log(this.backupAttend.run);
-            console.log(this.attend.attend);
             let errMsg = [];
             if (
                 !this.attend.desc_value ||
@@ -185,7 +180,6 @@ export default {
                 }
                 this.waiting = false;
                 this.ifLoading = 1;
-                console.log("err check", errMsg);
                 this.$emit("attendChangeClose", 5, errMsg);
                 return;
             }

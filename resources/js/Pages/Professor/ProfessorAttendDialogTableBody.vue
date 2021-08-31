@@ -50,7 +50,6 @@ export default {
     },
     methods: {
         openAttendChange() {
-            console.log("변경 테스트");
             this.$emit("attendClick", this.attend);
         },
     },
