@@ -303,7 +303,7 @@ class UsersController extends Controller
     }
 
     // 반별 한정 전체인원
-     public function attendStatusByDate(Request $request, $team_id) {
+    public function attendStatusByDate(Request $request, $team_id) {
         $date = $request->query('date');
 
         $data = DB::table('users')
