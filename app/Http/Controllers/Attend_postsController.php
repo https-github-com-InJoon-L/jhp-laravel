@@ -71,7 +71,7 @@ class Attend_postsController extends Controller
             DB::raw('attend_posts.id, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('attend_posts.id', 'desc')->paginate(10);
 
         $commentsCount = DB::table('attend_comments')
         ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
@@ -242,7 +242,7 @@ class Attend_postsController extends Controller
             DB::raw('attend_posts.id, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('attend_posts.id', 'desc')->paginate(10);
 
         $commentsCount = DB::table('attend_comments')
         ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
