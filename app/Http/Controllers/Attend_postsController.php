@@ -141,14 +141,26 @@ class Attend_postsController extends Controller
         return $res;
     }
 
-    // post 수정
-    public function update(Request $req, $selected_post_id) {
-        $validator = Validator::make($req->all(), [
-            'user_id' => 'required|integer',
-            'content' => 'required|string',
-            'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'run' => 'integer'
-        ]);
+      // post 수정
+      public function update(Request $req, $selected_post_id) {
+
+
+        $post = Attend_posts::find($selected_post_id);
+        if(($req->imageFile == $post->image)) {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'run' => 'integer'
+            ]);
+            $req->imageFile = $post->image;
+        } else {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'run' => 'integer'
+            ]);
+        }
 
         if($validator->fails()){
             return response()->json([
@@ -156,8 +168,6 @@ class Attend_postsController extends Controller
                 'data' => $validator->errors()
             ], 200);
         }
-
-        $post = Attend_posts::find($selected_post_id);
 
         if ($req->user_id != $post->user_id) {
             $res = response()->json([
@@ -174,8 +184,6 @@ class Attend_postsController extends Controller
             $post->image = $this->uploadPostImage($req);
         } else {
             $imagePath = 'public/images/' . $post->image;
-            Storage::delete($imagePath);
-            $post->image = '';
         }
 
         $post->content = $req->content;
