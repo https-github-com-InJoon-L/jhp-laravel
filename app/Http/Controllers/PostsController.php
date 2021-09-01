@@ -71,7 +71,7 @@ class PostsController extends Controller
             DB::raw('posts.id, posts.title,
             posts.content, posts.user_id, posts.image,
             posts.updated_at, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('posts.id', 'desc')->paginate(10);
 
         $commentsCount = DB::table('comments')
         ->join('posts', 'posts.id', '=', 'comments.post_id')
@@ -84,14 +84,17 @@ class PostsController extends Controller
         $flag = true;
 
         foreach($posts as $row) {
-            if ($flag && $row->id == $commentsCount[$i]->id) {
-                $row->comments_count = $commentsCount[$i]->count;
-                $i++;
+            $flag = true;
 
-                if ($commentsCount->count() <= $i) {
+            for ($i = 0; $i < $commentsCount->count(); $i++) {
+                if ($row->id == $commentsCount[$i]->id) {
+                    $row->comments_count = $commentsCount[$i]->count;
                     $flag = false;
+                    break;
                 }
-            } else {
+            }
+
+            if ($flag) {
                 $row->comments_count = null;
             }
         }
@@ -142,12 +145,23 @@ class PostsController extends Controller
 
     // 자유 게시판 수정
     public function update(Request $req, $selected_post_id) {
-        $validator = Validator::make($req->all(), [
-            'user_id' => 'required|integer',
-            'title' => 'required|string',
-            'content' => 'required|string',
-            'imageFile' => 'image|Max:2000',
-        ]);
+        $post = Post::find($selected_post_id);
+
+        if(($req->imageFile == $post->image)) {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'run' => 'integer'
+            ]);
+            $req->imageFile = $post->image;
+        } else {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'run' => 'integer'
+            ]);
+        }
 
         if($validator->fails()){
             return response()->json([
@@ -155,7 +169,6 @@ class PostsController extends Controller
                 'data' => $validator->errors()
             ], 200);
         }
-        $post = Post::find($selected_post_id);
 
         if ($req->user_id != $post->user_id) {
             $res = response()->json([
@@ -172,8 +185,6 @@ class PostsController extends Controller
             $post->image = $this->uploadPostImage($req);
         } else {
             $imagePath = 'public/images/' . $post->image;
-            Storage::delete($imagePath);
-            $post->image = '';
         }
 
         $post->title = $req->title;
@@ -239,7 +250,7 @@ class PostsController extends Controller
             DB::raw('posts.id, posts.title, posts.content,
             posts.user_id, posts.image,
             posts.updated_at, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('posts.id', 'desc')->paginate(10);
 
 
         $commentsCount = DB::table('comments')
