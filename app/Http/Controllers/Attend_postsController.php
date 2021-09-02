@@ -125,11 +125,11 @@ class Attend_postsController extends Controller
             DB::raw('attend_comments.id, attend_comments.content, users.name, attend_comments.attend_post_id,
             attend_comments.created_at, attend_comments.updated_at')
         )
-        ->get();
+        ->orderBy('attend_comments.id', 'desc')->paginate(10);
 
-        for ($i = 0; $i < $comment->count(); $i++) {
-            $comment[$i]->updated_at = Carbon::parse($comment[$i]->updated_at);
-            $comment[$i]->updated_at = $comment[$i]->updated_at->diffForHumans(Carbon::now());
+        foreach($comment as $row) {
+            $row->updated_at = Carbon::parse($row->updated_at);
+            $row->updated_at = $row->updated_at->diffForHumans(Carbon::now());
         }
 
         $res = response()->json([

@@ -127,11 +127,11 @@ class PostsController extends Controller
             DB::raw('comments.id, comments.content, users.name, comments.post_id,
             comments.created_at, comments.updated_at')
         )
-        ->get();
+        ->orderBy('comments.id', 'desc')->paginate(10);
 
-        for ($i = 0; $i < $comment->count(); $i++) {
-            $comment[$i]->updated_at = Carbon::parse($comment[$i]->updated_at);
-            $comment[$i]->updated_at = $comment[$i]->updated_at->diffForHumans(Carbon::now());
+        foreach($comment as $row) {
+            $row->updated_at = Carbon::parse($row->updated_at);
+            $row->updated_at = $row->updated_at->diffForHumans(Carbon::now());
         }
 
         $res = response()->json([
@@ -158,7 +158,7 @@ class PostsController extends Controller
             $validator = Validator::make($req->all(), [
                 'user_id' => 'required|integer',
                 'content' => 'required|string',
-                'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'imageFile' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
                 'run' => 'integer'
             ]);
         }
