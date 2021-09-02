@@ -18,7 +18,10 @@ class AttendsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $date = date("Y-m-d");
@@ -168,7 +171,10 @@ class AttendsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $date = date("Y-m-d");
@@ -208,7 +214,10 @@ class AttendsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $updateAttend = User::find($selected_user_id)->attends()->where('attend', $req->attend)->first();

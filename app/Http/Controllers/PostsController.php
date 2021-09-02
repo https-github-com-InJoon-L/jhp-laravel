@@ -36,7 +36,10 @@ class PostsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $post = new Post();
@@ -68,7 +71,7 @@ class PostsController extends Controller
             DB::raw('posts.id, posts.title,
             posts.content, posts.user_id, posts.image,
             posts.updated_at, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('posts.id', 'desc')->paginate(10);
 
         $commentsCount = DB::table('comments')
         ->join('posts', 'posts.id', '=', 'comments.post_id')
@@ -81,14 +84,17 @@ class PostsController extends Controller
         $flag = true;
 
         foreach($posts as $row) {
-            if ($flag && $row->id == $commentsCount[$i]->id) {
-                $row->comments_count = $commentsCount[$i]->count;
-                $i++;
+            $flag = true;
 
-                if ($commentsCount->count() <= $i) {
+            for ($i = 0; $i < $commentsCount->count(); $i++) {
+                if ($row->id == $commentsCount[$i]->id) {
+                    $row->comments_count = $commentsCount[$i]->count;
                     $flag = false;
+                    break;
                 }
-            } else {
+            }
+
+            if ($flag) {
                 $row->comments_count = null;
             }
         }
@@ -121,11 +127,11 @@ class PostsController extends Controller
             DB::raw('comments.id, comments.content, users.name, comments.post_id,
             comments.created_at, comments.updated_at')
         )
-        ->get();
+        ->orderBy('comments.id', 'desc')->paginate(10);
 
-        for ($i = 0; $i < $comment->count(); $i++) {
-            $comment[$i]->updated_at = Carbon::parse($comment[$i]->updated_at);
-            $comment[$i]->updated_at = $comment[$i]->updated_at->diffForHumans(Carbon::now());
+        foreach($comment as $row) {
+            $row->updated_at = Carbon::parse($row->updated_at);
+            $row->updated_at = $row->updated_at->diffForHumans(Carbon::now());
         }
 
         $res = response()->json([
@@ -139,18 +145,30 @@ class PostsController extends Controller
 
     // 자유 게시판 수정
     public function update(Request $req, $selected_post_id) {
-        $validator = Validator::make($req->all(), [
-            'user_id' => 'required|integer',
-            'title' => 'required|string',
-            'content' => 'required|string',
-            'imageFile' => 'image|Max:2000',
-        ]);
+        $post = Post::find($selected_post_id);
 
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+        if(($req->imageFile == $post->image)) {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'run' => 'integer'
+            ]);
+            $req->imageFile = $post->image;
+        } else {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'imageFile' => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'run' => 'integer'
+            ]);
         }
 
-        $post = Post::find($selected_post_id);
+        if($validator->fails()){
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
+        }
 
         if ($req->user_id != $post->user_id) {
             $res = response()->json([
@@ -167,8 +185,6 @@ class PostsController extends Controller
             $post->image = $this->uploadPostImage($req);
         } else {
             $imagePath = 'public/images/' . $post->image;
-            Storage::delete($imagePath);
-            $post->image = '';
         }
 
         $post->title = $req->title;
@@ -191,7 +207,10 @@ class PostsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $post = Post::find($selected_post_id);
@@ -231,7 +250,7 @@ class PostsController extends Controller
             DB::raw('posts.id, posts.title, posts.content,
             posts.user_id, posts.image,
             posts.updated_at, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('posts.id', 'desc')->paginate(10);
 
 
         $commentsCount = DB::table('comments')

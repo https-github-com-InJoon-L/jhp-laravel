@@ -16,7 +16,10 @@ class CommentsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $comment = new Comment();
@@ -48,7 +51,10 @@ class CommentsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $comment->content = $req->content;

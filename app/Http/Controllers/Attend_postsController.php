@@ -36,7 +36,10 @@ class Attend_postsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $post = new Attend_posts();
@@ -68,7 +71,7 @@ class Attend_postsController extends Controller
             DB::raw('attend_posts.id, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('attend_posts.id', 'desc')->paginate(10);
 
         $commentsCount = DB::table('attend_comments')
         ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
@@ -122,11 +125,11 @@ class Attend_postsController extends Controller
             DB::raw('attend_comments.id, attend_comments.content, users.name, attend_comments.attend_post_id,
             attend_comments.created_at, attend_comments.updated_at')
         )
-        ->get();
+        ->orderBy('attend_comments.id', 'desc')->paginate(10);
 
-        for ($i = 0; $i < $comment->count(); $i++) {
-            $comment[$i]->updated_at = Carbon::parse($comment[$i]->updated_at);
-            $comment[$i]->updated_at = $comment[$i]->updated_at->diffForHumans(Carbon::now());
+        foreach($comment as $row) {
+            $row->updated_at = Carbon::parse($row->updated_at);
+            $row->updated_at = $row->updated_at->diffForHumans(Carbon::now());
         }
 
         $res = response()->json([
@@ -138,20 +141,33 @@ class Attend_postsController extends Controller
         return $res;
     }
 
-    // post 수정
-    public function update(Request $req, $selected_post_id) {
-        $validator = Validator::make($req->all(), [
-            'user_id' => 'required|integer',
-            'content' => 'required|string',
-            'imageFile' => 'image|Max:2000',
-            'run' => 'integer'
-        ]);
+      // post 수정
+      public function update(Request $req, $selected_post_id) {
 
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
-        }
 
         $post = Attend_posts::find($selected_post_id);
+        if(($req->imageFile == $post->image)) {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'run' => 'integer'
+            ]);
+            $req->imageFile = $post->image;
+        } else {
+            $validator = Validator::make($req->all(), [
+                'user_id' => 'required|integer',
+                'content' => 'required|string',
+                'imageFile' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+                'run' => 'integer'
+            ]);
+        }
+
+        if($validator->fails()){
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
+        }
 
         if ($req->user_id != $post->user_id) {
             $res = response()->json([
@@ -168,8 +184,6 @@ class Attend_postsController extends Controller
             $post->image = $this->uploadPostImage($req);
         } else {
             $imagePath = 'public/images/' . $post->image;
-            Storage::delete($imagePath);
-            $post->image = '';
         }
 
         $post->content = $req->content;
@@ -193,7 +207,10 @@ class Attend_postsController extends Controller
         ]);
 
         if($validator->fails()){
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'status' => 'false',
+                'data' => $validator->errors()
+            ], 200);
         }
 
         $post = Attend_posts::find($selected_post_id);
@@ -233,7 +250,7 @@ class Attend_postsController extends Controller
             DB::raw('attend_posts.id, attend_posts.content,
             attend_posts.user_id, attend_posts.image, attend_posts.flag,
             attend_posts.updated_at, attend_posts.run, users.name'),
-        )->orderBy('date', 'desc')->paginate(10);
+        )->orderBy('attend_posts.id', 'desc')->paginate(10);
 
         $commentsCount = DB::table('attend_comments')
         ->join('attend_posts', 'attend_posts.id', '=', 'attend_comments.attend_post_id')
