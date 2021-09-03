@@ -123,7 +123,7 @@ class Attend_postsController extends Controller
         ->where('attend_post_id', '=', $selected_post_id)
         ->select(
             DB::raw('attend_comments.id, attend_comments.content, users.name, attend_comments.attend_post_id,
-            attend_comments.created_at, attend_comments.updated_at, users.id')
+            attend_comments.created_at, attend_comments.updated_at, attend_comments.user_id')
         )
         ->orderBy('attend_comments.id', 'desc')->paginate(10);
 
