@@ -97,3 +97,6 @@ Route::patch('/comment/{comment}', [Attend_commentsController::class, 'update'])
 Route::post('/post_free/{postId}/comment', [CommentsController::class, 'create']);
 Route::delete('/comment_free/{comment}', [CommentsController::class, 'destroy']);
 Route::patch('/comment_free/{comment}', [CommentsController::class, 'update']);
+
+// 자유 게시판 자신이 작성한 글 갯수
+Route::get('/user/{user_id}/count_posts_comments', [UsersController::class, 'countMyPostsAndComments']);

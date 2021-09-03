@@ -93,7 +93,7 @@ class UsersController extends Controller
             ->where('users.current_team_id', $class_value)
             ->select('users.*', 'runs.totalRun')
             ->orderBy('totalRun', 'desc')
-            ->get();
+            ->paginate(10);
     }
 
     // 결석 횟수 반별 랭킹
@@ -154,7 +154,7 @@ class UsersController extends Controller
             })
             ->where('users.current_team_id', $class_value)
             ->orderBy('attends.total_count', 'desc')
-            ->get();
+            ->paginate(10);
     }
 
     // 출석 현황 최근 3개
@@ -336,14 +336,14 @@ class UsersController extends Controller
     }
 
     // 내가 쓴 게시글, 댓글 수 반환
-    public function countMyPosts($user_id)
+    public function countMyPostsAndComments($user_id)
     {
-        $myPosts = User::find($user_id)->posts;
-        $myComments = User::find($user_id)->comments;
+        $myPosts = User::find($user_id)->posts()->get();
+        $myComments = User::find($user_id)->comments()->get();
 
         $data = [
-            'countMyPosts' => $myPosts->length(),
-            'countMyComments' => $myComments->length()
+            'countMyPosts' => count($myPosts),
+            'countMyComments' => count($myComments)
         ];
 
         return response()->json([
