@@ -13,4 +13,9 @@ class Attend_comments extends Model
     {
         return $this->belongsTo(Attend_posts::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
