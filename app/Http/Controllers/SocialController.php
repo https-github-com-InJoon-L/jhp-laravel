@@ -64,6 +64,15 @@ class SocialController extends Controller
                 ], 200);
             }
 
+            $sid = User::where('sid', $req->sid)->first();
+
+            if($sid) {
+                return response()->json([
+                    'status' => 'false',
+                    'message' => '학번이 이미 존재합니다.'
+                ], 200, [], JSON_UNESCAPED_UNICODE);
+            }
+
             $res = null;
 
 
