@@ -125,7 +125,8 @@ class PostsController extends Controller
         ->where('post_id', '=', $selected_post_id)
         ->select(
             DB::raw('comments.id, comments.content, users.name, comments.post_id,
-            comments.created_at, comments.updated_at, comments.user_id')
+            comments.created_at, comments.updated_at, comments.user_id,
+            users.profile_photo_path')
         )
         ->orderBy('comments.id', 'desc')->paginate(10);
 

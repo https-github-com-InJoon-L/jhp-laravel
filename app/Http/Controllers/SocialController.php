@@ -61,42 +61,33 @@ class SocialController extends Controller
                 return response()->json([
                     'status' => 'false',
                     'data' => $validator->errors()
-                ], 200);
-            }
-
-            $sid = User::where('sid', $req->sid)->first();
-
-            if($sid) {
-                return response()->json([
-                    'status' => 'false',
-                    'message' => '학번이 이미 존재합니다.'
                 ], 200, [], JSON_UNESCAPED_UNICODE);
             }
 
-            $res = null;
-
-
             $user = User::find(Auth::user()->id);
-            $user->phone_number = $req->phone_number;
-            if($req->class == 'WDJ') {
+            $user->phone_number = $req->전화번호;
+            if($req->반 == 'WDJ') {
                 $user->current_team_id = 2;
-            } else if($req->class == 'CPJ'){
+            } else if($req->반 == 'CPJ'){
                 $user->current_team_id = 3;
             }
-            $user->class = $req->class;
-            $user->sid = $req->sid;
-            $user->position = $req->position;
-            $user->name = $req->name;
+            $user->class = $req->반;
+            $user->sid = $req->학번;
+            $user->position = $req->위치;
+            $user->name = $req->이름;
+            $ifUser = User::where('sid', $req->학번)->first();
+            if($ifUser) {
+                return response()->json([
+                    'status' => '학번',
+                    'data' => '이미 가입된 학번입니다'
+                ], 200, [], JSON_UNESCAPED_UNICODE);
+            } else {
+                $user->save();
+            }
 
-            $user->save();
-
-            $res = response()->json([
+            return response()->json([
                 'status' => 'success',
                 'data' => $user
             ], 200);
-
-            return redirect()->route('dashboard', ['res' => $res]);
         }
-
-
 }
