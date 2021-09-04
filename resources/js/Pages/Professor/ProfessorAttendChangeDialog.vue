@@ -109,7 +109,7 @@ import LoadingBar from "@/Pages/Board/LoadingBar";
 import axios from "axios";
 
 export default {
-    emits: ["attendChangeClose"],
+    emits: ["attendChangeClose", "attendChange"],
     components: {
         Modal,
         JetButton,
@@ -135,67 +135,21 @@ export default {
         ifLoading: {
             default: 1,
         },
-    },
-    data() {
-        return {
-            waiting: false,
-        };
+        waiting: {
+            default: false,
+        },
     },
     methods: {
         close() {
             this.$emit("attendChangeClose", 6, ["attend창 닫기"]);
         },
         change() {
-            this.ifLoading = 0;
-            this.waiting = true;
-            let errMsg = [];
-            if (
-                !this.attend.desc_value ||
-                this.attend.desc_value == "" ||
-                !this.attend.attend ||
-                this.attend.attend == "" ||
-                !(
-                    this.attend.run == 0 ||
-                    this.attend.run == "0" ||
-                    Number(this.attend.run) == Number(this.backupAttend.run)
-                )
-            ) {
-                if (!this.attend.desc_value || this.attend.desc_value == "") {
-                    errMsg.push("상태를 입력하지 않았습니다.");
-                }
-                if (
-                    (!this.attend.run || this.attend.run == "") &&
-                    Number(this.attend.run) != 0
-                ) {
-                    errMsg.push("바퀴수를 입력하지 않았습니다.");
-                }
-                if (
-                    !(
-                        this.attend.run == 0 ||
-                        this.attend.run == "0" ||
-                        Number(this.attend.run) == Number(this.backupAttend.run)
-                    )
-                ) {
-                    errMsg.push("바퀴수는 현재와 같거나 0이어야 합니다.");
-                }
-                this.waiting = false;
-                this.ifLoading = 1;
-                this.$emit("attendChangeClose", 5, errMsg);
-                return;
-            }
-
-            errMsg.push("변경하였습니다.");
-            axios
-                .patch("/api/attends/" + this.user.id, this.attend)
-                .then((res) => {
-                    console.log(res);
-                    this.$emit("attendChangeClose", 4, errMsg);
-                })
-                .catch((err) => {
-                    console.log(err);
-                });
-            this.ifLoading = 1;
-            this.waiting = false;
+            this.$emit(
+                "attendChange",
+                this.attend,
+                this.backupAttend,
+                this.user.id
+            );
         },
     },
 };

@@ -142,24 +142,46 @@
                                 v-if="ifLoading"
                                 class="bg-white divide-y divide-gray-200"
                             >
-                                <ProfessorAttendDialogTableBody
-                                    v-for="(attend, idx) in this.attend.data
-                                        .user_attend"
-                                    :key="idx"
-                                    :attend="attend"
-                                    :index="idx + 1"
-                                    :bodytype="0"
-                                    @attendClick="acceptClick"
+                                <div
+                                    v-if="
+                                        Object.keys(
+                                            this.attend.user_attend.data
+                                        ).length != 0
+                                    "
                                 >
-                                </ProfessorAttendDialogTableBody>
-                                <div v-if="this.attend.data.user_run[0]">
+                                    <ProfessorAttendDialogTableBody
+                                        v-for="(atd, idx) in this.attend
+                                            .user_attend.data"
+                                        :key="idx"
+                                        :attend="atd"
+                                        :index="idx + 1"
+                                        :bodytype="0"
+                                        @attendClick="acceptClick"
+                                    >
+                                    </ProfessorAttendDialogTableBody>
+                                </div>
+                                <div v-else>
+                                    <tr class="flex">
+                                        <td
+                                            class="
+                                                w-full
+                                                whitespace-nowrap
+                                                text-center
+                                                py-3
+                                            "
+                                        >
+                                            해당 학생은 출결 기록이 없습니다.
+                                        </td>
+                                    </tr>
+                                </div>
+                                <div v-if="this.attend.user_run.data[0]">
                                     <ProfessorAttendDialogTableBody
                                         v-if="
-                                            this.attend.data.user_run[0]
+                                            this.attend.user_run.data[0]
                                                 .countRun
                                         "
                                         :attend="
-                                            this.attend.data.user_run[0]
+                                            this.attend.user_run.data[0]
                                                 .countRun
                                         "
                                         :index="'달려야 할 바퀴'"
@@ -168,11 +190,11 @@
                                     </ProfessorAttendDialogTableBody>
                                     <ProfessorAttendDialogTableBody
                                         v-if="
-                                            this.attend.data.user_run[0]
+                                            this.attend.user_run.data[0]
                                                 .minusRun
                                         "
                                         :attend="
-                                            this.attend.data.user_run[0]
+                                            this.attend.user_run.data[0]
                                                 .minusRun
                                         "
                                         :index="'달린 바퀴'"
@@ -181,11 +203,11 @@
                                     </ProfessorAttendDialogTableBody>
                                     <ProfessorAttendDialogTableBody
                                         v-if="
-                                            this.attend.data.user_run[0]
+                                            this.attend.user_run.data[0]
                                                 .totalRun
                                         "
                                         :attend="
-                                            this.attend.data.user_run[0]
+                                            this.attend.user_run.data[0]
                                                 .totalRun
                                         "
                                         :index="'누적 바퀴'"
@@ -193,7 +215,21 @@
                                     >
                                     </ProfessorAttendDialogTableBody>
                                 </div>
-                                <!-- {{this.attend.data.user_run}} -->
+                                <div v-else>
+                                    <tr class="flex">
+                                        <td
+                                            class="
+                                                w-full
+                                                whitespace-nowrap
+                                                text-center
+                                                py-3
+                                            "
+                                        >
+                                            해당 학생은 달려야 할 바퀴수가
+                                            없습니다.
+                                        </td>
+                                    </tr>
+                                </div>
                             </tbody>
                         </table>
                     </slot>

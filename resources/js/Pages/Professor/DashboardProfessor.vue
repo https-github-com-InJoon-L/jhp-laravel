@@ -217,7 +217,9 @@
             :user="selectedUser"
             :attend="selectedChangeAttend"
             :backupAttend="backupAttend"
+            :waiting="atdWaiting"
             @attendChangeClose="closeDialog"
+            @attendChange="attendChange"
         >
         </professor-attend-change-dialog>
 
@@ -289,6 +291,7 @@ export default {
             errState: 0,
             headList: ["학생 정보관리", "출결관리"],
             attendLoading: 0, // attend loading
+            atdWaiting: false,
             isModActive: 1,
             mod: 1,
         };
@@ -401,9 +404,9 @@ export default {
                 this.attendLoading = 0;
                 this.attendDialogShow = true;
                 axios
-                    .get("/api/user/attendStatus/" + user.id)
+                    .get("/api/user/attendStatus/" + user.id + "?attend=전체")
                     .then((res) => {
-                        this.selectedAttend = res;
+                        this.selectedAttend = res.data;
                         this.attendLoading = 1;
                     })
                     .catch((err) => {
@@ -449,6 +452,55 @@ export default {
             this.selectedChangeAttend = attend;
             this.backupAttend.desc_value = attend.desc_value;
             this.backupAttend.run = attend.run;
+        },
+        attendChange(attend, backupAttend, userid) {
+            this.atdWaiting = true;
+            this.attendLoading = 0;
+            let errMsg = [];
+            if (
+                !attend.desc_value ||
+                attend.desc_value == "" ||
+                !(
+                    attend.run == 0 ||
+                    attend.run == "0" ||
+                    Number(attend.run) == Number(backupAttend.run)
+                )
+            ) {
+                if (!attend.desc_value || attend.desc_value == "") {
+                    errMsg.push("상태를 입력하지 않았습니다.");
+                }
+                if (
+                    (!attend.run || attend.run == "") &&
+                    Number(attend.run) != 0
+                ) {
+                    errMsg.push("바퀴수를 입력하지 않았습니다.");
+                }
+                if (
+                    !(
+                        attend.run == 0 ||
+                        attend.run == "0" ||
+                        Number(attend.run) == Number(backupAttend.run)
+                    )
+                ) {
+                    errMsg.push("바퀴수는 현재와 같거나 0이어야 합니다.");
+                }
+                this.atdWaiting = false;
+                this.attendLoading = 1;
+                this.closeDialog(5, errMsg);
+                return;
+            }
+
+            errMsg.push("변경하였습니다.");
+            axios
+                .patch("/api/attends/" + userid, attend)
+                .then(() => {
+                    this.closeDialog(4, errMsg);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            this.attendLoading = 1;
+            this.atdWaiting = false;
         },
     },
     mounted() {
