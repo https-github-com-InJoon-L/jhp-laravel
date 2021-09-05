@@ -478,7 +478,6 @@ export default {
         },
         acceptAttend(attend) {
             this.attendChangeDialogShow = true;
-            this.attendLoading = 0;
             this.selectedChangeAttend = attend;
             this.backupAttend.desc_value = attend.desc_value;
             this.backupAttend.run = attend.run;
