@@ -63,6 +63,7 @@
                                     v-model="user.name"
                                     autocomplete="name"
                                     placeholder="박 성철"
+                                    @keydown.enter.prevent="change"
                                 />
                             </div>
                             <div class="flex flex-col mb-4">
@@ -74,6 +75,7 @@
                                     v-model="user.email"
                                     autocomplete="email"
                                     placeholder="scpark@g.yju.ac.kr"
+                                    @keydown.enter.prevent="change"
                                 />
                             </div>
                             <div class="flex flex-col mb-4">
@@ -84,7 +86,8 @@
                                     class="mt-1 block w-full"
                                     v-model="user.sid"
                                     autocomplete="sid"
-                                    placeholder="18-000000"
+                                    placeholder="0000000"
+                                    @keydown.enter.prevent="change"
                                 />
                             </div>
                             <div class="flex flex-col mb-4">
@@ -99,6 +102,7 @@
                                     v-model="user.phone_number"
                                     autocomplete="phone_number"
                                     placeholder="018-0000-0000"
+                                    @keydown.enter.prevent="change"
                                 />
                             </div>
                             <div class="flex flex-col mb-4">

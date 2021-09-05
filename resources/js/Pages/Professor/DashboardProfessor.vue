@@ -206,9 +206,13 @@
             :show="attendDialogShow"
             :ifLoading="attendLoading"
             :user="selectedUser"
-            :attend="selectedAttend"
+            :attend="selectedUserAttend"
+            :attendRun="selectedUserRun"
+            :currentPage="currentPage"
+            :pageLinks="pageLinks"
             @attendClose="closeAttendDialog"
             @acceptClick="acceptAttend"
+            @pageNation="refreshByPage"
         >
         </professor-attend-dialog>
 
@@ -217,6 +221,7 @@
             :user="selectedUser"
             :attend="selectedChangeAttend"
             :backupAttend="backupAttend"
+            :ifLoading="attendLoading"
             :waiting="atdWaiting"
             @attendChangeClose="closeDialog"
             @attendChange="attendChange"
@@ -279,7 +284,8 @@ export default {
             },
             selectedTeam: {},
             selectedUser: {},
-            selectedAttend: {},
+            selectedUserAttend: {},
+            selectedUserRun: {},
             selectedChangeAttend: {},
             allTeam: {},
             form: this.$inertia.form({
@@ -292,6 +298,8 @@ export default {
             headList: ["학생 정보관리", "출결관리"],
             attendLoading: 0, // attend loading
             atdWaiting: false,
+            currentPage: 1,
+            pageLinks: [],
             isModActive: 1,
             mod: 1,
         };
@@ -301,7 +309,7 @@ export default {
     },
     methods: {
         wait() {
-            this.errMsg = ["로딩중이니까 좀 참으세요"];
+            this.errMsg = ["로딩중입니다"];
             this.errState0 = 0;
             this.errorDialogShow = true;
         },
@@ -362,12 +370,20 @@ export default {
                     }
                 }
             } else if (state == 4) {
-                if (this.selectedChangeAttend.run != this.backupAttend.run) {
-                    this.selectedAttend.data.user_run[0].countRun -=
+                console.log(this.selectedUserRun);
+                console.log(this.selectedChangeAttend);
+                console.log(this.backupAttend);
+                if (
+                    Number(this.selectedChangeAttend.run) !=
+                    Number(this.backupAttend.run)
+                ) {
+                    this.selectedUserRun.data[0].countRun -=
                         this.backupAttend.run;
-                    this.selectedAttend.data.user_run[0].totalRun -=
+                    this.selectedUserRun.data[0].totalRun -=
                         this.backupAttend.run;
                 }
+                this.attendLoading = 1;
+                this.atdWaiting = false;
                 this.errState = 0;
             } else if (state == 5 || state == 6) {
                 this.errState = 1;
@@ -404,9 +420,21 @@ export default {
                 this.attendLoading = 0;
                 this.attendDialogShow = true;
                 axios
-                    .get("/api/user/attendStatus/" + user.id + "?attend=전체")
+                    .get(
+                        "/api/user/attendStatus/" +
+                            user.id +
+                            "?page=" +
+                            this.currentPage +
+                            "&attend=전체",
+                        null
+                    )
                     .then((res) => {
-                        this.selectedAttend = res.data;
+                        this.selectedUserAttend = res.data.user_attend;
+                        this.selectedUserRun = res.data.user_run;
+
+                        console.log(res.data);
+                        this.currentPage = res.data.user_attend.current_page;
+                        this.pageLinks = res.data.user_attend.links;
                         this.attendLoading = 1;
                     })
                     .catch((err) => {
@@ -441,6 +469,7 @@ export default {
             }
         },
         closeAttendDialog() {
+            this.currentPage = 1;
             this.attendDialogShow = false;
         },
         changeActive(idx) {
@@ -449,6 +478,7 @@ export default {
         },
         acceptAttend(attend) {
             this.attendChangeDialogShow = true;
+            this.attendLoading = 0;
             this.selectedChangeAttend = attend;
             this.backupAttend.desc_value = attend.desc_value;
             this.backupAttend.run = attend.run;
@@ -489,7 +519,6 @@ export default {
                 this.closeDialog(5, errMsg);
                 return;
             }
-
             errMsg.push("변경하였습니다.");
             axios
                 .patch("/api/attends/" + userid, attend)
@@ -499,8 +528,51 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-            this.attendLoading = 1;
-            this.atdWaiting = false;
+        },
+        refreshByPage(page, userId) {
+            this.attendLoading = 0;
+            if (page == "<") {
+                if (this.pageLinks[0].url) {
+                    page = this.pageLinks[0].url.charAt(
+                        this.pageLinks[0].url.length - 1
+                    );
+                } else {
+                    page = 1;
+                }
+            }
+            if (page == ">") {
+                console.log("여기요 여기");
+                if (this.pageLinks[this.selectedUserAttend.last_page + 1].url) {
+                    page = this.pageLinks[
+                        this.selectedUserAttend.last_page + 1
+                    ].url.charAt(
+                        this.pageLinks[this.selectedUserAttend.last_page + 1]
+                            .url.length - 1
+                    );
+                } else {
+                    page = this.selectedUserAttend.last_page;
+                }
+            }
+            console.log("전부 통과");
+            axios
+                .get(
+                    "/api/user/attendStatus/" +
+                        userId +
+                        "?page=" +
+                        page +
+                        "&attend=전체",
+                    null
+                )
+                .then((res) => {
+                    this.selectedUserAttend = res.data.user_attend;
+                    console.log(res.data);
+                    this.currentPage = res.data.user_attend.current_page;
+                    this.pageLinks = res.data.user_attend.links;
+                    this.attendLoading = 1;
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         },
     },
     mounted() {

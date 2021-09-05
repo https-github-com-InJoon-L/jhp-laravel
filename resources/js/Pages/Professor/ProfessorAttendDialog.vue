@@ -144,14 +144,12 @@
                             >
                                 <div
                                     v-if="
-                                        Object.keys(
-                                            this.attend.user_attend.data
-                                        ).length != 0
+                                        Object.keys(this.attend.data).length !=
+                                        0
                                     "
                                 >
                                     <ProfessorAttendDialogTableBody
-                                        v-for="(atd, idx) in this.attend
-                                            .user_attend.data"
+                                        v-for="(atd, idx) in this.attend.data"
                                         :key="idx"
                                         :attend="atd"
                                         :index="idx + 1"
@@ -159,6 +157,101 @@
                                         @attendClick="acceptClick"
                                     >
                                     </ProfessorAttendDialogTableBody>
+                                    <div
+                                        class="
+                                            bg-white
+                                            px-4
+                                            py-3
+                                            items-center
+                                            justify-between
+                                            border-t border-gray-200
+                                            sm:px-6
+                                            lg:flex
+                                        "
+                                    >
+                                        <div
+                                            class="
+                                                flex-1 flex
+                                                items-center
+                                                justify-between
+                                            "
+                                        >
+                                            <div>
+                                                <nav
+                                                    class="
+                                                        relative
+                                                        z-0
+                                                        inline-flex
+                                                        flex-nowrap
+                                                        rounded-md
+                                                        shadow-sm
+                                                        -space-x-px
+                                                    "
+                                                    aria-label="Pagination"
+                                                >
+                                                    <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+                                                    <a
+                                                        v-for="(
+                                                            item, i
+                                                        ) in pageLinks"
+                                                        v-bind:key="i"
+                                                    >
+                                                        <button
+                                                            @click="
+                                                                refreshByPage(
+                                                                    item.label
+                                                                )
+                                                            "
+                                                            v-if="
+                                                                item.active ==
+                                                                true
+                                                            "
+                                                            class="
+                                                                z-10
+                                                                bg-indigo-50
+                                                                border-indigo-500
+                                                                text-indigo-600
+                                                                relative
+                                                                inline-flex
+                                                                items-center
+                                                                px-4
+                                                                py-2
+                                                                border
+                                                                text-sm
+                                                                font-medium
+                                                            "
+                                                        >
+                                                            {{ item.label }}
+                                                        </button>
+                                                        <button
+                                                            @click="
+                                                                refreshByPage(
+                                                                    item.label
+                                                                )
+                                                            "
+                                                            v-else
+                                                            class="
+                                                                bg-white
+                                                                border-gray-300
+                                                                text-gray-500
+                                                                hover:bg-gray-50
+                                                                relative
+                                                                inline-flex
+                                                                items-center
+                                                                px-4
+                                                                py-2
+                                                                border
+                                                                text-sm
+                                                                font-mediums
+                                                            "
+                                                        >
+                                                            {{ item.label }}
+                                                        </button>
+                                                    </a>
+                                                </nav>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div v-else>
                                     <tr class="flex">
@@ -174,41 +267,29 @@
                                         </td>
                                     </tr>
                                 </div>
-                                <div v-if="this.attend.user_run.data[0]">
+                                <div v-if="this.attendRun.data[0]">
                                     <ProfessorAttendDialogTableBody
-                                        v-if="
-                                            this.attend.user_run.data[0]
-                                                .countRun
-                                        "
+                                        v-if="this.attendRun.data[0].countRun"
                                         :attend="
-                                            this.attend.user_run.data[0]
-                                                .countRun
+                                            this.attendRun.data[0].countRun
                                         "
                                         :index="'달려야 할 바퀴'"
                                         :bodytype="1"
                                     >
                                     </ProfessorAttendDialogTableBody>
                                     <ProfessorAttendDialogTableBody
-                                        v-if="
-                                            this.attend.user_run.data[0]
-                                                .minusRun
-                                        "
+                                        v-if="this.attendRun.data[0].minusRun"
                                         :attend="
-                                            this.attend.user_run.data[0]
-                                                .minusRun
+                                            this.attendRun.data[0].minusRun
                                         "
                                         :index="'달린 바퀴'"
                                         :bodytype="1"
                                     >
                                     </ProfessorAttendDialogTableBody>
                                     <ProfessorAttendDialogTableBody
-                                        v-if="
-                                            this.attend.user_run.data[0]
-                                                .totalRun
-                                        "
+                                        v-if="this.attendRun.data[0].totalRun"
                                         :attend="
-                                            this.attend.user_run.data[0]
-                                                .totalRun
+                                            this.attendRun.data[0].totalRun
                                         "
                                         :index="'누적 바퀴'"
                                         :bodytype="1"
@@ -257,7 +338,7 @@ import ProfessorAttendDialogTableBody from "@/Pages/Professor/ProfessorAttendDia
 import LoadingBar from "@/Pages/Board/LoadingBar";
 
 export default {
-    emits: ["attendClose", "acceptClick"],
+    emits: ["attendClose", "acceptClick", "pageNation"],
     components: {
         Modal,
         JetButton,
@@ -280,9 +361,12 @@ export default {
         },
         user: Object,
         attend: Object,
+        attendRun: Object,
         ifLoading: {
             default: 0,
         },
+        currentPage: Number,
+        pageLinks: Array,
         fake: 0,
     },
     data() {
@@ -296,6 +380,9 @@ export default {
         },
         acceptClick(attend) {
             this.$emit("acceptClick", attend);
+        },
+        refreshByPage(page) {
+            this.$emit("pageNation", page, this.user.id);
         },
     },
 };

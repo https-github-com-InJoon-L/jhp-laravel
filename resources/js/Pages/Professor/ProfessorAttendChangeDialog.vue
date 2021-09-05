@@ -54,32 +54,39 @@
                             >
                                 <loading-bar />
                             </table>
-                            <div class="flex flex-col mb-4">
-                                <jet-label for="name" value="상태" />
-                                <jet-input
-                                    id="name"
-                                    type="text"
-                                    class="mt-1 block w-full"
-                                    v-model="attend.desc_value"
-                                    autocomplete="name"
-                                    placeholder="지각, 병결 등"
-                                />
-                            </div>
-                            <div class="flex flex-col mb-4">
-                                <jet-label for="name" value="바퀴" />
-                                <jet-input
-                                    id="name"
-                                    type="number"
-                                    class="mt-1 block w-full"
-                                    v-model="attend.run"
-                                    autocomplete="run"
-                                    placeholder="현재와 같거나 0이어야 합니다."
-                                />
-                            </div>
+                            <table v-else class="w-full">
+                                <div class="flex flex-col mb-4">
+                                    <jet-label for="name" value="상태" />
+                                    <jet-input
+                                        id="name"
+                                        type="text"
+                                        class="mt-1 block w-full"
+                                        v-model="attend.desc_value"
+                                        autocomplete="name"
+                                        placeholder="지각, 병결 등"
+                                        @keydown.enter.prevent="change"
+                                    />
+                                </div>
+                                <div class="flex flex-col mb-4">
+                                    <jet-label for="name" value="바퀴" />
+                                    <jet-input
+                                        id="name"
+                                        type="number"
+                                        class="mt-1 block w-full"
+                                        v-model="attend.run"
+                                        autocomplete="run"
+                                        placeholder="현재와 같거나 0이어야 합니다."
+                                        @keydown.enter.prevent="change"
+                                    />
+                                </div>
+                            </table>
                         </slot>
                     </div>
                 </div>
-                <div class="px-6 py-4 bg-gray-100 text-right">
+                <div
+                    class="px-6 py-4 bg-gray-100 text-right"
+                    v-if="ifLoading > 0"
+                >
                     <slot name="footer">
                         <jet-button
                             @click.prevent="close"
@@ -132,9 +139,7 @@ export default {
         user: Object,
         attend: Object,
         backupAttend: Object,
-        ifLoading: {
-            default: 1,
-        },
+        ifLoading: Number,
         waiting: {
             default: false,
         },
