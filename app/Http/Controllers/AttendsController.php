@@ -26,9 +26,9 @@ class AttendsController extends Controller
 
         $date = date("Y-m-d");
         $time = date("H:i:s");
-        $attend_start = strtotime('08:30:00');
-        $attend_end = strtotime('18:00:00');
-        $point = strtotime('09:00:00');
+        $attend_start = strtotime('18:45:00');
+        $attend_end = strtotime('21:00:00');
+        $point = strtotime('19:00:00');
 
         $timestamp = strtotime($time);
         $result = $timestamp - $point;
@@ -45,7 +45,7 @@ class AttendsController extends Controller
             ]);
         }
 
-        // 8:30 ~ 18:00에만 출석이 가능
+        // 18:45 ~ 21:00에만 출석이 가능
         if ($timestamp < $attend_start || $timestamp > $attend_end) {
             return $res = response()->json([
                 'status' => 'false',
