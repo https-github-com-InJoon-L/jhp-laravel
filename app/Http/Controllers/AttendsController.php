@@ -56,7 +56,7 @@ class AttendsController extends Controller
         if ($result > 0) {
             $cul = number_format($result/60/5); // 바퀴 수
             $cul++;
-            if ($cul > 20) $cul = 20;
+            if ($cul > 12) $cul = 12;
 
             $attend->run = $cul;
             $attend->desc_value = '지각';
