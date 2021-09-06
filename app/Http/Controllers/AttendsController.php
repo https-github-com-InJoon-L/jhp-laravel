@@ -192,7 +192,7 @@ class AttendsController extends Controller
         $absent_user->user_id = $userId;
         $absent_user->desc_value = '결석';
         $absent_user->attend = $date;
-        $absent_user->run = 20;
+        $absent_user->run = 12;
 
         $absent_user->save();
 
