@@ -119,11 +119,15 @@ class AttendsController extends Controller
             return $res;
         }
 
+        $count = 0;
+
         // 한명이라도 출석 했다면
         for ($i = 0; $i < $users->count(); $i++) {
             for ($j = 0; $j < $attend_users->count(); $j++) {
                 if($users[$i]->id == $attend_users[$j]->user_id) {
-                    array_splice($users_array, $i, 1);
+                    array_splice($users_array, $i - $count, 1);
+                    $count++;
+                    break;
                 }
             }
         }
