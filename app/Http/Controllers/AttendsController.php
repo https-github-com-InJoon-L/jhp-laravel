@@ -28,7 +28,7 @@ class AttendsController extends Controller
         $time = date("H:i:s");
         $attend_start = strtotime('18:45:00');
         $attend_end = strtotime('21:00:00');
-        $point = strtotime('19:00:00');
+        $point = strtotime('19:01:00');
 
         $timestamp = strtotime($time);
         $result = $timestamp - $point;
@@ -101,9 +101,9 @@ class AttendsController extends Controller
     }
 
     // 출석하지 않은 유저들 반별로
-    public function notAttendUsers($selected_class) {
+    public function notAttendUsers() {
         $date = date("Y-m-d");
-        $users = User::where('class', $selected_class)->get();
+        $users = User::where('class', 'wdj')->get();
         $attend_users = Attend::where('attend', $date)->get();
         $users_array = $users->toArray();
 
@@ -133,7 +133,7 @@ class AttendsController extends Controller
         ->join('users', 'users.id', '=', 'attends.user_id')
         ->where('attends.attend', '=', $date)
         ->where('attends.desc_value', 'like', '%지각%')
-        ->where('users.class', '=', $selected_class)
+        ->where('users.class', '=', 'wdj')
         ->select(
             DB::raw("users.id, users.name, users.email, users.class,
             users.sid, users.profile_photo_path, attends.id, attends.run,
@@ -145,7 +145,7 @@ class AttendsController extends Controller
         ->join('users', 'users.id', '=', 'attends.user_id')
         ->where('attends.attend', '=', $date)
         ->where('attends.desc_value', 'like', '%결석%')
-        ->where('users.class', '=', $selected_class)
+        ->where('users.class', '=', 'wdj')
         ->select(
             DB::raw("users.id, users.name, users.email, users.class,
             users.sid, users.profile_photo_path, attends.id, attends.run,
