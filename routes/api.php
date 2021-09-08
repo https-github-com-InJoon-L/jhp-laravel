@@ -37,7 +37,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 // axios.Post('/api/attends') <- 요청 방법
 Route::post('/attends', [AttendsController::class, 'attend']);
 Route::post('/attends/absent', [AttendsController::class, 'absent']);
-Route::get('/attends/not_users', [AttendsController::class, 'notAttendUsers']);
+Route::get('/attends/not_users/{date}', [AttendsController::class, 'notAttendUsers']);
 Route::patch('/attends/{selected_user_id}', [AttendsController::class, 'update']);
 // test용
 Route::post('/token', [AuthController::class, 'createApiToken']);

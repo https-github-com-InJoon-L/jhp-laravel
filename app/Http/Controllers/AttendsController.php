@@ -101,8 +101,8 @@ class AttendsController extends Controller
     }
 
     // 출석하지 않은 유저들 반별로
-    public function notAttendUsers() {
-        $date = date("Y-m-d");
+    public function notAttendUsers($date) {
+        // $date = date("Y-m-d");
         $users = User::where('class', 'wdj')->get();
         $attend_users = Attend::where('attend', $date)->get();
         $users_array = $users->toArray();
