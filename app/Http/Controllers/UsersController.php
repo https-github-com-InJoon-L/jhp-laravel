@@ -15,8 +15,6 @@ class UsersController extends Controller
     // team_id 별 전체 사용자
     public function read()
     {
-        // 읽기 권한 검사
-
         $users = [
             'none' => User::all()->where('current_team_id', 1),
             'wdj' => User::all()->where('current_team_id', 2),
@@ -33,8 +31,6 @@ class UsersController extends Controller
     // 사용자 정보 수정
     public function update(Request $request, $selected_user_id)
     {
-        // 수정 권한 검사
-
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
