@@ -26,9 +26,9 @@ class AttendsController extends Controller
 
         $date = date("Y-m-d");
         $time = date("H:i:s");
-        $attend_start = strtotime('08:30:00');
-        $attend_end = strtotime('18:00:00');
-        $point = strtotime('09:00:00');
+        $attend_start = strtotime('18:45:00');
+        $attend_end = strtotime('21:00:00');
+        $point = strtotime('19:01:00');
 
         $timestamp = strtotime($time);
         $result = $timestamp - $point;
@@ -45,7 +45,7 @@ class AttendsController extends Controller
             ]);
         }
 
-        // 8:30 ~ 18:00에만 출석이 가능
+        // 18:45 ~ 21:00에만 출석이 가능
         if ($timestamp < $attend_start || $timestamp > $attend_end) {
             return $res = response()->json([
                 'status' => 'false',
@@ -56,7 +56,7 @@ class AttendsController extends Controller
         if ($result > 0) {
             $cul = number_format($result/60/5); // 바퀴 수
             $cul++;
-            if ($cul > 20) $cul = 20;
+            if ($cul > 12) $cul = 12;
 
             $attend->run = $cul;
             $attend->desc_value = '지각';
@@ -101,9 +101,9 @@ class AttendsController extends Controller
     }
 
     // 출석하지 않은 유저들 반별로
-    public function notAttendUsers($selected_class) {
-        $date = date("Y-m-d");
-        $users = User::where('class', $selected_class)->get();
+    public function notAttendUsers($date) {
+        // $date = date("Y-m-d");
+        $users = User::where('class', 'wdj')->get();
         $attend_users = Attend::where('attend', $date)->get();
         $users_array = $users->toArray();
 
@@ -119,11 +119,15 @@ class AttendsController extends Controller
             return $res;
         }
 
+        $count = 0;
+
         // 한명이라도 출석 했다면
         for ($i = 0; $i < $users->count(); $i++) {
             for ($j = 0; $j < $attend_users->count(); $j++) {
                 if($users[$i]->id == $attend_users[$j]->user_id) {
-                    array_splice($users_array, $i, 1);
+                    array_splice($users_array, $i - $count, 1);
+                    $count++;
+                    break;
                 }
             }
         }
@@ -133,7 +137,7 @@ class AttendsController extends Controller
         ->join('users', 'users.id', '=', 'attends.user_id')
         ->where('attends.attend', '=', $date)
         ->where('attends.desc_value', 'like', '%지각%')
-        ->where('users.class', '=', $selected_class)
+        ->where('users.class', '=', 'wdj')
         ->select(
             DB::raw("users.id, users.name, users.email, users.class,
             users.sid, users.profile_photo_path, attends.id, attends.run,
@@ -145,7 +149,7 @@ class AttendsController extends Controller
         ->join('users', 'users.id', '=', 'attends.user_id')
         ->where('attends.attend', '=', $date)
         ->where('attends.desc_value', 'like', '%결석%')
-        ->where('users.class', '=', $selected_class)
+        ->where('users.class', '=', 'wdj')
         ->select(
             DB::raw("users.id, users.name, users.email, users.class,
             users.sid, users.profile_photo_path, attends.id, attends.run,
@@ -192,7 +196,7 @@ class AttendsController extends Controller
         $absent_user->user_id = $userId;
         $absent_user->desc_value = '결석';
         $absent_user->attend = $date;
-        $absent_user->run = 20;
+        $absent_user->run = 12;
 
         $absent_user->save();
 
