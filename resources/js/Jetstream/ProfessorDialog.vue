@@ -5,7 +5,7 @@
                 <div class="px-3 py-4">
                     <div class="text-lg">
                         <slot name="title">
-                        </slot>
+                         </slot>
                     </div>
                     <div class="mt-4">
                         <slot name="content">
@@ -66,7 +66,7 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import JetActionMessage from '@/Jetstream/ActionMessage'
-    import JetButton from '@/Jetstream/Button'
+    import JetButton from './Button'
     import LoadingBar from "@/Pages/Board/LoadingBar"
     import axios from 'axios';
 

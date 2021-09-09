@@ -28,17 +28,28 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^29.1.0",
+        "@ckeditor/ckeditor5-vue": "^2.0.1",
         "@fortawesome/fontawesome-free": "^5.15.4",
+        "@popperjs/core": "^2.10.1",
         "bootstrap": "^5.1.0",
         "chart.js": "^3.5.0",
+        "chartjs-plugin-labels": "^1.1.0",
         "cheerio": "^1.0.0-rc.10",
         "daisyui": "^1.11.1",
         "date-fns": "^2.23.0",
         "diacriticless": "^1.0.1",
         "jquery": "^3.6.0",
+        "laravel-vue-pagination": "^2.3.1",
+        "lottie-vuejs": "^0.4.0",
+        "moment": "^2.29.1",
         "request": "^2.88.2",
         "sass-loader": "^12.1.0",
         "theme-change": "^2.0.2",
-        "vue3-chart-v2": "^0.8.2"
+        "v-calendar": "^3.0.0-alpha.5",
+        "vue-dynamic-marquee": "^0.1.7",
+        "vue-text-marquee": "^1.1.0",
+        "vue3-chart-v2": "^0.8.2",
+        "vue3-datepicker": "^0.2.5"
     }
 }

@@ -1,78 +1,81 @@
 <template>
     <app-layout>
+        <attend-marquee/>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                출석현황
-            </h2>
+            <div class="tabs">
+                <a class="tab  tab-lifted tab-lg tab-active font-bold" :href="route('attendstatus')">My 출석</a>
+                <a class="tab  tab-lifted tab-lg font-bold" :href="route('classAttendStatus')">전체 출석</a>
+            </div>
         </template>
-        <div class="md:px-32 py-4 w-full">
-         
-<div class="overflow-hidden">
-  <table class="table table-auto min-w-full table-zebra">
-    <thead class="text-center">
-      <tr>
-        <th></th> 
-        <th>상태</th> 
-        <th>바퀴</th> 
-        <th>시간</th>
-      </tr>
-    </thead> 
-    <tbody>
-      <tr  v-for="(attend,i) in attends" v-bind:key=i class="text-center justify-center">
-        <th>{{i+1}}</th> 
-        <td v-if="attend.desc_value=='출석'" class=" badge-success">{{ attend.desc_value }}</td> 
-        <td v-else-if="attend.desc_value=='지각'" class=" badge-warning">{{ attend.desc_value }}</td> 
-        <td v-else class="badge-error">{{ attend.desc_value }}</td> 
-        <td>{{ attend.run }}</td> 
-        <td>{{ attend.date }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+
+            <div class="overflow-hidden">
+
+                <div class="pt-2 mx-auto">
+                    <attend-chart />
+                </div>
+                <div class="tabs">
+                    <button class="tab  tab-lifted tab-lg tab-active font-bold" v-if="category=='전체'"
+                        @click="refresh('전체')">전체</button>
+                    <button class="tab  tab-lifted tab-lg font-bold" v-else @click="refresh('전체')">전체</button>
+                    <button class="tab  tab-lifted tab-lg tab-active font-bold" v-if="category=='출석'"
+                        @click="refresh('출석')">출석</button>
+                    <button class="tab  tab-lifted tab-lg font-bold" v-else @click="refresh('출석')">출석</button>
+                    <button class="tab  tab-lifted tab-lg tab-active font-bold" v-if="category=='지각'"
+                        @click="refresh('지각')">지각</button>
+                    <button class="tab  tab-lifted tab-lg font-bold" v-else @click="refresh('지각')">지각</button>
+                    <button class="tab  tab-lifted tab-lg tab-active font-bold" v-if="category=='결석'"
+                        @click="refresh('결석')">결석</button>
+                    <button class="tab  tab-lifted tab-lg font-bold" v-else @click="refresh('결석')">결석</button>
+                </div>
+                <!-- This example requires Tailwind CSS v2.0+ -->
+                <div class="bg-white px-4 py-3   items-center justify-between border-t border-gray-200 sm:px-6 lg:flex">
+                    <div class="flex-1 flex items-center justify-between ">
+                        <div>
+                            <nav class="relative z-0 inline-flex flex-nowrap rounded-md shadow-sm -space-x-px"
+                                aria-label="Pagination">
+                                <!-- Current: "z-10 bg-indigo-50 border-indigo-500 text-indigo-600", Default: "bg-white border-gray-300 text-gray-500 hover:bg-gray-50" -->
+                                <a v-for="(item,i) in pageLinks" v-bind:key="i">
+                                    <button @click="refreshByPage(item.label)" v-if="item.active==true"
+                                        class="z-10 bg-indigo-50 border-indigo-500 text-indigo-600 relative inline-flex items-center px-4 py-2 border text-sm font-medium">{{ item.label }}</button>
+                                    <button @click="refreshByPage(item.label)" v-else
+                                        class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-mediums">{{ item.label }}</button>
+                                </a>
+
+                            </nav>
+
+                        </div>
+
+                    </div>
+                </div>
+                <table class="table table-compact min-w-full table-zebra">
+                    <thead class="text-center bold">
+                        <tr>
+                            <th></th>
+                            <th><i class="far fa-question-circle"></i>상태</th>
+                            <th><i class="far fa-flag"></i>바퀴</th>
+                            <th><i class="far fa-clock"></i>시간</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(attend,i) in attends" v-bind:key=i class="text-center justify-center">
+                            <th>{{data.from + i}}</th>
+                            <td v-if="attend.desc_value=='출석'" class=" badge-success"><i class="fas fa-check"> 출석</i>
+                            </td>
+                            <td v-else-if="attend.desc_value=='지각'" class=" badge-warning"><i
+                                    class="fas fa-exclamation"> 지각</i></td>
+                            <td v-else class="badge-error"><i class="fas fa-times"> 결석</i></td>
+                            <td>{{ attend.run }}</td>
+                            <td>{{ attend.date }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
         </div>
 
-        <Dialog :show="dialogShow" @close="closeDialog">
 
-            <template #title>
-                {{ msg }}
-            </template>
-
-            <template #content>
-                {{header}}
-            </template>
-
-            <template #footer>
-
-                <jet-button type="button" class="ml-2">
-                    <inertia-link :href="route('attend')"
-                        class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
-                        확인</inertia-link>
-                </jet-button>
-            </template>
-        </Dialog>
-
-        <Dialog :show="showAttend" @close="closeDialog">
-
-            <template #title>
-                {{ msg }}
-            </template>
-
-            <template #content>
-                {{header}}
-                <br>
-                {{header2}}
-            </template>
-
-            <template #footer>
-
-                <jet-button type="button"
-                    class="ml-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
-                    @click="closeDialog">
-                    닫기
-                </jet-button>
-
-            </template>
-        </Dialog>
     </app-layout>
 </template>
 
@@ -83,12 +86,17 @@
     import BadgeYellow from '@/Geofencing/BadgeYellow'
     import LoadingBar from "@/Pages/Board/LoadingBar"
     import AppLayout from '@/Layouts/AppLayout'
+    import AttendChart from './AttendChart.vue'
     export default {
         data: function () {
             return {
+                currentPage: 1,
+                category: '전체',
                 header: '',
                 header2: '',
                 msg: '',
+                data: [],
+                pageLinks: [],
                 user_name: document.head.querySelector('meta[name="user-name"]').content,
                 user_sid: document.head.querySelector('meta[name="user-sid"]').content,
                 user_class: document.head.querySelector('meta[name="user-class"]').content,
@@ -108,37 +116,61 @@
             BadgeGreen,
             BadgeYellow,
             LoadingBar,
+            AttendChart,
         },
         mounted() {
-
-            axios.get('/api/user/attendStatus/' + this.user_id, null)
+            axios.get('/api/user/attendStatus/' + this.user_id + '?page=' + this.currentPage + '&attend=전체', null)
                 .then(response => {
-                    this.attends = response.data.user_attend;
+                    this.attends = response.data.user_attend.data;
+                    this.pageLinks = response.data.user_attend.links
+                    this.data = response.data.user_attend;
                     this.isLoading = 1;
-                    console.log(this.attends)
-                })
-                .catch(err => {
-                    console.log(err);
+                    this.currentPage = response.data.user_attend.current_page;
                 })
         },
         methods: {
-            openDialog() {
-                this.dialogShow = true;
+            refresh(category) {
+                axios.get('/api/user/attendStatus/' + this.user_id + '?page=1' + '&attend=' + category, null)
+                    .then(response => {
+                        this.attends = response.data.user_attend.data;
+                        this.pageLinks = response.data.user_attend.links
+                        this.data = response.data.user_attend;
+                        this.isLoading = 1;
+                        this.currentPage = 1;
+                        this.category = category;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
             },
-            closeDialog() {
-                this.showAttend = false;
-            },
-            openAttendDialog(index) {
-                this.msg = this.attends[index].desc_value;
-                if (this.attends[index].run) {
-                    this.header = this.attends[index].attend + " : [" + this.attends[index].desc_value + "]입니다";
-                    this.header2 = " 지각 패널티 : " + this.attends[index].run + "바퀴 ";
-                } else {
-                    this.header = this.attends[index].attend + " : [" + this.attends[index].desc_value + "]입니다";
-                    this.header2 = ''
+            refreshByPage(page) {
+                if (page == "<") {
+                    if (this.pageLinks[0].url) {
+                        page = this.pageLinks[0].url.charAt(this.pageLinks[0].url.length - 1)
+                    } else {
+                        page = 1
+                    }
                 }
-                this.showAttend = true;
-            }
+                if (page == ">") {
+                    if (this.pageLinks[this.data.last_page + 1].url) {
+                        page = this.pageLinks[this.data.last_page + 1].url.charAt(this.pageLinks[this.data.last_page +
+                            1].url.length - 1)
+                    } else {
+                        page = this.data.last_page;
+                    }
+                }
+                axios.get('/api/user/attendStatus/' + this.user_id + '?page=' + page + '&attend=' + this.category, null)
+                    .then(response => {
+                        this.attends = response.data.user_attend.data;
+                        this.pageLinks = response.data.user_attend.links
+                        this.data = response.data.user_attend;
+                        this.isLoading = 1;
+                        this.currentPage = response.data.user_attend.current_page;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+            },
         }
     }
 </script>

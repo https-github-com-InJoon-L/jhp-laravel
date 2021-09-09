@@ -31,7 +31,11 @@
                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636">
                         </path>
                     </svg>
-                    <label class="font-semibold">출석체크를 할려면 {{ boundary }}M 안에 접근하세요!</label>
+                    <label>
+                         <h4 class="font-semibold text-red">출석체크를 할려면 {{ boundary }}M 안에 접근하세요!</h4>
+                         <p class="text-sm font-semibold">실내에서는 오차 범위가 커질 수 있습니다 문밖에서 새로 고침 부탁드립니다.</p>
+                    </label>
+                   
                 </div>
             </div>
             <div class="py-3">
@@ -54,7 +58,7 @@
                 counts: '0',
                 distance: '9999',
                 isPC: '0',
-                boundary: 300, // 출석허용거리
+                boundary: 230, // 출석허용거리
                 isLoading: 0,
             }
         },
@@ -176,8 +180,6 @@
                         });
 
 
-                        //return getTimeHTML(polyline.getLength());//미터단위로 길이 반환;
-                        console.log("길이" + polyline.getLength());
                         var length = polyline.getLength();
                         this.distance = length;
                         polyline.setMap(map);
@@ -193,7 +195,6 @@
                             yAnchor: 1
                         });
                         if (polyline.getLength() <= this.boundary) {
-                            console.log("출석체크 버튼 생성");
                             this.addAttendButton();
                         } else {
 

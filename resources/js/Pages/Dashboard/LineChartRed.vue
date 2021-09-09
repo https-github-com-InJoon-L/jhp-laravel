@@ -15,7 +15,7 @@ export default {
     options: {
       type: Object,
       default: null
-    }
+    },
   },
   mounted() { 
     this.renderChart({
@@ -23,9 +23,9 @@ export default {
     datasets: [
           {
             label: '명',
-   backgroundColor: "rgba(246, 153, 63, 0.1)",
-                borderColor: "rgba(246, 153, 63, 0.8)",
-                borderWidth: 2,
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            borderColor: "rgba(255, 99, 132, 1)",
+            borderWidth: 2,  
             data: this.chartData
           }
         ]

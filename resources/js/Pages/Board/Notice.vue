@@ -1,16 +1,17 @@
 <template>
     <app-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                공지사항
-            </h2>
+              <div class="tabs">
+                <a class="tab  tab-lifted tab-lg font-bold tab-active focus:outline-none" :href="route('notice')">공지사항</a>
+                <a class="tab  tab-lifted tab-lg font-bold focus:outline-none" :href="route('free')">자유게시판</a>
+            </div>
         </template>
-        <div class="md:px-32 py-4 w-full">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="shadow overflow-hidden rounded border-b border-gray-200">
                 <table v-if="ifLoading<1" class="flex items-center justify-center min-w-full bg-white">
                     <loading-bar />
                 </table>
-                <table v-else class="min-w-full bg-white table-compact">
+                <table v-else  class="min-w-full bg-white table-compact">
                     <thead class="bg-gray-800 text-white">
                         <tr>
                             <th class="w-2/3 text-left py-3 font-semibold text-sm text-center">제목</th>
@@ -21,18 +22,17 @@
                     <tbody class="text-gray-700 divide-y divide-gray-300 ">
                         <tr v-for="(post,i) in posts" v-bind:key="i">
                             <!-- 모바일  -->
-                            <th v-if="this.isMobile() && i<3"
-                                class="w-2/3 text-left  px-4 text-center text-red-500"><a
-                                    v-bind:href='post.href'>{{ post.title }}</a></th>
+                            <th v-if="this.isMobile() && i<3" class="w-2/3 text-left  px-4 text-center text-red-500"><a
+                                    v-bind:href='post.href' class="hover:text-red-700">{{ post.title }}</a></th>
                             <th v-else-if="this.isMobile() && i>=3" class="w-1/3 text-left px-4 text-center "><a
-                                    v-bind:href='post.href'>{{ post.title }}</a></th>
+                                    v-bind:href='post.href' class="hover:text-red-700">{{ post.title }}</a></th>
 
                             <!-- PC버전 -->
                             <th v-if="!this.isMobile() && i<3"
                                 class="w-2/3 text-left py-3 px-4 text-center text-red-500"><a
-                                    v-bind:href='post.href'>{{ post.title }}</a></th>
+                                    v-bind:href='post.href' class="hover:text-red-700">{{ post.title }}</a></th>
                             <th v-else-if="!this.isMobile() && i>=3" class="w-1/3 text-left py-3 px-4 text-center "><a
-                                    v-bind:href='post.href'>{{ post.title }}</a></th>
+                                    v-bind:href='post.href' class="hover:text-red-700">{{ post.title }}</a></th>
                             <td class="py-3 px-4 text-center"><a class="hover:text-blue-500">{{ post.time }}</a></td>
                         </tr>
                     </tbody>
@@ -80,12 +80,14 @@
                                 title: title,
                                 href: href
                             }
-                            console.log(value);
                             posts.push(value);
 
                         })
                         this.posts = posts;
                         this.ifLoading = 1;
+                    }).catch(error => {
+                        this.ifLoading = 1;
+                        alert("프록시 서버와 연결실패입니다")
                     })
             } else {
                 // 모바일이 아니면 실행될 코드 들어가는 곳
@@ -106,11 +108,14 @@
                                 href: href
                             }
                             posts.push(value);
-                           
+
                         })
                         posts.shift();
                         this.posts = posts;
                         this.ifLoading = 1;
+                    }).catch(error => {
+                        this.ifLoading = 1;
+                        alert("프록시 서버와 연결실패입니다")
                     })
             }
 
@@ -123,8 +128,3 @@
         },
     }
 </script>
-<style>
-    a:hover {
-        text-decoration: underline;
-    }
-</style>

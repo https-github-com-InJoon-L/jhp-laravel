@@ -1,16 +1,16 @@
 <template>
-                    <div class="card   mx-auto">
+                    <div class="mx-auto">
                     <div class="card-body"> 
                     <div class="stat-title">최근 일주일 지각횟수</div>
                     <div class="stat-value">{{ sum }}</div>
-                        <LaterChart v-if="loaded" :height="300" :chart-data="count" :chart-labels="date" :options="options" class="min-w-full"/>
+                        <line-chart v-if="loaded" :height="200" :chart-data="count" :chart-labels="date" :options="options"  class="min-w-full"/>
                     </div>
                     </div>
 </template>
 
 <script>
     // import the styles 
-    import LaterChart from '@/Pages/Dashboard/LaterChart'
+import LineChart from './LineChart.vue'
     export default {
         data: () => ({
             loaded: false,
@@ -51,13 +51,13 @@
             }
         }),
         components: {
-            LaterChart
+            LineChart
         },
+   
         mounted() {
             axios.get("/api/users/rank?attend=지각&teamId=2")
                 .then(response => {
                     this.ranking = response.data.data
-                    console.log(this.ranking);
                     this.date = response.data.data.map(element => element.date)
                     this.count = response.data.data.map(element => element.count)
                     this.sum = this.count.reduce(function add(sum, currValue) {

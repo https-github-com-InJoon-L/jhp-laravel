@@ -326,8 +326,8 @@ class UsersController extends Controller
             ->where('users.current_team_id', $team_id)
             ->where(DB::raw("(DATE_FORMAT(attends.created_at, '%Y-%m-%d'))"), $date)
             ->selectRaw("users.name, attends.desc_value, DATE_FORMAT(attends.created_at, '%Y-%m-%d %H:%i') as date")
-            ->orderBy('users.id')
-            ->paginate(10);
+            ->orderBy('attends.created_at', 'asc')
+            ->get();
 
         return response()->json([
             'state' => 'success',

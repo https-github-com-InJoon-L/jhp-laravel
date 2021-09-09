@@ -314,6 +314,7 @@ export default {
             this.errorDialogShow = true;
         },
         closeDialog(state, errMsg) {
+            this.checkAuth();
             this.errMsg = errMsg;
             if (state == 0) {
                 this.attendChangeDialogShow = false;
@@ -370,9 +371,6 @@ export default {
                     }
                 }
             } else if (state == 4) {
-                console.log(this.selectedUserRun);
-                console.log(this.selectedChangeAttend);
-                console.log(this.backupAttend);
                 if (
                     Number(this.selectedChangeAttend.run) !=
                     Number(this.backupAttend.run)
@@ -408,6 +406,7 @@ export default {
             }
         },
         openDialog(user) {
+            this.checkAuth();
             this.selectedUser = user;
             if (this.mod == 1) {
                 this.backupUser.name = user.name;
@@ -432,14 +431,11 @@ export default {
                         this.selectedUserAttend = res.data.user_attend;
                         this.selectedUserRun = res.data.user_run;
 
-                        console.log(res.data);
                         this.currentPage = res.data.user_attend.current_page;
                         this.pageLinks = res.data.user_attend.links;
                         this.attendLoading = 1;
                     })
-                    .catch((err) => {
-                        console.log(err);
-                    });
+                    .catch((err) => {});
             }
         },
         closeErrorDialog(errState) {
@@ -473,6 +469,7 @@ export default {
             this.attendDialogShow = false;
         },
         changeActive(idx) {
+            this.checkAuth();
             this.isModActive = idx;
             this.mod = idx;
         },
@@ -483,6 +480,7 @@ export default {
             this.backupAttend.run = attend.run;
         },
         attendChange(attend, backupAttend, userid) {
+            this.checkAuth();
             this.atdWaiting = true;
             this.attendLoading = 0;
             let errMsg = [];
@@ -524,11 +522,10 @@ export default {
                 .then(() => {
                     this.closeDialog(4, errMsg);
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+                .catch((err) => {});
         },
         refreshByPage(page, userId) {
+            this.checkAuth();
             this.attendLoading = 0;
             if (page == "<") {
                 if (this.pageLinks[0].url) {
@@ -540,7 +537,6 @@ export default {
                 }
             }
             if (page == ">") {
-                console.log("여기요 여기");
                 if (this.pageLinks[this.selectedUserAttend.last_page + 1].url) {
                     page = this.pageLinks[
                         this.selectedUserAttend.last_page + 1
@@ -552,7 +548,6 @@ export default {
                     page = this.selectedUserAttend.last_page;
                 }
             }
-            console.log("전부 통과");
             axios
                 .get(
                     "/api/user/attendStatus/" +
@@ -564,14 +559,19 @@ export default {
                 )
                 .then((res) => {
                     this.selectedUserAttend = res.data.user_attend;
-                    console.log(res.data);
                     this.currentPage = res.data.user_attend.current_page;
                     this.pageLinks = res.data.user_attend.links;
                     this.attendLoading = 1;
                 })
-                .catch((err) => {
-                    console.log(err);
-                });
+                .catch((err) => {});
+        },
+        checkAuth() {
+            if (!(this.current_user == 4 || this.current_user == 5)) {
+                this.errState = 4027;
+                this.errMsg = ["볼 권한이 없습니다. 홈으로 돌아갑니다."];
+                this.errorDialogShow = true;
+                return;
+            }
         },
     },
     mounted() {
@@ -589,9 +589,7 @@ export default {
                 this.selectedTeam = this.allTeam.none;
                 this.ifLoading = 1;
             })
-            .catch((err) => {
-                console.log(err);
-            });
+            .catch((err) => {});
     },
 };
 </script>

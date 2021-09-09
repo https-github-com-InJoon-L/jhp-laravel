@@ -17,25 +17,25 @@
 
 <script>
     export default {
-        props: ['active', 'href', 'as','home','notice','attend','timetable','attendstatus'],
+        props: ['active', 'href', 'as','home','notice','attend','timetable','attendstatus','runauth','profileshow'],
 
         computed: {
             classes() {
                 return this.active
-                            ? 'flex items-end justify-center text-center mx-auto pt-2 w-full text-indigo-500'
-                            : 'flex items-end justify-center text-center mx-auto pt-2 w-full text-gray-400 focus:text-indigo-500 rounded-full'
+                            ? 'flex items-end justify-center text-center mx-auto pt-2 w-full text-indigo-500 focus:outline-none'
+                            : 'flex items-end justify-center text-center mx-auto pt-2 w-full text-gray-400 focus:text-indigo-500 rounded-full focus:outline-none'
             },
 
             classes2() {
                 return this.active
-                        ?  'block w-5 mx-auto h-1 bg-indigo-500 group-hover:bg-indigo-500 rounded-full'
-                        :  'block w-5 mx-auto h-1  rounded-full focus:bg-indigo-500 rounded-full hover:bg-indigo-500 rounded-full'
+                        ?  'block w-5 mx-auto h-1 bg-indigo-500 group-hover:bg-indigo-500 rounded-full focus:outline-none'
+                        :  'block w-5 mx-auto h-1  rounded-full focus:bg-indigo-500 rounded-full hover:bg-indigo-500 rounded-full focus:outline-none'
             },
             home() {
-                return this.home ? 'fa-home' :  this.notice ? 'fa-clipboard' : this.attend ? 'fa-check' : this.timetable ? 'fa-table' : this.attendstatus ? 'fa-table' : 'fa-columns'
+                return this.home ? 'fa-home' :  this.notice ? 'fa-clipboard' : this.attend ? 'fa-check' : this.timetable ? 'fa-table' : this.attendstatus ? 'fa-calendar-check' : this.runauth ? 'fa-running' : this.profileshow ? 'fa-id-card' : 'fa-columns'
             },
             name() {
-                return this.home ? '홈' : this.notice ? '공지사항' : this.attend ? '출석' :this.timetable ? '시간표' : this.attendstatus ? '출석현황' : '교수용 대시보드'
+                return this.home ? '홈' : this.notice ? '게시판' : this.attend ? '자습출석' :this.timetable ? '시간표' : this.attendstatus ? '출석현황' : this.runauth ? '달리기 인증' : this.profileshow ? '프로필 수정'  : '교수용 대시보드'
             }
         }
     }

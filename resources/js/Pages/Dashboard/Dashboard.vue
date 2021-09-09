@@ -1,21 +1,21 @@
 <template>
     <app-layout>
-        <template #header>
-            <!-- Navigation Links -->
-            <div>
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    대시보드
-                </h2>
-            </div>
-        </template>
-        <div class="py-12">
+        <div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                                                 <LatersChart/>
-                                                        <MyAttend/>
-                    <most-runner/>
-                    <laters/>
-                    <abcenters/>
+                    <go-attend/>
+                    <attend-marquee />
+                    <not-attend-status/>
+                    <today-attend-status />
+                    <MyAttend />
+                    <div class="lg:flex">
+
+                        <LatersChart />
+                        <AbsenceChart />
+                    </div>
+                    <most-runner />
+                    <laters />
+                    <abcenters />
                 </div>
             </div>
         </div>
@@ -24,6 +24,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
+    import NotAttendStatus from '@/Pages/Menu/NotAttendStatus.vue'
     import Welcome from '@/Jetstream/Welcome'
     import JetNavLink from '@/Jetstream/NavLink'
     import MostRunner from "@/Pages/Dashboard/MostRunner"
@@ -31,6 +32,10 @@
     import Abcenters from '@/Pages/Dashboard/Abcenters'
     import MyAttend from '@/Pages/Dashboard/MyAttendStatus'
     import LatersChart from '@/Pages/Dashboard/LatersChart'
+    import GoAttend from '@/Pages/Dashboard/GoAttend'
+    import AttendMarquee from '@/Geofencing/AttendMarquee'
+    import AbsenceChart from '@/Pages/Dashboard/AbsenceChart'
+    import TodayAttendStatus from '@/Pages/Dashboard/TodayAttendStatus'
     export default {
         data: () => ({}),
         components: {
@@ -42,14 +47,12 @@
             Abcenters,
             MyAttend,
             LatersChart,
+            AbsenceChart,
+            AttendMarquee,
+            TodayAttendStatus,
+            NotAttendStatus,
+            GoAttend
 
-        },
-         mounted() {
-                axios.get("/api/users/runners")
-                    .then(response => {
-                        console.log(response.data);
-                    }) 
-            
 
 
         },

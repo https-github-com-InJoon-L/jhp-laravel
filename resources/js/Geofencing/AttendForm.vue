@@ -4,14 +4,14 @@
             <img class="w-12 h-12 rounded-full" :src="user_photo" :alt="user_name">
             <div class="ml-3">
                 <p class="text-primary font-semibold tracking-wide text-sm">{{user_name}}</p>
-                <div class="flex text-sm">
+                <div class="flex text-xs">
                     <p class="text-gray-700 font-semibold mr-1">{{user_sid}}</p>
                 </div>
             </div>
         </div>
         <div class="flex items-center">
             <badge-green value="attend" @click="attend">출석</badge-green>
-            <badge-red class="m-1" value="abcense" @click="absence">결석</badge-red>
+            <badge-red class="m-1" value="abcense" @click="isAbcense">결석</badge-red>
         </div>
     </li>
 
@@ -48,11 +48,11 @@
 
         <template #footer>
 
-            <jet-button type="button" class="ml-2">
+            <button type="button" class="ml-2">
                 <inertia-link :href="route('attend')"
                     class="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
                     확인</inertia-link>
-            </jet-button>
+            </button>
 
         </template>
     </Dialog>
@@ -71,11 +71,36 @@
 
         <template #footer>
 
-            <jet-button type="button"
+            <button type="button"
                 class="ml-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
                 @click="closeDialog">
                 닫기
-            </jet-button>
+            </button>
+
+        </template>
+    </Dialog>
+
+     <Dialog :show="showAbsense" @close="closeDialog">
+
+        <template #title>
+            결석하시겠습니까?
+        </template>
+
+        <template #content>
+            진짜요?
+        </template>
+
+        <template #footer>
+            <button type="button"
+                class="ml-2 bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border border-red-500 hover:border-transparent rounded"
+                @click="absence">
+                결석하기
+            </button>
+            <button type="button"
+                class="ml-2 bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+                @click="closeDialog">
+                닫기
+            </button>
 
         </template>
     </Dialog>
@@ -103,6 +128,7 @@
                 attends: [],
                 isLoading: 0,
                 showAttend: false,
+                showAbsense: false,
             }
         },
         components: {
@@ -119,9 +145,6 @@
                     this.attends = response.data.attends;
                     this.isLoading = 1;
                 })
-                .catch(err => {
-                    console.log(err);
-                })
         },
         methods: {
             attend() {
@@ -132,19 +155,22 @@
                         params: value
                     })
                     .then(response => {
-                        console.log(response);
                         this.msg = response.statusText;
                         this.header = response.data.message;
                         this.openDialog();
                     })
                     .catch(response => {
-                        console.log(response)
+
                         this.msg = '출석 실패';
                         this.header = '출석 서버와 통신에 실패했습니다';
                         this.openDialog();
                     })
             },
+             isAbcense() {
+                this.showAbsense = true;
+            },
             absence() {
+                this.closeDialog();
                 let value = {
                     user_sid: this.user_sid
                 }
@@ -152,13 +178,11 @@
                         params: value
                     })
                     .then(response => {
-                        console.log(response);
                         this.msg = response.statusText;
                         this.header = response.data.message;
                         this.openDialog();
                     })
                     .catch(response => {
-                        console.log(response)
                         this.msg = '출석 실패';
                         this.header = '출석 서버와 통신에 실패했습니다';
                         this.openDialog();
@@ -169,6 +193,7 @@
             },
             closeDialog() {
                 this.showAttend = false;
+                this.showAbsense = false;
             },
             openAttendDialog(index) {
                 this.msg = this.attends[index].desc_value;
@@ -184,10 +209,3 @@
         }
     }
 </script>
-<style>
-jet-button {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-}
-</style>

@@ -69,7 +69,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(Attend::class);
     }
-
+    
     public function attend_posts()
     {
         return $this->hasMany(Attend_posts::class);

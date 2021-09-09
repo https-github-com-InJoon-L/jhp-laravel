@@ -42,14 +42,54 @@ Route::middleware(['auth:sanctum', 'verified','auth'])->get('/attendstatus', fun
 })->name('attendstatus');
 
 Route::post('setInfo/save', [SocialController::class, 'inputData'])->name('input');
-
-Route::middleware(['cors'])->group(function () {
+Route::post('profile/save', [SocialController::class, 'profileEdit'])->name('profileEdit');
+Route::middleware(['cors','auth:sanctum', 'verified','auth'])->group(function () {
     Route::get('/csrf_token', function(){
         return csrf_token();
     });
     Route::get('/notice',function() {
         return Inertia::render('Board/Notice');
     })->name('notice');
+
+    Route::get('/free',function() {
+        return Inertia::render('Board/Free');
+    })->name('free');
+
+    Route::get('/freeshow/{post_id}',function() {
+        return Inertia::render('Board/FreeShow');
+    })->name('freeshow');
+
+    Route::get('/freeedit/{post_id}',function() {
+        return Inertia::render('Board/FreeEdit');
+    })->name('freeedit');
+    Route::get('/freewrite',function() {
+        return Inertia::render('Board/FreeWrite');
+    })->name('freewrite');
+});
+
+Route::middleware(['cors','auth:sanctum', 'verified','auth'])->group(function () {
+    Route::get('/csrf_token', function(){
+        return csrf_token();
+    });
+    Route::get('/runauth/',function() {
+        return Inertia::render('Board/RunAuth');
+    })->name('runauth');
+
+    Route::get('/runauth/show/{post_id}',function() {
+        return Inertia::render('Board/Show');
+    })->name('runauthshow');
+
+    Route::get('/write',function() {
+        return Inertia::render('Board/Write');
+    })->name('runauthwrite');
+
+    Route::get('/edit/{post_id}',function() {
+        return Inertia::render('Board/Edit');
+    })->name('runauthedit');
+
+    Route::get('/classAttendStatus',function() {
+        return Inertia::render('Menu/ClassAttendStatus');
+    })->name('classAttendStatus');
 });
 
 Route::get('/timetable',function() {

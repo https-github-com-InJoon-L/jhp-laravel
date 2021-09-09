@@ -24,18 +24,22 @@
                                     대시보드
                                 </jet-nav-link>
                                 <jet-nav-link :href="route('notice')" :active="route().current('notice')">
-                                    공지사항
+                                    게시판
                                 </jet-nav-link>
                                 <jet-nav-link :href="route('attend')" :active="route().current('attend')">
-                                    출석
+                                    자습출석
                                 </jet-nav-link>
-                                <jet-nav-link :href="route('attendstatus')" :active="route().current('attendstatus')">
+                                <jet-nav-link :href="route('attendstatus')"
+                                    :active="route().current('attendstatus') || route().current('classAttendStatus')">
                                     출석현황
+                                </jet-nav-link>
+                                <jet-nav-link :href="route('runauth')" :active="route().current('runauth')">
+                                    달리기 인증
                                 </jet-nav-link>
                                 <jet-nav-link :href="route('timetable')" :active="route().current('timetable')">
                                     시간표
                                 </jet-nav-link>
-                                <jet-nav-link v-if="$page.props.user.current_team_id==4"
+                                <jet-nav-link v-if="$page.props.user &&($page.props.user.current_team_id==4||$page.props.user.current_team_id==5)"
                                     :href="route('dashboard.professor')"
                                     :active="route().current('dashboard.professor')">
                                     교수용 대시보드
@@ -69,33 +73,7 @@
                                         </span>
                                     </template>
 
-                                    <template #content>
-                                        <div class="w-60">
-                                            <!-- Team Management -->
-                                            <template v-if="$page.props.jetstream.hasTeamFeatures ">
-                                                <div v-if="$page.props.user"
-                                                    class="block px-4 py-2 text-xs text-gray-400">
-                                                    반
-                                                </div>
 
-                                                <!-- Team Settings -->
-                                                <jet-dropdown-link v-if="$page.props.user"
-                                                    :href="route('teams.show', $page.props.user.current_team)">
-                                                    팀정보
-                                                </jet-dropdown-link>
-
-                                                <jet-dropdown-link v-else :href="route('login')">
-                                                    로그인
-                                                </jet-dropdown-link>
-
-                                                <div class="border-t border-gray-100"></div>
-
-
-
-
-                                            </template>
-                                        </div>
-                                    </template>
                                 </jet-dropdown>
                             </div>
 
@@ -129,11 +107,11 @@
                                     <template #content>
                                         <!-- Account Management -->
                                         <div class="block px-4 py-2 text-xs text-gray-400">
-                                            Manage Account
+                                            계정 관리
                                         </div>
 
                                         <jet-dropdown-link :href="route('profile.show')">
-                                            Profile
+                                            프로필 수정
                                         </jet-dropdown-link>
 
                                         <jet-dropdown-link :href="route('api-tokens.index')"
@@ -146,7 +124,7 @@
                                         <!-- Authentication -->
                                         <form @submit.prevent="logout">
                                             <jet-dropdown-link as="button">
-                                                Log Out
+                                                로그아웃
                                             </jet-dropdown-link>
                                         </form>
                                     </template>
@@ -198,20 +176,30 @@
                             </div>
                             <div class="flex-1 group">
                                 <jet-responsive-nav-link :href="route('attendstatus')"
-                                    :active="route().current('attendstatus')" :attendstatus="route('attendstatus')">
+                                    :active="route().current('attendstatus') || route().current('classAttendStatus')"
+                                    :attendstatus="route('attendstatus')">
                                 </jet-responsive-nav-link>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="pt-2 pb-2 space-y-1">
-                                                        <jet-responsive-nav-link :href="route('timetable')"
+                        <div class="flex">
+                            <div class="flex-1 group">
+                                <jet-responsive-nav-link :href="route('runauth')" :active="route().current('runauth')"
+                                    :runauth="route('runauth')">
+                                </jet-responsive-nav-link>
+                            </div>
+                            <div class="flex-1 group">
+                                <jet-responsive-nav-link :href="route('timetable')"
                                     :active="route().current('timetable')" :timetable="route('dashboard')">
                                 </jet-responsive-nav-link>
-                        <jet-responsive-nav-link v-if="$page.props.user.current_team_id==4"
-                            :href="route('dashboard.professor')" :active="route().current('dashboard.professor')">
-                            교수용 대시보드
-                        </jet-responsive-nav-link>
+                            </div>
+                            <div class="flex-1 group">
+                                <jet-responsive-nav-link v-if="$page.props.user && ($page.props.user.current_team_id==4||$page.props.user.current_team_id==5)"
+                                    :href="route('dashboard.professor')"
+                                    :active="route().current('dashboard.professor')">
+                                    교수용 대시보드
+                                </jet-responsive-nav-link>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -234,6 +222,12 @@
                         </div>
 
                         <div class="mt-4 space-y-1">
+
+                            <jet-responsive-nav-link :href="route('profile.show')"
+                                :active="route().current('profile.show')" :profileshow="route('dashboard')">
+                                프로필 수정
+                            </jet-responsive-nav-link>
+
                             <jet-responsive-nav-link v-if="!$page.props.user" :href="route('login')"
                                 :active="route().current('login')">
                                 로그인
@@ -277,7 +271,7 @@
 
             <!-- Page Heading -->
             <header class="bg-white shadow" v-if="$slots.header">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-7xl flex mx-auto  px-4 sm:px-6 lg:px-8">
                     <slot name="header"></slot>
                 </div>
             </header>
@@ -286,6 +280,15 @@
             <main>
                 <slot></slot>
             </main>
+
+
+
+            <footer class="max-w-7xl flex mx-auto  px-4 sm:px-6 lg:px-8 footer footer-center p-6 footer">
+                <div>
+                    <p>Copyright © 2021 - All right reserved by 체크메이트</p>
+                    <p>[이인준,박동현,박주형,장현석]</p>
+                </div>
+            </footer>
         </div>
     </div>
 </template>

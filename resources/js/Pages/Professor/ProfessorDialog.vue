@@ -204,7 +204,6 @@ export default {
             );
             const checkedNumber = Number(checked.value);
             if (!(checked && checkedNumber >= 1 && checkedNumber < 5)) {
-                console.log("비정상적인 접근");
                 document.querySelector('input[name="class"]').checked = true;
                 checked = document.querySelector('input[name="class"]:checked');
             }
@@ -294,7 +293,6 @@ export default {
                     this.waiting = false;
                     this.ifLoading = 1;
                     this.$emit("close", 3, ["다시 입력 부탁드립니다."]);
-                    console.log(err);
                 });
         },
     },
