@@ -255,7 +255,7 @@ class UsersController extends Controller
             ->join('attends', 'users.id', '=', 'attends.user_id')
             ->selectRaw('attends.desc_value, count(*) as count')
             ->where('users.current_team_id', $teamId)
-            ->orWhere('users.current_team_id', $teamId + 2) // 반대표 wdj: 4, cpj:5
+            ->orWhere('users.current_team_id', $teamId + 3) // 반대표 wdj: 5, cpj:6
             ->where('attends.created_at', '>=', $range)
             ->groupBy('desc_value')
             ->get();
